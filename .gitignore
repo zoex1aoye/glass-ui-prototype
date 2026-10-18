@@ -1,0 +1,67 @@
+# === Local design refs (not committed) ===
+ai-workbench-glass-workbench-v5.html
+legacy-shell-ia.jpg
+coloros13.jpg
+
+# === OS / editor ===
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+!.vscode/extensions.json
+
+# Cursor: keep rules symlink; drop machine-local MCP paths
+.cursor/*
+!.cursor/rules
+
+# === Node / frontend ===
+node_modules/
+dist/
+*.local
+.env
+.env.*
+!.env.example
+
+# Vite / TypeScript caches
+.vite/
+**/.vite/
+*.tsbuildinfo
+.turbo/
+.cache/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# === Agent / local scratch ===
+.agents/tmp-*
+.agents/refs/
+.agents/node_modules/
+.playwright-cli/
+.mimocode/node_modules/
+.mimocode/.cron-lock
+.mimocode/scheduled_tasks.json
+
+# Playwright / coverage
+test-results/
+playwright-report/
+blob-report/
+coverage/
+ms-playwright/
+
+# === Generated QA media & local tooling (keep curated *.md under output/qa) ===
+output/playwright/
+output/qa-crops/
+output/**/*.png
+output/**/*.jpg
+output/**/*.webp
+output/**/*.mp4
+output/qa/.pw/
+output/qa/.venv/
+output/**/tmp-*

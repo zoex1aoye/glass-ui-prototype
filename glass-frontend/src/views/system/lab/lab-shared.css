@@ -1,0 +1,627 @@
+/**
+ * 组件实验室共享样式 — Material / Density / Tone 术语见宪章。
+ * 色值一律走 --glass-wb-* / --glass-*，禁止魔法色。
+ */
+
+.lab-page {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  padding: 8px 4px 24px;
+  overflow: auto;
+}
+
+.lab-head {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lab-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--glass-text-primary);
+}
+
+.lab-desc {
+  margin: 0;
+  font-size: 13px;
+  color: var(--glass-text-secondary);
+  line-height: 1.6;
+}
+
+.lab-live {
+  margin: 0;
+  font-size: 12px;
+  color: var(--glass-text-muted);
+}
+
+.lab-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lab-section-label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.lab-section-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--glass-text-primary);
+}
+
+.lab-section-meta {
+  font-size: 12px;
+  color: var(--glass-text-muted);
+  line-height: 1.5;
+}
+
+/* Living Demo 容器：浅色描边框 + 页底 accent，非业务托盘 */
+.lab-frame {
+  border-radius: var(--glass-wb-card-radius);
+  border: 1px solid var(--glass-border-soft);
+  background: var(--glass-page-bg-accent);
+  padding: 16px;
+  min-height: 220px;
+  display: flex;
+}
+
+.lab-frame--surface {
+  min-height: 260px;
+}
+
+.lab-frame--stage {
+  min-height: 420px;
+}
+
+.lab-frame--fab {
+  min-height: 180px;
+}
+
+/* Glass Host Demo（§1 · Feedback Lab）：Alert 的 Light Frost（backdrop blur）要能
+   「透出背后叠层」，故用 GlassPosterWash 作 L0 橱窗底（蓝 bloom + petals 色场），
+   替代实灰 lab-frame。裁切圆角框 + 内容内 padding，lab-alert-stack 直接叠 wash 上。
+   禁双托盘（不再套 Surface / Panel）。
+   min-height 需压过 PosterWash 自身 min-height:100%（container-type:size 下内容不撑高）。 */
+.lab-section .lab-alert-host.glass-poster-wash {
+  min-height: 720px;
+  border: 1px solid var(--glass-border-soft);
+  border-radius: var(--glass-wb-card-radius);
+}
+
+.lab-section .lab-alert-host .glass-poster-wash__content {
+  padding: 16px;
+}
+
+.lab-surface {
+  min-height: 220px;
+}
+
+.lab-stub {
+  flex: 1;
+  min-height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lab-stub--rail {
+  flex: 0 0 30%;
+  background: var(--glass-wb-rail-wash);
+  -webkit-backdrop-filter: var(--glass-wb-rail-blur);
+  backdrop-filter: var(--glass-wb-rail-blur);
+}
+
+.lab-stub--stage {
+  background: var(--glass-wb-stage-fill);
+  -webkit-backdrop-filter: var(--glass-wb-stage-blur);
+  backdrop-filter: var(--glass-wb-stage-blur);
+}
+
+.lab-stub-tag {
+  font-size: 12px;
+  color: var(--glass-text-secondary);
+}
+
+/* Rail 会话列表（Frost Glass） */
+.lab-rail {
+  width: 220px;
+  padding: 16px 12px;
+  gap: 10px;
+}
+
+.lab-rail--mini {
+  width: 160px;
+}
+
+.lab-rail-identity {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.lab-agent-avatar {
+  flex-shrink: 0;
+  background: var(--glass-wb-avatar-gradient);
+  box-shadow: var(--glass-wb-avatar-shadow);
+  color: var(--glass-wb-white);
+}
+
+.lab-agent-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--glass-text-primary);
+}
+
+.lab-rail-head {
+  margin-bottom: 4px;
+}
+
+.lab-rail-search {
+  margin-bottom: 8px;
+}
+
+.lab-rail-list {
+  background: transparent;
+  padding: 0;
+  overflow: auto;
+}
+
+/* t-list-item 根 li 去默认 padding，几何挂到 .t-list-item-main */
+.lab-rail-item {
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+
+.lab-rail-item :deep(.t-list-item-main) {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition:
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.lab-rail-item:hover :deep(.t-list-item-main) {
+  background: var(--glass-wb-session-hover-bg);
+}
+
+.lab-rail-item.is-active :deep(.t-list-item-main) {
+  background: var(--glass-wb-session-active-bg);
+  border-left-color: var(--glass-wb-tag-bg);
+  box-shadow: var(--glass-wb-session-active-shadow);
+}
+
+.lab-rail-meta {
+  flex: 1;
+  min-width: 0;
+  align-items: center;
+}
+
+.lab-rail-meta :deep(.t-list-item__meta-avatar) {
+  width: 28px;
+  height: 28px;
+  margin-right: 8px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  overflow: visible;
+  background: transparent;
+}
+
+.lab-rail-meta :deep(.t-list-item__meta-content) {
+  min-width: 0;
+  flex: 1;
+}
+
+.lab-rail-meta :deep(.t-list-item__meta-title) {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--glass-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0 0 2px;
+  padding: 0;
+}
+
+.lab-rail-meta :deep(.t-list-item__meta-description) {
+  font-size: 11px;
+  color: var(--glass-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+}
+
+.lab-rail-tag {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--glass-wb-tag-bg);
+  color: var(--glass-wb-white);
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: var(--glass-wb-tag-shadow);
+}
+
+.lab-rail-item :deep(.t-list-item__action) {
+  list-style: none;
+  flex-shrink: 0;
+  align-self: flex-start;
+  padding: 0;
+  margin-top: 2px;
+}
+
+.lab-rail-time {
+  font-size: 11px;
+  color: var(--glass-text-muted);
+}
+
+.lab-rail--mini .lab-rail-item {
+  padding: 0;
+}
+
+.lab-hint {
+  margin: 24px;
+  font-size: 13px;
+  color: var(--glass-text-muted);
+}
+
+.lab-stage-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--glass-text-primary);
+}
+
+.lab-stage-aside {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.lab-welcome {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 8px 16px 12px;
+}
+
+.lab-welcome-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--glass-text-primary);
+}
+
+.lab-welcome-desc {
+  margin: 16px 0 0;
+  font-size: 14px;
+  color: var(--glass-text-secondary);
+  line-height: 1.6;
+}
+
+.lab-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin: 28px 0 32px;
+}
+
+/* 控件对照区 */
+.lab-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  border: 1px solid var(--glass-border-soft);
+  border-radius: var(--glass-wb-card-radius);
+  background: var(--glass-panel-bg);
+  padding: 20px;
+}
+
+.lab-control-row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lab-control-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--glass-text-primary);
+}
+
+.lab-control-row-items {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.lab-input {
+  width: 240px;
+}
+
+.lab-input--range {
+  min-width: 280px;
+}
+
+.lab-capsule {
+  width: 260px;
+}
+
+.lab-capsule-value {
+  font-size: 12px;
+  color: var(--glass-text-muted);
+}
+
+.lab-control-note {
+  font-size: 12px;
+  color: var(--glass-text-muted);
+}
+
+.lab-fab-host {
+  position: relative;
+  flex: 1;
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--glass-wb-card-radius);
+  background: var(--glass-wb-stage-fill);
+  -webkit-backdrop-filter: var(--glass-wb-stage-blur);
+  backdrop-filter: var(--glass-wb-stage-blur);
+  overflow: hidden;
+}
+
+.lab-alert-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+/* Inline Banner State Matrix 子组：小 meta 标题 + 组内竖向节奏 */
+.lab-alert-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lab-alert-group-title {
+  margin: 0;
+  font-size: 12px;
+  color: var(--glass-text-muted);
+  line-height: 1.5;
+}
+
+/* Soft Toast / Message（§1.5）：静态矩阵橱窗 + 竖排 spacing
+   材质由 theme.css 全局 .t-message 负责，此处只给容器与间距。 */
+.lab-message-host {
+  border: 1px solid var(--glass-border-soft);
+  border-radius: var(--glass-wb-card-radius);
+  background: var(--glass-page-bg-accent);
+  padding: 16px;
+}
+
+.lab-message-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+/* 表单 Lab 容器：Soft Surface（页底 accent + 极淡 hairline），禁止粉笔白实色 Card */
+.lab-form-panel {
+  max-width: 460px;
+  border: 1px solid var(--glass-border-soft);
+  border-radius: var(--glass-wb-card-radius);
+  background: var(--glass-page-bg-accent);
+  padding: 20px;
+}
+
+.lab-form-panel--narrow {
+  max-width: 320px;
+  flex: 1;
+}
+
+.lab-form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: stretch;
+}
+
+.lab-form-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.lab-table-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid var(--glass-border-soft);
+  border-radius: var(--glass-wb-card-radius);
+  background: var(--glass-panel-bg);
+  padding: 16px;
+}
+
+.lab-table-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--glass-text-primary);
+}
+
+.lab-table-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* Living Showcase：并列 Sample（single/multiple、empty/loading） */
+.lab-table-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+@media (max-width: 960px) {
+  .lab-table-pair {
+    grid-template-columns: 1fr;
+  }
+}
+
+.lab-table-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.lab-table-caption {
+  font-size: 12px;
+  color: var(--glass-text-muted);
+}
+
+/* Soft Stage — 工作台 Near-White Stage 洗（吃 --glass-wb-stage-fill，禁魔法色）
+   内嵌 Inset Table（Stage Nested Chrome）；禁双托盘（本壳不再叠 Host Tray fill/blur/lift） */
+.lab-soft-stage {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  border-radius: var(--glass-wb-card-radius);
+  background: var(--glass-wb-stage-fill);
+  -webkit-backdrop-filter: var(--glass-wb-stage-blur);
+  backdrop-filter: var(--glass-wb-stage-blur);
+}
+
+/* Overview Hub 卡片链 */
+.lab-hub-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.lab-hub-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  border-radius: var(--glass-wb-card-radius);
+  border: 1px solid var(--glass-border-soft);
+  background: var(--glass-panel-bg);
+  cursor: pointer;
+  transition:
+    box-shadow 0.15s ease,
+    background-color 0.15s ease;
+  text-align: left;
+}
+
+.lab-hub-card:hover {
+  background: var(--glass-wb-pill-hover-bg);
+  box-shadow: var(--glass-wb-card-shadow);
+}
+
+.lab-hub-card-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--glass-text-primary);
+}
+
+.lab-hub-card-desc {
+  font-size: 12px;
+  color: var(--glass-text-secondary);
+  line-height: 1.5;
+}
+
+.lab-charter {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 18px;
+  border-radius: var(--glass-wb-card-radius);
+  border: 1px solid var(--glass-border-soft);
+  background: var(--glass-panel-bg);
+}
+
+.lab-charter-row {
+  display: flex;
+  gap: 10px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--glass-text-secondary);
+}
+
+.lab-charter-term {
+  flex-shrink: 0;
+  font-weight: 600;
+  color: var(--glass-text-primary);
+  min-width: 72px;
+}
+
+.lab-todo-list {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 12px;
+  color: var(--glass-text-muted);
+  line-height: 1.7;
+}
+
+/* Live Props Demo 选中区块：透明边 → hover 描边 → 选中 focus-ring（对齐 Actions 页模式，
+   供各 Lab 页复用；色值一律走 glass token） */
+.docs-demo-block {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.docs-demo-block:hover {
+  border-color: var(--glass-wb-btn-blue);
+}
+
+.docs-demo-block:focus-visible {
+  outline: none;
+  box-shadow: var(--glass-wb-control-focus-ring);
+}
+
+.docs-demo-block.is-selected {
+  border-color: var(--glass-wb-btn-blue);
+  box-shadow: var(--glass-wb-control-focus-ring);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .docs-demo-block {
+    transition: none;
+  }
+}

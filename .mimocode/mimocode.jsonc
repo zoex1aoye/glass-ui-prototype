@@ -1,0 +1,16 @@
+{
+  "$schema": "https://mimo.xiaomi.com/mimocode/config.json",
+  // 单一真相：技能与纪律在仓库根 `.agents/`（mimo 默认扫描 `.agents` + `.mimocode`）。
+  // 勿在 `.mimocode/skills/` 复制第二份；Cursor（AGENTS + `.cursor/rules` 符号链接）与 Codex（原生扫 `.agents/skills`）共用同一套。
+  // 禁止在 `.codex/skills/` 复制正文；仅允许 symlink → `.agents/skills`。
+  //
+  // 【派发默认】任务派发默认走 Codex CLI（见 .agents/skills/codex-dispatch/），不再默认走 mimo。
+  // 本文件仅供偶开 mimo / mimocode 客户端时仍能读到同一套 skills；无「默认 trust」配置键：
+  // TUI 用 `mimo --trust`；若用户点名 headless mimo，须 CLI 带 `--yolo`（禁止 `mimo run --trust`）。
+  // 详见 .agents/skills/mimo-dispatch/（DEPRECATED）与 .agents/skills/codex-dispatch/。
+  "instructions": ["AGENTS.md", ".agents/tmp-glass-kit-governance.md"],
+  "skills": {
+    // 显式声明，防止未来关闭默认 `.agents` 扫描时失联
+    "paths": [".agents/skills"]
+  }
+}

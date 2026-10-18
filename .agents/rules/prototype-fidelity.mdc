@@ -1,0 +1,52 @@
+---
+description: Glass 组件库视觉权威、Lab IA 边界与信息架构禁区
+alwaysApply: true
+---
+
+# 原型 / 组件库还原纪律
+
+## 权威链
+
+1. **已定 token（视觉权威）**：`glass-frontend/src/styles/theme.css` 的 `--glass-wb-*` / `--glass-*`。定义材质、Tone、Density、色板与控件尺度；组件内禁止魔法 hex/rgba。
+2. **Lab Living Demo**：`glass-frontend/src/views/system/lab/*` 与已导出 `Glass*` 为实现与对照面；新增观感须可在 Lab 演示。
+3. **行为底座**：TDesign Vue Next（交互 / a11y）；视觉由 Glass 覆盖。
+4. **Lab 宿主**：DocsShell + `docs-nav.ts`；禁止把历史业务导航写进 Lab 目录。
+
+**冲突裁决**：Glass / Lab / theme / `Glass*` 一律以 **已定 token + Lab** 裁决。不确定 → 停笔问用户，禁止取平均或自创。  
+外部 UX 清单（内化自 ui-ux-pro-max 的 a11y/交互项）**不得**覆盖 token 色板、Tone 或 Density；见 `glass-ui/references/ux-delivery-checklist.md`。
+
+## 还原优先级（从高到低）
+
+1. 信息架构：分区是否存在、相对位置、层级归属（Lab 目录以 `docs-nav.ts` 为准）。
+2. 文案槽位：标题 / 按钮 / 占位符等固定文案（已有则保留，禁止擅自「优化」）。
+3. 尺寸与间距：栏宽比例、卡片留白、控件高度（对齐 Density / 已定 token）。
+4. 色彩与状态：背景层级、品牌蓝用法、选中 / 次要文字（以 token 为准）。
+5. 细节装饰：图标形状、微阴影、渐变。
+
+低优先级不得为「好看」推翻高优先级。
+
+## 层级几何（飞轮：同一坑出现多次）
+
+Living / Poster 等舞台是 **两层独立目标**，禁止绑成互斥：
+
+| 层 | UX 术语 | 可见条件 |
+|---|---|---|
+| z2 Behind Surface | frosted glass plate，无边、微透渐变、多层柔阴影 | **整块内容相对玻璃底板 inset**（Surface `padding`）。四周能看见玻璃材质。相对页底还有外边距。 |
+| z3 Rail \| Stage | flush stitch / 无缝拼接 | **二者之间 gap = 0**。分界只靠明度差。外轮廓圆角由 Surface `overflow: hidden` 统一裁切。 |
+
+禁止写法：
+- 用 Rail–Stage **中间 gutter** 当「露出背后容器」→ 撕开拼接。
+- 为贴缝把 Surface **padding 也删掉**，让 Rail/Stage 铺满 → 玻璃底板被盖住，只剩外轮廓圆角+阴影，验收上会误判「Surface 还在」。
+
+验收禁令：看见「大圆角浮板」≠ Surface 材质可见。必须能指出玻璃底板在 Rail/Stage **四周**露边，而不是把 Rail+Stage 外轮廓当成 Surface。
+
+## 禁止事项
+
+- 禁止擅自增删 / 重排 Lab 目录项与固定文案槽位。
+- 禁止把历史业务模块写进 Docs 导航或路由。
+- 禁止组件内魔法色；禁止另起第二套绕过 token 的色板。
+- 不确定的图标 / 徽标细节允许近似，但必须在验收清单里标注「未精确还原」。
+
+## 验收动作
+
+每完成一个区域，必须输出：对照结论（一致 / 偏差清单 / 待确认项）。Glass / Lab / theme 对照 **已定 token + Lab Living**。无对照结论不得合并进下一步。

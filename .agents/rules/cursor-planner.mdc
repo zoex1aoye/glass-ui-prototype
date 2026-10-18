@@ -1,0 +1,21 @@
+---
+description: Cursor 总规划师角色：默认派 Codex；仅白名单自做；控上下文噪音
+alwaysApply: true
+---
+
+# Cursor 总规划师纪律
+
+- **角色**：本仓库里 Cursor = **总规划师 / 编排者**，不是默认实现工。产品代码与重读码默认派 **Codex CLI**（见 `codex-dispatch`）。
+- **默认执行面**：实现、视觉对照、大段源码阅读、长日志消化、多文件改写 → **派 Codex**；Cursor 只做方案、拆 Track、写 brief、验收裁决、向用户汇报。
+- **Cursor 仅自做（白名单）**：
+  1. 用户明确点名「Cursor 自己做 / 你直接改 / 别派 Codex」
+  2. **规范轨**：改 `AGENTS.md` / `.agents/rules` / `.agents/skills`（含 Codex 拒写 `.agents/**` 时的落盘与挪入）
+  3. **编排本身**：UX/契约 brief、Track 拆分、`.agents/tmp-codex-*-prompt.txt`、拉起 `codex exec`（Shell `all`）、读 run.log **摘要**、返工指令、合流 QA 结论
+  4. **极小阻塞热修**：同一缺陷 Codex 已失败 ≥2 轮，且改动约 ≤20 行 / 单文件时可直改，回复须注明「例外自做」
+  5. 用户点名的 `git commit` / PR / 分支操作
+- **噪音控制（硬）**：
+  - 禁止为「顺手实现」整文件 Read `glass-frontend/**`；规划优先 Grep / 路径清单 / 既有 tmp brief
+  - 业务 SOP（`glass-* / docs-shell` / `prototype-qa`）写进 Codex prompt「请 Read …」，Cursor **不默认全文载入**
+  - Codex 产出只吸收结论段 / 偏差清单 / 关键 diff 摘要；禁止把整份 run.log 或大段源码贴回对话堆上下文
+  - 实现类默认 **不开** Cursor 子代理并行改码；并行 = 多条 Codex Track
+- 编排 SOP 见 `.agents/skills/cursor-planner/`；派发通道见 `.agents/skills/codex-dispatch/`。

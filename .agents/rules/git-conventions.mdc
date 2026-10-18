@@ -1,0 +1,43 @@
+---
+description: Git 分支命名、提交信息与历史整洁手法
+alwaysApply: true
+---
+
+# Git 分支与提交规范
+
+## 前提
+
+- AI 不自动 commit；仅当用户明确要求时提交。
+- 工作区未初始化 git 时，先问用户是否初始化，禁止自行 `git init` + 首推。
+
+## 分支
+
+| 分支 | 用途 |
+|---|---|
+| `main` | 稳定可发布主干 |
+
+禁止直接在 `main` 开发。特性分支：`<type>/<YY/MM>/<kebab-desc>`；type ∈ `feature` / `bugfix` / `chore` / `docs`。
+
+示例：`feature/26/10/glass-scaffold`、`bugfix/26/10/session-rail-align`
+
+## 提交信息
+
+```
+<type>(<scope>): <中文描述>
+```
+
+- type：`feat` / `fix` / `chore` / `refactor` / `docs` / `test`
+- scope 可选：`scaffold` / `docs-shell` / `lab` / `glass` / `agents` / `styles`
+- 规范文件变更用 `docs(agents): …` 或 `chore(agents): …`
+
+示例：`feat(layout): 还原左侧导航壳一级菜单`
+
+## 历史整洁
+
+| 场景 | 手法 |
+|---|---|
+| 同步上游到未共享分支 | `fetch` + `rebase` |
+| 吸收 WIP | `merge --squash` + 一条语义提交 |
+| 从远端同步 | `git pull --rebase`，禁止裸 `git pull` |
+
+已 push 共享的分支禁止擅自改写历史。

@@ -1,0 +1,47 @@
+---
+description: 分步实现、每步可验收、对照权威源的执行节奏
+alwaysApply: true
+---
+
+# 执行纪律
+
+一切实现类任务按「步」推进；每步产出可独立验收；每步结束按任务类型对照权威源再进步。
+
+**执行面**：Cursor = 总规划师（见 `cursor-planner`）；步骤 2 的「写实现」对 Cursor 默认 = **写 brief + 派 Codex**，仅白名单可自改产品代码。Codex 按业务 skill 真正落盘。
+
+## 步骤模板
+
+1. **读范围**：列出本轮涉及的文件路径与对应区域（左侧导航壳 / 顶栏 / 会话 Rail / 欢迎态 / 输入区 / Glass Lab）。Cursor 规划阶段优先 Grep / 路径清单，忌整文件预载。
+2. **写实现**：一次只落地一个可验收单元（一个布局区或一个组件群），禁止跨区域大爆炸改写。Cursor：拆 Track → `tmp-codex-*-prompt.txt` → `codex exec`；Codex：按 prompt 改码。
+3. **自验**：执行本轮适用命令（脚手架期 `npm --prefix glass-frontend run build`；规范期列出文件树）。Cursor 读 Codex 产出摘要，不吞整份 run.log。
+4. **对权威**：Glass / Lab / theme → 对照已定 `--glass-wb-*` / `--glass-*` token + Lab Living。偏差写成清单，禁止静默「顺手美化」。
+5. **进步 / 停笔**：验收通过 → 进下一步；出现红线冲突或视觉不确定 → 停笔列问题，等用户裁决。FAIL → 返工 brief 再派 Codex，禁止 Cursor 无白名单大面积接手。
+
+## 最小合格产出
+
+| 任务体量 | 步骤粒度 | 必备产出 |
+|---|---|---|
+| 小修（改文案 / 样式单点） | 1 步 | 改动点 + 对照结论 |
+| 中型（单区域还原） | 2~4 步 | 每步文件清单 + 构建/预览结果 |
+| 大型（脚手架 / 多区域） | 按区域拆步 | 步骤计划 + 每步验收记录 |
+
+## 必检项
+
+- 动手前先确认 `glass-frontend/` 是否已存在；不存在且本轮不含脚手架任务 → 停笔，改走 `glass-scaffold` 或等用户指令。
+- 改已有组件前搜索同目录已有实现，复用既有模式，禁止同视觉出现两套组件。
+- 每步结束禁止遗留编译错误进步。
+- 未对照权威源不得宣称「完成」。
+- 视觉验收禁止假通过：结构层（如 Behind Surface）被内容铺满后只剩圆角阴影，不得勾「该层仍可见」。必须指出该层材质露在哪。
+
+## 验证命令
+
+```bash
+# 规范期：确认规范文件就位
+ls .agents/rules .agents/skills/*/SKILL.md
+
+# 脚手架落地后：
+npm --prefix glass-frontend run build
+npm --prefix glass-frontend run dev   # Glass/Lab 对照 token + Living Demo
+```
+
+编排见 `.agents/rules/cursor-planner.mdc`；派发通道见 `.agents/rules/codex-dispatch.mdc`（默认 `codex exec`；Cursor Shell 须 `required_permissions: ["all"]`）。mimo 仅用户点名时见 `.agents/rules/mimo-dispatch.mdc`（DEPRECATED）。

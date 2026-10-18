@@ -1,0 +1,4147 @@
+/* TDesign 变量覆盖 + 壳层尺寸 / 色彩变量。视觉权威：本文件已定 --glass-wb-* / --glass-*；Lab Living 为对照面。 */
+:root {
+  /* 品牌 / 强调 */
+  --glass-brand-blue: #4d7cfe;
+  --glass-brand-blue-deep: #3b66f0;
+  /* 左蓝右紫横向渐变（壳层遗留 token，非 html 组件库权威） */
+  --glass-cta-gradient: linear-gradient(90deg, #5b7cf8 0%, #8b6cf0 100%);
+  --glass-avatar-bg: #7b6cf0;
+
+  /* 背景层级 */
+  --glass-page-bg: #eef2f8;
+  --glass-page-bg-accent: #e6ebf8;
+  --glass-sidebar-bg: #f4f6fa;
+  --glass-panel-bg: #ffffff;
+  --glass-panel-radius: 22px;
+  --glass-panel-shadow: 0 10px 40px rgba(40, 60, 120, 0.06);
+
+  /* 文字 */
+  --glass-text-primary: #1a2332;
+  --glass-text-secondary: #4a5568;
+  --glass-text-muted: #94a3b8;
+  --glass-text-submenu: #5a6a7e;
+
+  /* 边框 / 分割 */
+  --glass-border-soft: #e4e9f0;
+
+  /* 布局尺寸 */
+  --glass-sidebar-width: 252px;
+  --glass-topbar-height: 80px;
+  --glass-content-pad: 22px;
+
+  /* 字号 */
+  --glass-font-brand: 16px;
+  --glass-font-nav: 14px;
+  --glass-font-sub: 13px;
+  --glass-font-topbar: 14px;
+
+  /* AI 工作台 —— z2 Behind Surface（整块浮层）+ z3 Rail|Stage 内部贴缝 */
+  --glass-rail-width: 260px;
+
+  /* z2 Behind Surface：微透渐变 + backdrop blur + 多层柔阴影 + 大圆角，禁止 border 描边。
+     「被看见」= 相对页底外边距（app-content）+ 整框 inset（surface-pad）四周露玻璃。
+     Rail/Stage 之间 gap 必须为 0，禁止用中间缝露底板。 */
+  --glass-wb-surface-pad: 16px;
+  /* t1 .big 宿主托盘：近白磨砂玻璃，蓝从背后雾状 bloom 透出（非涂面、无描边） */
+  --glass-wb-surface-fill: rgba(250, 253, 255, 0.55);
+  --glass-wb-surface-blur: blur(20px);
+  /* Ambient（大范围极低 alpha） + Key（稍紧、略下偏移） */
+  --glass-wb-surface-shadow:
+    0 36px 96px rgba(15, 50, 120, 0.1),
+    0 12px 32px rgba(15, 50, 120, 0.045);
+  --glass-wb-surface-radius: 24px;
+
+  /* z3a Session Rail：z2 磨砂冰蓝冷侧栏（html .rail / .widgets）
+     主层实色 frost-blue，比 Surface 露边更冷更实；可选顶部冷青轻团叠压。
+     禁止近白 .bsurf 主材质、大圆角 / 重阴影 / 描边（外轮廓由 Surface overflow 裁）。 */
+  --glass-wb-rail-wash:
+    radial-gradient(70% 36% at 28% 12%, rgba(79, 195, 255, 0.24), transparent 55%),
+    rgba(198, 222, 250, 0.56);
+  --glass-wb-rail-blur: blur(20px) saturate(1.18);
+
+  /* z3b Stage：z4 近白微透焦点面（html .chat）
+     比 Surface 露边更亮更暖；抬升影交给整板，Stage 自身不得成第二张浮卡 */
+  --glass-wb-stage-fill: linear-gradient(165deg, rgba(255, 255, 255, 0.74), rgba(248, 252, 255, 0.58));
+  --glass-wb-stage-blur: blur(22px) saturate(1.15);
+  --glass-wb-stage-shadow: none;
+
+  /* Rail|Stage 贴缝整板：一体柔影（html chat Ambient+Key，略收） */
+  --glass-wb-body-shadow:
+    0 20px 48px rgba(15, 60, 140, 0.1),
+    0 4px 12px rgba(15, 60, 140, 0.05);
+
+  /* 小控件（输入条等）允许略强抬升；大容器禁用 */
+  --glass-wb-btn-blue: #2f6bf6;
+  --glass-wb-btn-blue-shadow: 0 6px 14px rgba(47, 107, 246, 0.28);
+  --glass-wb-tag-bg: #7b6cf0;
+  --glass-wb-tag-shadow: 0 3px 8px rgba(123, 108, 240, 0.28);
+  --glass-wb-online-bg: #e7f8ef;
+  --glass-wb-online-text: #18b458; /* 酷安绿品牌锚（favicon 采样），与 success 同源 */
+  /* Badge（GlassBadge）：count = 满浓双蓝小物件；status 复用 --glass-wb-online-* 酷安绿 */
+  --glass-wb-badge-bg: var(--glass-wb-btn-blue);
+  --glass-wb-badge-text: var(--glass-wb-white);
+  --glass-wb-pill-border: rgba(0, 82, 204, 0.28);
+  --glass-wb-pill-text: #2f6bf6;
+  --glass-wb-pill-bg: #fbfcfe;
+  --glass-wb-pill-hover-bg: #f0f5ff;
+  --glass-wb-pill-hover-border: rgba(0, 82, 204, 0.4);
+
+  /* Header Actions / Action Pair（html .pill / .pill.pri）
+     Pill Control：高度对齐 Capsule Field（GlassInput 38px） */
+  --glass-wb-pill-height: 38px;
+  --glass-wb-pill-radius: 999px;
+  --glass-wb-pill-pad-x: 16px;
+  --glass-wb-pill-font-size: 13px;
+  --glass-wb-pill-font-weight: 600;
+  /* Quiet CTA：近白微透玻璃 + 知乎深蓝字（token 承载色值，组件禁止硬编码） */
+  --glass-wb-pill-quiet-bg: rgba(252, 254, 255, 0.66);
+  --glass-wb-pill-quiet-color: #0052cc;
+  --glass-wb-pill-quiet-shadow: 0 8px 18px rgba(0, 80, 180, 0.08);
+  --glass-wb-pill-quiet-blur: blur(10px);
+  --glass-wb-pill-quiet-hover-bg: rgba(240, 245, 255, 0.78);
+  /* Tonal icon-only 字色轨对齐 Quiet CTA（Track P）；勿再用 --glass-text-secondary */
+  --glass-wb-icon-color: var(--glass-wb-pill-quiet-color);
+  /* Primary pill：满浓品牌蓝小物件，阴影略强于 Rail 块级按钮 */
+  --glass-wb-pill-pri-shadow: 0 10px 24px rgba(0, 82, 204, 0.24);
+  --glass-wb-toolbar-gap: 10px;
+  /* send 不可用：浅冷底保留「未就绪」语义；icon/spinner 走品牌蓝（勿中性脏灰 #94a3b8） */
+  --glass-wb-send-bg: #e8edf5;
+  --glass-wb-send-text: var(--glass-wb-btn-blue);
+  --glass-wb-main-max: 640px;
+  --glass-wb-card-radius: 18px;
+  --glass-wb-card-shadow: 0 12px 32px rgba(15, 60, 140, 0.1);
+
+  /* Soft Cite Card（html .card-soft）：近白微透软引用卡 · 非 Host Tray / Surface / Panel
+     max-width ≈ 88% · radius 14 · padding 12×14；柔影 + AI 紫 inset hairline；
+     强调 <b> 对齐 zhihu-deep（--glass-wb-pill-quiet-color）。视觉规则见 `.glass-card`。 */
+  --glass-wb-card-soft-max-width: 88%;
+  --glass-wb-card-soft-radius: 14px;
+  --glass-wb-card-soft-pad: 12px 14px;
+  --glass-wb-card-soft-font-size: 12.5px;
+  --glass-wb-card-soft-color: var(--glass-text-secondary); /* html --ink-2 近义 */
+  --glass-wb-card-soft-fill: rgba(252, 254, 255, 0.72);
+  --glass-wb-card-soft-shadow: 0 12px 30px rgba(15, 60, 140, 0.08);
+  --glass-wb-card-soft-hairline: inset 0 0 0 1px rgba(124, 92, 255, 0.28); /* = --glass-chroma-ai @28% */
+  --glass-wb-card-soft-emphasis: var(--glass-wb-pill-quiet-color); /* zhihu-deep #0052CC */
+  /* Soft Cite 内联进度与 GlassProgress 共用同一 Quiet Progress Whisper 语义 */
+  --glass-wb-card-soft-progress-track: var(--glass-wb-progress-track);
+  --glass-wb-card-soft-progress-fill: var(--glass-wb-progress-fill);
+
+  /* Quiet Progress Whisper · GlassProgress（html `.bar` / `.bar-cap`）
+     6px 圆角轨 + 冰青→知乎蓝渐变；label 走次级字色 10.5px。 */
+  --glass-wb-progress-height: 6px;
+  --glass-wb-progress-radius: 999px;
+  --glass-wb-progress-track: rgba(22, 119, 255, 0.1);
+  --glass-wb-progress-fill: linear-gradient(90deg, var(--glass-chroma-cyan), var(--glass-chroma-zhihu));
+  --glass-wb-progress-success-fill: var(--glass-wb-online-text);
+  --glass-wb-progress-warning-fill: var(--glass-wb-alert-warning-icon);
+  --glass-wb-progress-error-fill: var(--glass-wb-alert-error-icon);
+  --glass-wb-progress-margin: 8px 0 4px;
+  --glass-wb-progress-label-color: var(--glass-text-secondary);
+  --glass-wb-progress-label-font-size: 10.5px;
+  --glass-wb-progress-label-gap: 4px;
+
+  /* Conversation Bubble · GlassBubble（html `.bub-a` / `.bub-u`）
+     会话气泡只负责消息内容态；DetailPlate 继续持有 `.bub-a` 密信息岛材质。 */
+  --glass-wb-bubble-max-width-ai: 76%;
+  --glass-wb-bubble-max-width-user: 70%;
+  --glass-wb-bubble-font-size: 13.5px;
+  --glass-wb-bubble-line-height: 1.55;
+  --glass-wb-bubble-pad: 11px 15px;
+  --glass-wb-bubble-ai-fill: rgba(244, 250, 255, 0.82);
+  --glass-wb-bubble-ai-color: var(--glass-text-primary);
+  --glass-wb-bubble-ai-blur: blur(10px);
+  --glass-wb-bubble-ai-shadow: 0 10px 24px rgba(15, 60, 140, 0.07);
+  --glass-wb-bubble-ai-radius: 14px 14px 14px 5px;
+  --glass-wb-bubble-ai-emphasis: var(--glass-wb-pill-quiet-color);
+  --glass-wb-bubble-user-fill: var(--glass-wb-btn-blue);
+  --glass-wb-bubble-user-color: var(--glass-wb-white);
+  --glass-wb-bubble-user-shadow: 0 12px 28px rgba(0, 82, 204, 0.2);
+  --glass-wb-bubble-user-radius: 14px 14px 5px 14px;
+
+  /* Detail Plate · GlassDetailPlate（html .bub-a）
+     密信息只读详情板：冷近白微透内容岛 + 轻柔影；比 Stage 略实、略冷，作为阅读底板。
+     固定一档，无 inset / standalone 变体；不是 Stage / Cite / Host Tray / 二次 Surface。
+     材质只引用本族 token；容器外轮廓不加 hairline 补层次。 */
+  --glass-wb-detail-plate-fill: rgba(244, 250, 255, 0.82);
+  --glass-wb-detail-plate-blur: blur(10px);
+  --glass-wb-detail-plate-shadow: 0 10px 24px rgba(15, 60, 140, 0.07);
+  --glass-wb-detail-plate-radius: 14px;
+  --glass-wb-detail-plate-pad: 14px 16px;
+
+  /* Comment · GlassComment（Quiet 排版 · 盖 t-comment）
+     会话流引用槽同级 Quiet：avatar 40 / 圆角 12；无硬描边；
+     quote 区嵌 GlassCard 时靠卡自带 hairline，不重复左描边。
+     reply 微透近白底，左缩进对齐头像。视觉规则见 `.glass-comment`。 */
+  --glass-wb-comment-avatar-size: 40px;
+  --glass-wb-comment-avatar-radius: 12px;
+  --glass-wb-comment-avatar-gap: 12px;
+  --glass-wb-comment-gap: 10px;
+  --glass-wb-comment-name-color: var(--glass-text-primary);
+  --glass-wb-comment-time-color: var(--glass-text-muted);
+  --glass-wb-comment-detail-color: var(--glass-text-secondary);
+  --glass-wb-comment-action-color: var(--glass-text-muted);
+  --glass-wb-comment-reply-bg: rgba(246, 249, 253, 0.72);
+  --glass-wb-comment-reply-radius: 14px;
+  --glass-wb-comment-reply-pad: 12px 14px;
+  --glass-wb-comment-reply-offset: calc(var(--glass-wb-comment-avatar-size) + var(--glass-wb-comment-avatar-gap));
+
+  /* Glass Compound Wrapper 共用材质 */
+  --glass-wb-surface-air:
+    radial-gradient(50% 55% at 20% 30%, rgba(79, 195, 255, 0.45), transparent 60%),
+    radial-gradient(45% 50% at 80% 70%, rgba(0, 102, 255, 0.28), transparent 60%),
+    #eaf3fb;
+  --glass-wb-surface-air-blur: blur(28px) saturate(1.2);
+  --glass-wb-avatar-gradient: linear-gradient(145deg, #8b7cf8 0%, #6b6ef0 100%);
+  --glass-wb-avatar-shadow: 0 6px 14px rgba(107, 124, 250, 0.28);
+  --glass-wb-avatar-glow:
+    0 0 0 14px rgba(139, 124, 248, 0.1),
+    0 14px 32px rgba(107, 124, 250, 0.28);
+  --glass-wb-search-bg: rgba(255, 255, 255, 0.72);
+  --glass-wb-search-blur: blur(10px);
+  --glass-wb-session-hover-bg: rgba(255, 255, 255, 0.55);
+  --glass-wb-session-active-bg: #ffffff;
+  --glass-wb-session-active-shadow: 0 6px 16px rgba(30, 50, 100, 0.08);
+  --glass-wb-soft-bg: #f7f9fc;
+  --glass-wb-soft-hover-bg: #eef2f8;
+  /* Tonal 字色对齐 Quiet CTA（Track O）：soft 字色 alias quiet 蓝，勿再吃正文墨灰 */
+  --glass-wb-soft-color: var(--glass-wb-pill-quiet-color);
+  --glass-wb-icon-hover-bg: #f3f6fb;
+  /* Text CTA / Ink Link：无底无边文字钮（Alert operation / 行内次要行动）
+     色相 alias Quiet 蓝族；hover 极淡冷洗；active = Quiet Active Wash（深字，禁止反转）。
+     密度 28/8/13/radius8（非 999 pill）；组件禁止魔法色，一律走下列 token。 */
+  --glass-wb-text-cta-color: var(--glass-wb-pill-quiet-color);
+  --glass-wb-text-cta-hover-color: var(--glass-wb-pill-quiet-color);
+  --glass-wb-text-cta-hover-bg: rgba(240, 245, 255, 0.62);
+  --glass-wb-text-cta-active-color: var(--glass-wb-pill-quiet-active-color);
+  --glass-wb-text-cta-active-bg: var(--glass-wb-pill-quiet-active-bg);
+  --glass-wb-text-cta-ripple: rgba(0, 82, 204, 0.08); /* text 最弱档：quiet ≥ soft ≥ icon > text */
+  --glass-wb-text-cta-height: 28px;
+  --glass-wb-text-cta-pad-x: 8px;
+  --glass-wb-text-cta-radius: 8px;
+  --glass-wb-text-cta-font-size: 13px;
+  --glass-wb-white: #ffffff;
+
+  /* Glass Tabs — Action Blue Accent / Quiet Ink / Soft Segment / Capsule / Soft Card
+     hover / active 字、line bar 与 soft / card 选中字统一对齐「按钮与行动」
+     Action Blue；文字用深档派生色保证 Soft Wash 上 ≥4.5:1。选中底与轨道
+     仍维持低噪微透材质。
+     组件只挂 .glass-tabs + --{line|soft|card|capsule}，视觉数值全部在本文件收口。
+     形状区分：soft = 圆角矩形分段（track 12px / item 8px）；capsule = soft 的真胶囊形变
+     （仅 radius 换 pill，track 999px / item = soft-item-height / 2），其余材质与状态同 soft。 */
+  /* Action Blue 70% + Quiet Active 30%：13px 文字在 Soft Wash 上达到 4.5:1 */
+  --glass-wb-tabs-accent-color: #2160e2;
+  --glass-wb-tabs-font-size: 13px;
+  --glass-wb-tabs-font-weight: 400;
+  --glass-wb-tabs-font-weight-active: 600;
+  --glass-wb-tabs-color: var(--glass-text-secondary);
+  --glass-wb-tabs-color-hover: var(--glass-wb-tabs-accent-color);
+  --glass-wb-tabs-color-active: var(--glass-wb-tabs-accent-color);
+  --glass-wb-tabs-item-height: 36px;
+  --glass-wb-tabs-item-pad-x: 12px;
+  --glass-wb-tabs-item-gap: 4px;
+  --glass-wb-tabs-item-radius: 8px;
+  --glass-wb-tabs-item-hover-bg: var(--glass-wb-text-cta-hover-bg);
+  --glass-wb-tabs-item-active-bg: transparent;
+  --glass-wb-tabs-item-disabled-color: var(--glass-text-muted);
+  --glass-wb-tabs-item-transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s var(--glass-wb-control-ease-lift);
+  --glass-wb-tabs-divider: transparent;
+  --glass-wb-tabs-bar-height: 2px;
+  --glass-wb-tabs-bar-color: var(--glass-wb-btn-blue);
+  --glass-wb-tabs-bar-radius: 1px;
+  --glass-wb-tabs-soft-track-bg: var(--glass-layer-l3-fill);
+  --glass-wb-tabs-soft-track-blur: var(--glass-wb-search-blur);
+  --glass-wb-tabs-soft-track-radius: 12px;
+  --glass-wb-tabs-soft-track-pad: 4px;
+  --glass-wb-tabs-soft-track-hairline: var(--glass-layer-l3-hairline);
+  --glass-wb-tabs-soft-track-shadow: 0 4px 14px rgba(15, 60, 140, 0.05);
+  --glass-wb-tabs-soft-item-height: 32px;
+  --glass-wb-tabs-soft-item-radius: 8px;
+  --glass-wb-tabs-soft-item-active-bg: var(--glass-wb-soft-active-bg);
+  --glass-wb-tabs-soft-item-active-color: var(--glass-wb-tabs-accent-color);
+  /* capsule 专属形状 token：镜像 Radio capsule 的 pill 写法，材质 / 选中 / 交互复用 soft */
+  --glass-wb-tabs-capsule-track-radius-pill: 999px;
+  --glass-wb-tabs-capsule-item-radius-pill: calc(var(--glass-wb-tabs-soft-item-height) / 2);
+  --glass-wb-tabs-card-nav-bg: rgba(240, 246, 255, 0.58);
+  --glass-wb-tabs-card-nav-radius: 12px;
+  --glass-wb-tabs-card-nav-pad: 4px;
+  --glass-wb-tabs-card-item-radius: 8px;
+  --glass-wb-tabs-card-item-active-bg: rgba(252, 254, 255, 0.86);
+  --glass-wb-tabs-card-item-active-color: var(--glass-wb-tabs-accent-color);
+  --glass-wb-tabs-card-item-active-hairline: var(--glass-layer-l3-hairline);
+  --glass-wb-tabs-card-item-active-shadow: 0 3px 10px rgba(15, 60, 140, 0.06);
+  --glass-wb-tabs-panel-pad-top: 16px;
+
+  /* Glass Radio — Action Blue 圆点（default）+ 分段轨（rounded / capsule）
+     强调对齐「按钮与行动」--glass-wb-btn-blue；分段轨复用 Soft Segment Track 材质。
+     appearance 管描边/填充：default×outline 为现状空心圆点芯；default×filled 选中整圆实心；
+     segment×outline 选中蓝描边 + 淡冷 wash + Action Blue 字；segment×filled 选中实心白字。
+     组件只挂 .glass-radio-group + --{default|rounded|capsule} + --appearance-{outline|filled}，
+     视觉数值全部在本文件收口。
+     形状区分：rounded = 圆角矩形分段（track 12px / item 8px）；capsule = 真胶囊（pill，
+     track 999px / item = height/2，两端半圆）。逻辑样式（材质/高度/颜色/wash）二者共享。 */
+  --glass-wb-radio-font-size: 13px;
+  --glass-wb-radio-color: var(--glass-text-secondary);
+  --glass-wb-radio-label-gap: 8px;
+  --glass-wb-radio-gap: 20px;
+  --glass-wb-radio-dot-size: 16px;
+  --glass-wb-radio-dot-bg: var(--glass-wb-white);
+  --glass-wb-radio-dot-border-color: var(--glass-border-soft);
+  --glass-wb-radio-dot-hover-border-color: var(--glass-wb-btn-blue);
+  --glass-wb-radio-dot-checked-border-color: var(--glass-wb-btn-blue);
+  --glass-wb-radio-dot-inner-color: var(--glass-wb-btn-blue);
+  --glass-wb-radio-dot-filled-bg: var(--glass-wb-btn-blue);
+  --glass-wb-radio-disabled-opacity: var(--glass-wb-control-disabled-opacity);
+  --glass-wb-radio-transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s var(--glass-wb-control-ease-lift);
+  /* 分段轨共享逻辑样式（rounded / capsule 共用） */
+  --glass-wb-radio-segment-track-bg: var(--glass-layer-l3-fill);
+  --glass-wb-radio-segment-track-blur: var(--glass-wb-search-blur);
+  --glass-wb-radio-segment-track-pad: 4px;
+  --glass-wb-radio-segment-track-hairline: var(--glass-layer-l3-hairline);
+  --glass-wb-radio-segment-track-shadow: 0 4px 14px rgba(15, 60, 140, 0.05);
+  --glass-wb-radio-segment-item-height: 32px;
+  --glass-wb-radio-segment-item-pad-x: 14px;
+  --glass-wb-radio-segment-item-color: var(--glass-text-secondary);
+  --glass-wb-radio-segment-item-hover-bg: var(--glass-wb-tabs-item-hover-bg);
+  --glass-wb-radio-segment-item-hover-color: var(--glass-wb-btn-blue);
+  --glass-wb-radio-segment-item-active-bg: var(--glass-wb-btn-blue);
+  --glass-wb-radio-segment-item-active-color: var(--glass-wb-white);
+  --glass-wb-radio-segment-item-active-shadow: 0 3px 8px rgba(47, 107, 246, 0.28);
+  --glass-wb-radio-segment-item-disabled-color: var(--glass-text-muted);
+  --glass-wb-radio-segment-item-outline-bg: rgba(47, 107, 246, 0.1); /* 克制冷 wash，非满铺实心 */
+  --glass-wb-radio-segment-item-outline-border-color: var(--glass-wb-btn-blue);
+  --glass-wb-radio-segment-item-outline-color: var(--glass-wb-btn-blue);
+
+  /* 形状专属圆角：rounded = 圆角矩形；capsule = 真胶囊（两端半圆） */
+  --glass-wb-radio-segment-track-radius: 12px;
+  --glass-wb-radio-segment-item-radius: 8px;
+  --glass-wb-radio-segment-track-radius-pill: 999px;
+  --glass-wb-radio-segment-item-radius-pill: calc(var(--glass-wb-radio-segment-item-height) / 2);
+
+  /* Glass Steps — Action Number Path / Soft Dot Path
+     强调色对齐「按钮与行动」--glass-wb-btn-blue；finish 仍走 Soft Active Wash，
+     流程指示只做小物件强调，禁止紫蓝渐变轨与白核；
+     process / finish / default / error 四态分明。 */
+  --glass-wb-steps-title-size: 13px;
+  --glass-wb-steps-title-weight: 400;
+  --glass-wb-steps-title-weight-process: 600;
+  --glass-wb-steps-title-color: var(--glass-text-secondary);
+  --glass-wb-steps-title-color-process: var(--glass-wb-btn-blue);
+  --glass-wb-steps-title-color-finish: var(--glass-text-primary);
+  --glass-wb-steps-title-color-error: var(--glass-wb-form-error);
+  --glass-wb-steps-desc-size: 12px;
+  --glass-wb-steps-desc-color: var(--glass-text-muted);
+  --glass-wb-steps-icon-size: 26px;
+  --glass-wb-steps-icon-font: 12px;
+  --glass-wb-steps-icon-process-bg: var(--glass-wb-btn-blue);
+  --glass-wb-steps-icon-process-color: var(--glass-wb-white);
+  --glass-wb-steps-icon-process-shadow: 0 3px 8px rgba(47, 107, 246, 0.18);
+  --glass-wb-steps-icon-finish-bg: var(--glass-wb-soft-active-bg);
+  --glass-wb-steps-icon-finish-color: var(--glass-wb-soft-active-color);
+  --glass-wb-steps-icon-default-border-color: rgba(120, 160, 210, 0.36);
+  --glass-wb-steps-icon-default-color: var(--glass-text-secondary);
+  --glass-wb-steps-icon-error-bg: rgba(217, 74, 74, 0.1);
+  --glass-wb-steps-icon-error-color: var(--glass-wb-form-error);
+  --glass-wb-steps-icon-error-border-color: rgba(217, 74, 74, 0.36);
+  --glass-wb-steps-line-color: rgba(120, 160, 210, 0.35);
+  --glass-wb-steps-line-color-finish: rgba(47, 107, 246, 0.35);
+  --glass-wb-steps-line-width: 1px;
+  --glass-wb-steps-dot-size: 8px;
+  --glass-wb-steps-dot-border-width: 2px;
+  --glass-wb-steps-item-gap: 8px;
+  --glass-wb-steps-content-gap: 8px;
+  --glass-wb-steps-hover-bg: var(--glass-wb-text-cta-hover-bg);
+  --glass-wb-steps-disabled-opacity: 0.58;
+  --glass-wb-steps-transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s var(--glass-wb-control-ease-lift);
+
+  /* Glass Collapse — Borderless Glass Rail / Quiet Header / Quiet Content Divider
+     borderless 优先：容器吃玻璃轨（微透 + blur + inset hairline），panel 微透 header，
+     展开内容用 Quiet 分隔（顶部淡 hairline，非硬边）。Action Blue 仅用于 icon 等
+     必要交互强调（hover / active 字），禁止满铺蓝。组件只挂 .glass-collapse
+     + --{borderless|bordered} 与 .glass-collapse-panel，视觉数值全部在本文件收口。 */
+  --glass-wb-collapse-track-radius: var(--glass-wb-card-radius);
+  --glass-wb-collapse-track-fill: var(--glass-layer-l3-fill);
+  --glass-wb-collapse-track-blur: var(--glass-wb-search-blur);
+  --glass-wb-collapse-track-hairline: var(--glass-layer-l3-hairline);
+  --glass-wb-collapse-track-shadow: 0 4px 14px rgba(15, 60, 140, 0.05);
+  --glass-wb-collapse-header-height: 44px;
+  --glass-wb-collapse-header-pad-x: 16px;
+  --glass-wb-collapse-header-fill: rgba(252, 254, 255, 0.46);
+  --glass-wb-collapse-header-blur: blur(8px);
+  --glass-wb-collapse-header-color: var(--glass-text-primary);
+  --glass-wb-collapse-header-font-size: 13px;
+  --glass-wb-collapse-header-font-weight: 600;
+  --glass-wb-collapse-header-hover-fill: var(--glass-wb-text-cta-hover-bg);
+  --glass-wb-collapse-header-active-fill: var(--glass-wb-soft-active-bg);
+  --glass-wb-collapse-content-pad-x: 16px;
+  --glass-wb-collapse-content-pad-y: 14px;
+  --glass-wb-collapse-content-color: var(--glass-text-secondary);
+  --glass-wb-collapse-content-divider: rgba(120, 160, 210, 0.18); /* Quiet 分隔 */
+  --glass-wb-collapse-icon-color: var(--glass-text-secondary);
+  --glass-wb-collapse-icon-hover-color: var(--glass-wb-btn-blue);
+  --glass-wb-collapse-icon-active-color: var(--glass-wb-btn-blue);
+  --glass-wb-collapse-icon-hover-bg: var(--glass-wb-text-cta-hover-bg);
+  --glass-wb-collapse-icon-size: 22px;
+  --glass-wb-collapse-icon-radius: 6px;
+  --glass-wb-collapse-disabled-color: var(--glass-text-muted);
+  --glass-wb-collapse-transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s var(--glass-wb-control-ease-lift);
+
+  /* Glass Picker — Quiet Field + Floating Plate Panel
+     Date / Time 共用前缀；触发器吃 Field，面板吃 Dropdown。
+     选中格吃 Action Blue（满浓蓝底白字），Range 中间带吃克制 Action Wash。
+     能 alias 的材质不另起数值；cell / time 密度单独收口。 */
+  --glass-wb-picker-field-height: var(--glass-wb-field-height);
+  --glass-wb-picker-field-radius: var(--glass-wb-field-radius);
+  --glass-wb-picker-field-pad-x: 12px;
+  --glass-wb-picker-field-bg: var(--glass-wb-white);
+  --glass-wb-picker-field-hairline: var(--glass-wb-field-hairline);
+  --glass-wb-picker-field-hairline-hover: var(--glass-wb-field-hairline-hover);
+  --glass-wb-picker-field-focus-ring: var(--glass-wb-field-focus-ring);
+  --glass-wb-picker-panel-fill: var(--glass-wb-dropdown-fill);
+  --glass-wb-picker-panel-blur: var(--glass-wb-dropdown-blur);
+  --glass-wb-picker-panel-radius: var(--glass-wb-dropdown-radius);
+  --glass-wb-picker-panel-shadow: var(--glass-wb-dropdown-shadow);
+  --glass-wb-picker-panel-pad: 12px;
+  --glass-wb-picker-panel-gap: 10px;
+  --glass-wb-picker-header-size: 13px;
+  --glass-wb-picker-header-weight: 600;
+  --glass-wb-picker-header-color: var(--glass-text-primary);
+  --glass-wb-picker-weekday-size: 12px;
+  --glass-wb-picker-weekday-color: var(--glass-text-muted);
+  --glass-wb-picker-cell-size: 30px;
+  --glass-wb-picker-cell-margin-y: 4px;
+  /* Range 中间带与日格同 footprint（高宽=cell-size、居中），避免 TD left/right:-5% 邻格 rgba 叠缝 */
+  --glass-wb-picker-range-band-height: var(--glass-wb-picker-cell-size);
+  --glass-wb-picker-range-band-width: var(--glass-wb-picker-cell-size);
+  --glass-wb-picker-cell-radius: 8px;
+  --glass-wb-picker-cell-color: var(--glass-text-secondary);
+  --glass-wb-picker-cell-hover-bg: var(--glass-wb-text-cta-hover-bg);
+  --glass-wb-picker-cell-hover-color: var(--glass-wb-btn-blue);
+  --glass-wb-picker-cell-active-bg: var(--glass-wb-btn-blue); /* Action Blue，不再用 Soft Active Wash */
+  --glass-wb-picker-cell-active-color: var(--glass-wb-white);
+  --glass-wb-picker-cell-active-hairline: none; /* 实心格不再叠 tonal hairline */
+  --glass-wb-picker-range-band-bg: rgba(47, 107, 246, 0.12); /* Range 中间带：克制冷 wash，禁止满铺实心蓝 */
+  --glass-wb-picker-cell-today-ring: inset 0 0 0 1px rgba(47, 107, 246, 0.22);
+  --glass-wb-picker-cell-disabled-color: var(--glass-text-muted);
+  --glass-wb-picker-time-item-height: 28px;
+  --glass-wb-picker-time-item-gap: 2px;
+  --glass-wb-picker-time-row-height: 32px;
+  --glass-wb-picker-time-panel-height: 224px;
+  --glass-wb-picker-time-item-radius: 8px;
+  --glass-wb-picker-time-item-color: var(--glass-text-secondary);
+  --glass-wb-picker-time-item-hover-bg: var(--glass-wb-text-cta-hover-bg);
+  --glass-wb-picker-time-item-active-bg: rgba(47, 107, 246, 0.12);
+  --glass-wb-picker-time-item-active-color: var(--glass-wb-btn-blue);
+  --glass-wb-picker-footer-pad: 10px 12px;
+  --glass-wb-picker-footer-divider: var(--glass-wb-dialog-divider-top);
+  --glass-wb-picker-panel-divider: var(--glass-wb-dialog-divider-color);
+  --glass-wb-picker-button-height: 28px;
+  --glass-wb-picker-button-radius: 8px;
+  --glass-wb-picker-button-font-size: 13px;
+  --glass-wb-picker-button-pad-x: 10px;
+  --glass-wb-picker-button-hover-bg: var(--glass-wb-text-cta-hover-bg);
+  --glass-wb-picker-button-active-bg: var(--glass-wb-soft-active-bg);
+  --glass-wb-picker-button-active-color: var(--glass-wb-soft-active-color);
+
+  /* Glass Calendar — Compound Wrapper 盖 t-calendar（full | card）
+     full = 整幅日历：透明外壳（宿主 Surface/Stage 承载材质），Quiet 分割线；
+     card = 独立玻璃卡片：Floating Plate 近白微透 + soft shadow + hairline（禁 Host Tray / 双托盘）。
+     日格密度与选中/悬停/今天态复用 picker 日格 token，DatePicker ↔ Calendar 同套 Glass 日历语言。 */
+  --glass-wb-calendar-font-size: 13px;
+  --glass-wb-calendar-color: var(--glass-text-primary);
+  --glass-wb-calendar-divider: rgba(120, 160, 210, 0.16); /* 静默 hairline 分割，去 TD 2px 灰硬线 */
+  --glass-wb-calendar-hairline: inset 0 0 0 1px rgba(120, 160, 210, 0.14);
+
+  /* card 玻璃壳：alias Floating Plate（dropdown）材质 */
+  --glass-wb-calendar-card-fill: var(--glass-wb-dropdown-fill);
+  --glass-wb-calendar-card-blur: var(--glass-wb-dropdown-blur);
+  --glass-wb-calendar-card-radius: var(--glass-wb-dropdown-radius);
+  --glass-wb-calendar-card-shadow: var(--glass-wb-dropdown-shadow);
+  --glass-wb-calendar-card-hairline: var(--glass-wb-calendar-hairline);
+  --glass-wb-calendar-card-pad-x: 14px;
+  --glass-wb-calendar-card-pad-y: 14px;
+
+  /* full 外壳：透明、不抬影（由宿主承载材质） */
+  --glass-wb-calendar-full-fill: transparent;
+  --glass-wb-calendar-full-shadow: none;
+  --glass-wb-calendar-full-pad: 20px 24px;
+
+  /* 控制器 Quiet：标题 + Select / Radio / CheckTag / Button 对齐 Action Blue / Quiet Field */
+  --glass-wb-calendar-title-size: 15px;
+  --glass-wb-calendar-title-weight: 600;
+  --glass-wb-calendar-title-color: var(--glass-text-primary);
+  --glass-wb-calendar-control-gap: 8px;
+  --glass-wb-calendar-control-height: 32px;
+  --glass-wb-calendar-weekday-size: var(--glass-wb-picker-weekday-size);
+  --glass-wb-calendar-weekday-color: var(--glass-wb-picker-weekday-color);
+  --glass-wb-calendar-weekday-weight: 400;
+
+  /* 日格：复用 picker 日格 token（选中实心 Action Blue 白字 / hover wash / today ring / disabled） */
+  --glass-wb-calendar-cell-size: var(--glass-wb-picker-cell-size);
+  --glass-wb-calendar-cell-radius: var(--glass-wb-picker-cell-radius);
+  --glass-wb-calendar-cell-color: var(--glass-wb-picker-cell-color);
+  --glass-wb-calendar-cell-hover-bg: var(--glass-wb-picker-cell-hover-bg);
+  --glass-wb-calendar-cell-hover-color: var(--glass-wb-picker-cell-hover-color);
+  --glass-wb-calendar-cell-active-bg: var(--glass-wb-picker-cell-active-bg);
+  --glass-wb-calendar-cell-active-color: var(--glass-wb-picker-cell-active-color);
+  --glass-wb-calendar-cell-now-color: var(--glass-wb-btn-blue);
+  --glass-wb-calendar-cell-now-ring: var(--glass-wb-picker-cell-today-ring);
+  --glass-wb-calendar-cell-disabled-color: var(--glass-wb-picker-cell-disabled-color);
+
+  /* Glass Form Density / Field Chrome / Validation Whisper */
+  --glass-wb-field-height: 38px;
+  --glass-wb-field-radius: 12px;
+  /* Capsule Field / Pill Search 几何；Focus Ring Follows Radius 贴此圆角 */
+  --glass-wb-capsule-radius: 999px;
+  --glass-wb-field-focus-ring: 0 0 0 2px rgba(47, 107, 246, 0.22);
+  --glass-wb-form-error: #d94a4a;
+  --glass-wb-form-warning: #9e6400; /* 与 warning 按钮同源（中石油宝石花辅色 Contrast-Safe 钮色 v2） */
+  --glass-wb-form-success: var(--glass-wb-online-text); /* 显式语义锚：与 online-text / 酷安绿 success 同源，勿另起色板 */
+  --glass-wb-form-required-mark: var(--glass-wb-form-error); /* required 星号柔化：收敛 TDesign 默认粉红至 Validation Whisper error 同族（#d94a4a） */
+
+  /* Glass Descriptions · GlassDescriptions（盖 t-descriptions）
+     阅读焦点三档：label = secondary（键可扫读）/ content = primary（值仍是焦点）/
+     content-secondary = muted（注解退到第三档）；复用 --glass-text-*，不另起色板。
+     bordered 用 Tone Grid + soft hairline：极淡矩阵 wash + 偶数行 content 条纹 +
+     label 淡染 + 柔和 1px 网格线；13px 节奏对齐 Form Quiet；host-first，content 吃宿主。
+     容器外轮廓（DetailPlate / Surface）仍不加 hairline。 */
+  --glass-wb-descriptions-label-color: var(--glass-text-secondary);
+  --glass-wb-descriptions-content-color: var(--glass-text-primary);
+  --glass-wb-descriptions-content-secondary: var(--glass-text-muted);
+  --glass-wb-descriptions-header-color: var(--glass-text-primary);
+  --glass-wb-descriptions-label-font-size: 13px;
+  --glass-wb-descriptions-content-font-size: 13px;
+  --glass-wb-descriptions-hairline: rgba(120, 160, 210, 0.14); /* bordered 组件网格唯一描边色；柔和蓝灰细线，勿用于容器外轮廓 */
+  --glass-wb-descriptions-bordered-fill: rgba(22, 119, 255, 0.018); /* bordered 矩阵底 wash；非粉笔白实底 */
+  --glass-wb-descriptions-row-stripe: rgba(22, 119, 255, 0.03); /* 对齐 html table 偶数行底色差；仅 content */
+  --glass-wb-descriptions-label-fill: rgba(22, 119, 255, 0.08); /* bordered label 淡蓝染，始终深于 content 条纹 */
+  --glass-wb-descriptions-label-fill-hover: rgba(22, 119, 255, 0.11);
+  --glass-wb-descriptions-content-fill: transparent; /* bordered content 吃宿主，禁粉笔白实底 */
+  --glass-wb-descriptions-radius: var(--glass-wb-table-inset-radius); /* 与 Stage 内嵌板同圆角语言 */
+
+  /* Empty / Quiet Empty State · GlassEmpty（盖 t-empty）
+     Quiet 空态：透明底、无蓝染满铺；title primary、description muted；
+     image 走 TDesign 默认态；action 间距收紧（勿沿用 --td-comp-margin-xxl 大空隙）。 */
+  --glass-wb-empty-title-color: var(--glass-text-primary);
+  --glass-wb-empty-title-font-size: 14px;
+  --glass-wb-empty-title-font-weight: 600;
+  --glass-wb-empty-description-color: var(--glass-text-muted);
+  --glass-wb-empty-description-font-size: 12px;
+  --glass-wb-empty-action-margin-top: 16px;
+  --glass-wb-empty-action-gap: 10px;
+
+  /* Affordant Orb / StickyTool FAB（知乎蓝行动点，小物件满浓） */
+  --glass-wb-fab-size: 52px;
+  --glass-wb-fab-offset: 28px;
+  --glass-wb-fab-bg: rgba(0, 102, 255, 0.72);
+  --glass-wb-fab-blur: blur(8px);
+  --glass-wb-fab-shadow: 0 20px 44px rgba(0, 82, 204, 0.24);
+  --glass-wb-fab-z: 5;
+
+  /* Control interaction — Liquid Lift Press（Hover Lift + Color Shift → Active Press + Shadow Settle）
+     幅度铁律：Quiet < Primary < FAB；组件禁止魔法色，一律走下列 token */
+  --glass-wb-control-hover-bright: brightness(1.04);
+  --glass-wb-control-hover-bright-fab: brightness(1.06);
+  --glass-wb-control-lift-quiet: -1px;
+  --glass-wb-control-lift-primary: -2px;
+  --glass-wb-control-lift-fab: -3px;
+  --glass-wb-control-press-y: 1px;
+  --glass-wb-control-active-scale: 0.98;
+  --glass-wb-fab-active-scale: 0.96;
+  --glass-wb-control-active-shadow-tight: 0 4px 12px rgba(0, 82, 204, 0.18);
+  --glass-wb-control-focus-ring: 0 0 0 2px rgba(47, 107, 246, 0.28);
+  --glass-wb-control-ease-lift: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --glass-wb-control-transition:
+    filter 0.15s ease,
+    transform 0.15s var(--glass-wb-control-ease-lift),
+    box-shadow 0.15s ease,
+    background-color 0.15s ease,
+    color 0.15s ease;
+  --glass-wb-control-disabled-opacity: 0.55;
+
+  /* Shadow Bloom / Settle + Color Shift（Quiet / Primary / FAB 分档）
+     Separate Tracks：Tonal（quiet/soft/icon/ghost/outline/dashed）= Quiet Active Wash；
+     Filled（primary/send/FAB）= 满浓 Press */
+  --glass-wb-pill-quiet-hover-shadow: 0 10px 22px rgba(0, 80, 180, 0.12);
+  /* Settle：冷蓝收紧影（勿用中性灰）；略提 chroma，避免按压读成脏灰 */
+  --glass-wb-pill-quiet-active-shadow: 0 3px 8px rgba(0, 82, 204, 0.14);
+  /* Tonal ripple 基准：盖掉 TDesign --ripple-color（#a6a6a6 / gray-10）；品牌冷色 whisper
+     quiet ≥ soft ≥ icon（alpha 递减）；Filled 轨勿用此组 */
+  --glass-wb-tonal-ripple: rgba(0, 82, 204, 0.16);
+  --glass-wb-pill-quiet-ripple: var(--glass-wb-tonal-ripple);
+  --glass-wb-soft-ripple: rgba(0, 82, 204, 0.12);
+  --glass-wb-icon-ripple: rgba(0, 82, 204, 0.1);
+  --glass-wb-soft-active-shadow: 0 3px 8px rgba(0, 82, 204, 0.12);
+  --glass-wb-icon-active-shadow: 0 2px 6px rgba(0, 82, 204, 0.1);
+  --glass-wb-pill-pri-hover-shadow: 0 14px 32px rgba(0, 82, 204, 0.3);
+  --glass-wb-btn-blue-hover-shadow: 0 10px 22px rgba(47, 107, 246, 0.32);
+  --glass-wb-fab-hover-shadow: 0 26px 56px rgba(0, 82, 204, 0.32);
+  --glass-wb-fab-active-shadow: 0 8px 18px rgba(0, 82, 204, 0.2);
+
+  /* Tonal — Quiet Active Wash（Contrast-Safe Press）
+     浅底深字 active 仅用同色相略深 wash，禁止近黑/重灰/brightness 压暗整钮；字色保持深色可读。
+     Press Invert（字色反转浅/白）已评估否决 — 见 .agents/tmp-quiet-active-invert-eval.md；勿误加。 */
+  --glass-wb-pill-quiet-active-bg: rgba(220, 230, 248, 0.78); /* 略深于旧 228/236/250@.72，压感更清晰仍非墨渍 */
+  --glass-wb-pill-quiet-active-color: #0047b3; /* 保持深字，禁止反转 */
+  --glass-wb-soft-active-bg: #e4ebf8; /* 略提冷 chroma，仍浅底深字 Quiet Active Wash */
+  --glass-wb-soft-active-color: var(--glass-wb-pill-quiet-active-color);
+  --glass-wb-icon-active-bg: #e6eef8;
+  --glass-wb-icon-active-color: var(--glass-wb-pill-quiet-active-color);
+
+  /* Quiet Outline Track — 新 ghost（TD ghost=true 镂空）/ outline / dashed
+     透明或近白底 + 品牌蓝描边；与 icon-only 32 圆钮完全分离。
+     hover / active 只走同色相 wash 与描边加深，禁止 Press Invert。 */
+  --glass-wb-ghost-border-color: var(--glass-wb-pill-border);
+  --glass-wb-ghost-color: var(--glass-wb-pill-quiet-color);
+  --glass-wb-ghost-hover-bg: var(--glass-wb-pill-quiet-hover-bg);
+  --glass-wb-ghost-hover-border-color: var(--glass-wb-pill-hover-border);
+  --glass-wb-ghost-hover-color: var(--glass-wb-pill-quiet-color);
+  --glass-wb-ghost-active-bg: var(--glass-wb-pill-quiet-active-bg);
+  --glass-wb-ghost-active-border-color: var(--glass-wb-pill-hover-border);
+  --glass-wb-ghost-active-color: var(--glass-wb-pill-quiet-active-color);
+  --glass-wb-ghost-ripple: var(--glass-wb-soft-ripple);
+  --glass-wb-ghost-hover-shadow: var(--glass-wb-pill-quiet-hover-shadow);
+  --glass-wb-ghost-active-shadow: var(--glass-wb-pill-quiet-active-shadow);
+  /* outline / dashed 保留近白玻璃底；ghost 仍 transparent（透底） */
+  --glass-wb-outline-bg: var(--glass-wb-white);
+
+  /* Quiet Chrome — Hairline Border（Tonal soft/icon；非 Field）
+     取消实线 border，轮廓只走 inset hairline；hover Fade（更淡）不靠描边箍边。
+     禁止与 --glass-wb-pill-hover-border / --glass-wb-field-hover-border 混用。 */
+  --glass-wb-tonal-hairline: inset 0 0 0 1px rgba(0, 82, 204, 0.22);
+  --glass-wb-tonal-hairline-hover: inset 0 0 0 1px rgba(0, 82, 204, 0.12); /* Hover Border Fade */
+  --glass-wb-tonal-hairline-active: inset 0 0 0 1px rgba(0, 82, 204, 0.18);
+
+  /* Modal Scrim / Confirm Sheet / Inline Confirm */
+  --glass-wb-dialog-scrim: rgba(15, 40, 80, 0.14); /* 降浅换微透（用户裁决）；FormPane overlay 共用 */
+  /* Floating Plate · T1 Bchat Material：对齐 html t1 .bchat（z4 近白高亮）档；
+     flat rgba 近白微透 fill + 16/1.15 blur + 单层柔影；
+     不使用整装背景 bloom / 花瓣 / Surface。
+     库消费口径：兄弟项目拿 `--glass-wb-dialog-*` 当 Confirm Sheet 材质，不当事会话窗整装。 */
+  /* T1 Bchat Port：fill / blur / shadow 数值与 html t1 .bchat 合成
+     （基座 L458–460 + t1 覆盖 L478）逐字对齐；
+     radius / padding 为自觉例外——radius 走 --glass-wb-card-radius 库契约
+     （Surface/Panel/Card 同轨 18 vs bchat 12），
+     padding 交 TD t-dialog shell 32 节奏（内 Form 字段呼吸 > 会话窗 10×12）。 */
+  --glass-wb-dialog-fill: rgba(252, 254, 255, 0.6);
+  --glass-wb-dialog-blur: blur(16px) saturate(1.15);
+  --glass-wb-dialog-radius: var(--glass-wb-card-radius);
+  /* Floating Shadow (Dialog)：逐字对齐 html t1 .bchat 基座（L460）单层柔影；
+     浮层体量由 Modal Scrim 承载，不加 Ambient。 */
+  --glass-wb-dialog-shadow: 0 12px 30px rgba(15, 60, 140, 0.07);
+  --glass-wb-dialog-width: 420px;
+  /* DEPRECATED：Dialog Air Bloom 已下线（v2 对齐 .chat 档无背后 bloom），本 token 保留一轮回退，下轮删 */
+  --glass-wb-dialog-air:
+    radial-gradient(55% 60% at 18% 22%, rgba(79, 195, 255, 0.26), transparent 60%),
+    radial-gradient(50% 55% at 82% 78%, rgba(22, 119, 255, 0.14), transparent 62%);
+  --glass-wb-dialog-air-blur: blur(28px) saturate(1.2);
+  --glass-wb-dialog-divider-color: rgba(120, 160, 210, 0.14);
+  --glass-wb-dialog-divider-bottom: inset 0 -1px 0 var(--glass-wb-dialog-divider-color);
+  --glass-wb-dialog-divider-top: inset 0 1px 0 var(--glass-wb-dialog-divider-color);
+  /* DEPRECATED：请改用 --glass-wb-dialog-divider-bottom / -top；一轮后删 */
+  --glass-wb-dialog-divider: var(--glass-wb-dialog-divider-bottom);
+  /* Dialog Section · 布局字排（GlassDialogSection）；迁移前缺失，取值对齐组件既有 fallback */
+  --glass-wb-dialog-section-gap: 18px;
+  --glass-wb-dialog-section-title-size: 12.5px;
+  /* Overlay footer · 唯一动作行节奏（Dialog / FormPane / Inline Confirm 共用） */
+  --glass-wb-dialog-footer-gap: 10px;
+  --glass-wb-dialog-footer-padding-top: 12px;
+  /* FormPane · 表单整装会话窗（Floating Plate）；材质起步对齐 Dialog/.bchat；脚钮由使用方 slot */
+  --glass-wb-form-pane-fill: var(--glass-wb-dialog-fill);
+  --glass-wb-form-pane-blur: var(--glass-wb-dialog-blur);
+  --glass-wb-form-pane-radius: var(--glass-wb-dialog-radius);
+  --glass-wb-form-pane-shadow: var(--glass-wb-dialog-shadow);
+  --glass-wb-form-pane-width: 480px;
+  --glass-wb-form-pane-scrim: var(--glass-wb-dialog-scrim);
+  --glass-wb-popconfirm-fill: rgba(255, 255, 255, 0.94);
+  --glass-wb-popconfirm-blur: blur(14px) saturate(1.1);
+  --glass-wb-popconfirm-radius: 14px;
+  --glass-wb-popconfirm-shadow: 0 10px 28px rgba(15, 60, 140, 0.12);
+
+  /* Dropdown Menu · Quiet Chrome（GlassDropdown 面板）
+     触发钮 = GlassButton 密度（soft/quiet/primary）；本组只管菜单。
+     近白微透 fill + 主题蓝 item hover/active whisper；禁 TD 灰脏边。 */
+  --glass-wb-dropdown-fill: rgba(252, 254, 255, 0.92);
+  --glass-wb-dropdown-blur: blur(16px) saturate(1.1);
+  --glass-wb-dropdown-radius: 14px;
+  --glass-wb-dropdown-shadow: 0 12px 32px rgba(15, 60, 140, 0.12);
+  --glass-wb-dropdown-item-radius: 10px;
+  --glass-wb-dropdown-item-color: var(--glass-text-primary);
+  --glass-wb-dropdown-item-hover-bg: rgba(0, 82, 204, 0.08);
+  --glass-wb-dropdown-item-hover-color: var(--glass-wb-pill-quiet-color);
+  --glass-wb-dropdown-item-active-bg: rgba(0, 82, 204, 0.12);
+  --glass-wb-dropdown-item-active-color: var(--glass-wb-pill-quiet-active-color);
+  --glass-wb-dropdown-item-disabled-color: var(--glass-text-muted);
+  --glass-wb-dropdown-ripple: rgba(0, 82, 204, 0.12);
+
+  /* Destructive Confirm —— 与 btn-danger 同源同档（JD Red 略深档） */
+  --glass-wb-confirm-danger: #d91f18;
+  --glass-wb-confirm-danger-shadow: 0 6px 14px rgba(217, 31, 24, 0.28);
+
+  /* Data Grid / Glass Table · Quiet Grid（t1–t4 大容器映射 · 单一语言）
+     t1 Host Tray   → shell fill + blur + soft shadow（禁实白 Excel 卡 + 重阴影）
+     Header Band    → Workbench Left Nav / Frost Rail 磨砂冰蓝平铺；标题行一体带；字 secondary
+     t3 Quiet Ribbon → 水平细分割 + pagination Quiet Chrome
+     t4 Near-White  → 行体透明吃外壳；空态 muted
+     Hover Whisper / Selected Whisper → session-hover 族 / 极淡紫
+     权威映射：.agents/tmp-glass-table-t1t4-plan.md */
+  --glass-wb-table-fill: rgba(250, 253, 255, 0.55); /* t1 .big Host Tray 微透近白 */
+  --glass-wb-table-blur: blur(20px); /* t1 .big blur≈20 */
+  --glass-wb-table-radius: 16px; /* soft radius 14–16 */
+  --glass-wb-table-shadow:
+    0 16px 40px rgba(15, 60, 140, 0.07),
+    0 4px 12px rgba(15, 60, 140, 0.04); /* 柔影抬浮，非 Excel 重阴影 */
+  --glass-wb-table-hairline: inset 0 0 0 1px rgba(120, 160, 210, 0.18); /* Quiet 轮廓，勿脏方框 */
+  /* Workbench Left Nav / Frost Rail / Header Band ← html .hero-ico — 磨砂冰蓝平铺，整行只画一次 */
+  --glass-wb-table-header-fill: rgba(198, 222, 250, 0.44);
+  --glass-wb-table-row-hover: var(--glass-wb-session-hover-bg); /* Hover Whisper */
+  --glass-wb-table-row-selected: rgba(123, 108, 240, 0.08); /* Selected Whisper 极淡紫 */
+  --glass-wb-table-expanded-fill: rgba(198, 222, 250, 0.22); /* 展开行 Quiet wash，不另起卡片 */
+  --glass-wb-table-loading-mask: rgba(255, 255, 255, 0.28); /* t4 轻 mask */
+  /* 固定列：取代 TD 2px 灰硬边；横向滚动时才由 TD 状态类触发。
+     P2-D：再收一档 —— 淡线负责分层，侧影只留方向感，避免脏边 / 硬切口。 */
+  --glass-wb-table-fixed-shadow-line: rgba(120, 160, 210, 0.14);
+  --glass-wb-table-fixed-shadow-left: 5px 0 10px -6px rgba(15, 60, 140, 0.08);
+  --glass-wb-table-fixed-shadow-right: -5px 0 10px -6px rgba(15, 60, 140, 0.08);
+  /* 固定列遮罩：滚动时盖住底层列，仍保持近白玻璃而非实白 Excel 格 */
+  --glass-wb-table-fixed-header-fill: rgba(213, 231, 251, 0.98);
+  --glass-wb-table-fixed-cell-fill: rgba(250, 253, 255, 0.94);
+  --glass-wb-table-fixed-cell-hover-fill: rgba(246, 251, 255, 0.96);
+  --glass-wb-table-fixed-cell-selected-fill: rgba(245, 246, 255, 0.96);
+  /* 行拖拽：chosen 轻提、ghost 轻留白；沿用 Quiet Grid 近白族 */
+  --glass-wb-table-drag-chosen-fill: rgba(250, 253, 255, 0.72);
+  --glass-wb-table-drag-chosen-shadow: 0 6px 16px rgba(15, 60, 140, 0.08);
+  --glass-wb-table-drag-ghost-fill: rgba(198, 222, 250, 0.16);
+  /* Stage Nested Chrome / Inset Plate — variant="inset"（工作台 Stage 内嵌主路径）
+     Stage 已是玻璃焦点面，表只做嵌板：禁托盘套托盘（二次 blur / lift 影 / 实白 Excel）
+     圆角贴 Field 12；hairline 更淡；blur / shadow = none */
+  --glass-wb-table-inset-fill: rgba(252, 254, 255, 0.32); /* 近白微 wash，浅于 tray 0.55 */
+  --glass-wb-table-inset-blur: none; /* 吃 Stage blur */
+  --glass-wb-table-inset-shadow: none; /* 禁 lift 影 */
+  --glass-wb-table-inset-hairline: inset 0 0 0 1px rgba(120, 160, 210, 0.12); /* 更淡轮廓 */
+  --glass-wb-table-inset-radius: 12px; /* 对齐 Field，嵌板略收 */
+
+  /* Quiet List · GlassList / GlassListItem / GlassListItemMeta（盖 t-list）
+     通用 Quiet 列表：透明底、无托盘满铺（非 Host Tray / Surface，禁双托盘）。
+     Item 行高 Quiet；Hover Whisper 复用 table/session hover token（勿另造第二套脏蓝）。
+     Meta 头像圆角对齐 Comment（--glass-wb-comment-avatar-radius 近义）。
+     视觉规则见 `.glass-list` / `.glass-list-item` / `.glass-list-item-meta`。 */
+  --glass-wb-list-fill: transparent; /* Quiet 列表，无托盘满铺 */
+  --glass-wb-list-padding: 0;
+  --glass-wb-list-header-pad-bottom: 10px;
+  --glass-wb-list-footer-pad-top: 10px;
+  --glass-wb-list-header-color: var(--glass-text-primary);
+  --glass-wb-list-footer-color: var(--glass-text-muted);
+  --glass-wb-list-loading-color: var(--glass-text-muted);
+  --glass-wb-list-load-pad: 10px 12px;
+  --glass-wb-list-item-pad: 10px 12px; /* medium 默认 Quiet 行高，对齐轨道 / 胶囊 */
+  --glass-wb-list-item-pad-s: 8px 12px;
+  --glass-wb-list-item-pad-l: 14px 16px;
+  --glass-wb-list-item-radius: 12px;
+  --glass-wb-list-item-hover-bg: var(--glass-wb-table-row-hover); /* Hover Whisper 复用 session-hover 族 */
+  --glass-wb-list-item-transition: background-color 0.15s ease;
+  --glass-wb-list-split-color: var(--glass-border-soft);
+  --glass-wb-list-stripe-bg: rgba(246, 249, 253, 0.72); /* 近白微透，对齐 comment reply 族 */
+  --glass-wb-list-title-color: var(--glass-text-primary);
+  --glass-wb-list-description-color: var(--glass-text-secondary);
+  --glass-wb-list-meta-avatar-size: 40px;
+  --glass-wb-list-meta-avatar-radius: var(--glass-wb-comment-avatar-radius); /* 12px 近义 */
+  --glass-wb-list-meta-gap: 12px;
+
+  /* Frost Disc Loading · GlassLoading（盖 t-loading）
+     默认指示器是磨砂液态盘：径向冰蓝长程渐变对齐 html `.disc-on-gan` / `.cell-float .disc`，
+     12s 慢旋 + 1.8s 强呼吸（opacity 0.38→1 / scale 0.82→1.14）；
+     禁 TD 硬圆环、纯色实心核、1px 描边与锐白高光点。
+     包裹态与 fullscreen 遮罩对齐 table loading mask（近白微透），禁实白盖板；
+     文本走 secondary（Quiet），不抢指示。 */
+  --glass-wb-loading-color: var(--glass-wb-message-loading-icon); /* 自定义 indicator / fallback */
+  --glass-wb-loading-text-color: var(--glass-text-secondary); /* 文本 Quiet secondary */
+  --glass-wb-loading-overlay: var(--glass-wb-table-loading-mask); /* 轻 mask，勿实白盖板 */
+  --glass-wb-loading-disc-size-small: 16px;
+  --glass-wb-loading-disc-size-medium: 24px;
+  --glass-wb-loading-disc-size-large: 32px;
+  --glass-wb-loading-disc-fill: radial-gradient(
+    ellipse at 40% 32%,
+    color-mix(in srgb, var(--glass-chroma-cyan) 58%, transparent) 0%,
+    color-mix(in srgb, var(--glass-chroma-cyan) 45%, transparent) 30%,
+    color-mix(in srgb, var(--glass-chroma-alipay) 30%, transparent) 60%,
+    color-mix(in srgb, var(--glass-chroma-zhihu) 12%, transparent) 86%,
+    color-mix(in srgb, var(--glass-chroma-ice) 3%, transparent) 100%
+  ); /* html .disc-on-gan：冰蓝芯 → 青 → 支付宝蓝 → 知乎蓝淡出；无锐白高光核 */
+  --glass-wb-loading-disc-shadow: 0 5px 12px rgba(0, 80, 180, 0.16); /* 柔影，无描边 */
+  --glass-wb-loading-disc-blur: blur(6px) saturate(1.16);
+  --glass-wb-loading-disc-rotate-duration: 12s;
+  --glass-wb-loading-disc-breathe-duration: 1.8s;
+  --glass-wb-loading-disc-ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* 微透 · 叠压染色 Skeleton · GlassSkeleton（盖 t-skeleton）
+     骨块对齐 html `.cell-see`：半透冷蓝底 + 两层蓝染强呼吸叠压（opacity 摆幅加大），
+     靠交叠深浅出层次；gradient 不再是扫光，flashed 染层深浅对呼吸，
+     reduced-motion 下保持静态微透染色；
+     圆角对齐 Field 12 的 Quiet 骨块。视觉规则见 `.glass-skeleton`。 */
+  --glass-wb-skeleton-fill: rgba(210, 232, 255, 0.4); /* 微透冷蓝叠压底（html .cell-see） */
+  --glass-wb-skeleton-radius: 8px; /* 骨块圆角 */
+  --glass-wb-skeleton-dye-cyan: radial-gradient(
+    ellipse 82% 150% at 20% 46%,
+    color-mix(in srgb, var(--glass-chroma-cyan) 38%, transparent) 0%,
+    color-mix(in srgb, var(--glass-chroma-alipay) 22%, transparent) 44%,
+    transparent 72%
+  ); /* 对齐 html .lay.l1：Cyan → 支付宝蓝软染，无近白端；峰值略加深便于呼吸可感 */
+  --glass-wb-skeleton-dye-blue: linear-gradient(
+    122deg,
+    color-mix(in srgb, var(--glass-chroma-zhihu) 20%, transparent) 0%,
+    color-mix(in srgb, var(--glass-chroma-alipay) 14%, transparent) 46%,
+    color-mix(in srgb, var(--glass-chroma-cyan) 16%, transparent) 100%
+  ); /* 对齐 html .lay.l2 并去掉近白端：Zhihu → 软蓝叠压，非扫光高亮 */
+  --glass-wb-skeleton-dye-duration: 2.2s;
+  --glass-wb-skeleton-breath-duration: 1.2s;
+  --glass-wb-skeleton-dye-opacity: 0.72;
+  --glass-wb-skeleton-dye-breath-opacity: 0.56;
+
+  /* Glass Statistic · GlassStatistic（盖 t-statistic）
+     Quiet 数字气质：透明底、非 Host Tray / Surface / Soft Cite Card（禁双托盘）。
+     标题 / 单位 Quiet secondary、extra muted；数值 tone 五态走 token；
+     trend 图标色跟语义（increase 酷安绿 / decrease 危险红）；
+     loading 用 TD 内建 skeleton（轻骨块，勿实白盖板）。
+     danger / warning 复用 Alert 同源品牌锚（JD Red #E1251B / 宝石花 #9E6400）。 */
+  --glass-wb-statistic-title-color: var(--glass-text-secondary);
+  --glass-wb-statistic-unit-color: var(--glass-text-secondary);
+  --glass-wb-statistic-extra-color: var(--glass-text-muted);
+  --glass-wb-statistic-value-color: var(--glass-text-primary); /* tone=default */
+  --glass-wb-statistic-brand: var(--glass-wb-btn-blue);
+  --glass-wb-statistic-success: var(--glass-wb-online-text); /* 酷安绿，与 success 同源 */
+  --glass-wb-statistic-warning: var(--glass-wb-alert-warning-icon);
+  --glass-wb-statistic-danger: var(--glass-wb-alert-error-icon); /* JD Red 品牌锚，与 alert/btn-danger 同源 */
+  --glass-wb-statistic-increase: var(--glass-wb-online-text); /* trend=increase */
+  --glass-wb-statistic-decrease: var(--glass-wb-alert-error-icon); /* trend=decrease */
+  --glass-wb-statistic-title-font-size: 13px;
+  --glass-wb-statistic-title-font-weight: 500;
+  --glass-wb-statistic-unit-font-size: 13px;
+  --glass-wb-statistic-extra-font-size: 12px;
+  --glass-wb-statistic-value-font-weight: 600;
+
+  /* Inline Banner / Status Alert · Status Soft Plate（Fan Tip + Light Frost + Whisper Lift）
+     html 技法锚：`.t1 .bph`（115deg 扇形软过渡 + blur(16) + 单层 lift 0 10px 28px / .07）。
+     中尺度状态条：边界 = 材质差 + Whisper Lift；无左侧 Tone Rail 色带；语义靠 icon + Fan Tip。
+     Tone Spectrum 色相冻结：*-icon 品牌锚不变。 */
+  --glass-wb-alert-radius: var(--glass-wb-field-radius);
+  --glass-wb-alert-padding-y: 12px;
+  --glass-wb-alert-padding-x: 16px;
+  --glass-wb-alert-blur: blur(16px) saturate(1.15); /* ← .bph */
+  --glass-wb-alert-shadow: 0 10px 28px rgba(0, 80, 180, 0.07); /* ← .bph；四态统一低噪蓝影 */
+  /* Fan Tip：首停略降 alpha 让 Light Frost 透叠；中段 wash 略抬，tip ≤0.12 */
+  --glass-wb-alert-success-fill: linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0.55) 0%,
+    rgba(231, 248, 239, 0.55) 42%,
+    rgba(24, 180, 88, 0.12) 100%
+  );
+  --glass-wb-alert-success-icon: var(--glass-wb-online-text);
+  --glass-wb-alert-info-fill: linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0.55) 0%,
+    rgba(226, 242, 255, 0.5) 42%,
+    rgba(47, 107, 246, 0.12) 100%
+  );
+  --glass-wb-alert-info-icon: var(--glass-wb-btn-blue);
+  --glass-wb-alert-warning-fill: linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0.55) 0%,
+    rgba(255, 246, 230, 0.55) 42%,
+    rgba(158, 100, 0, 0.12) 100%
+  );
+  --glass-wb-alert-warning-icon: #9e6400;
+  --glass-wb-alert-error-fill: linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0.55) 0%,
+    rgba(255, 240, 240, 0.55) 42%,
+    rgba(225, 37, 27, 0.12) 100%
+  );
+  --glass-wb-alert-error-icon: #e1251b;
+
+  /* Message / Soft Toast · Status Soft Plate（别名 Alert，密度略收）
+     同一 Fan Tip / Light Frost / Whisper Lift；无左侧色带。
+     question / loading 归 info 面，icon 走行动蓝。 */
+  --glass-wb-message-radius: var(--glass-wb-alert-radius);
+  --glass-wb-message-blur: var(--glass-wb-alert-blur);
+  --glass-wb-message-shadow: var(--glass-wb-alert-shadow);
+  --glass-wb-message-padding-y: 10px;
+  --glass-wb-message-padding-x: 14px;
+  --glass-wb-message-success-fill: var(--glass-wb-alert-success-fill);
+  --glass-wb-message-info-fill: var(--glass-wb-alert-info-fill);
+  --glass-wb-message-warning-fill: var(--glass-wb-alert-warning-fill);
+  --glass-wb-message-error-fill: var(--glass-wb-alert-error-fill);
+  --glass-wb-message-question-fill: var(--glass-wb-alert-info-fill);
+  --glass-wb-message-loading-fill: var(--glass-wb-alert-info-fill);
+  --glass-wb-message-success-icon: var(--glass-wb-alert-success-icon);
+  --glass-wb-message-info-icon: var(--glass-wb-alert-info-icon);
+  --glass-wb-message-warning-icon: var(--glass-wb-alert-warning-icon);
+  --glass-wb-message-error-icon: var(--glass-wb-alert-error-icon);
+  --glass-wb-message-question-icon: var(--glass-wb-btn-blue);
+  --glass-wb-message-loading-icon: var(--glass-wb-btn-blue);
+
+  /* Notification / Soft Notice · Status Soft Plate（别名 Message，密度略松）
+     同一 Fan Tip / Light Frost / Whisper Lift；无左侧色带。
+     Theme 态类挂在图标而非根节点，全局 fill 走 :has + --theme 双保险。 */
+  --glass-wb-notification-radius: var(--glass-wb-alert-radius);
+  --glass-wb-notification-blur: var(--glass-wb-message-blur);
+  --glass-wb-notification-shadow: var(--glass-wb-message-shadow);
+  --glass-wb-notification-padding-y: 14px;
+  --glass-wb-notification-padding-x: 16px;
+  --glass-wb-notification-width: 360px;
+  --glass-wb-notification-footer-margin-top: var(--td-comp-margin-l);
+  --glass-wb-notification-footer-gap: var(--td-comp-margin-s);
+  --glass-wb-notification-success-fill: var(--glass-wb-message-success-fill);
+  --glass-wb-notification-info-fill: var(--glass-wb-message-info-fill);
+  --glass-wb-notification-warning-fill: var(--glass-wb-message-warning-fill);
+  --glass-wb-notification-error-fill: var(--glass-wb-message-error-fill);
+  --glass-wb-notification-success-icon: var(--glass-wb-message-success-icon);
+  --glass-wb-notification-info-icon: var(--glass-wb-message-info-icon);
+  --glass-wb-notification-warning-icon: var(--glass-wb-message-warning-icon);
+  --glass-wb-notification-error-icon: var(--glass-wb-message-error-icon);
+  --glass-wb-notification-title-color: var(--glass-text-primary);
+  --glass-wb-notification-content-color: var(--glass-text-secondary);
+
+  /* Status Theme — Semantic Filled（小物件满浓；与 Alert tone 同族可识别）
+     按钮名 danger ↔ Alert error；warning / success 同名。
+     Hover/Active 走 Filled 轨（同 Primary lift / bright / press）；禁止 Quiet Active Wash。
+     白字对比 ≥4.5:1（含 hover 光学）；禁止白核渐变。
+     评估见 .agents/tmp-cnpc-baoshihua-warning-eval-v2.md（中石油宝石花辅色 warning · v2 覆盖 v1 钮色 #8C5A00）· success 酷安绿见 .agents/tmp-baoshihua-coolapk-tones-eval.md（该文件 warning 段已作废，仅 Success 有效）；danger 见 .agents/tmp-status-tone-refine-eval.md。
+     Tone Ladder：品牌锚较亮（识别）／按钮略深（保对比）——同 danger 京东红策略。
+     danger = 京东红同源分档（冻结）：品牌锚 #E1251B（Alert）／btn·confirm 略深 #D91F18 保 hover 余量。
+       hover ≈ filter brightness(1.04) → #E22019（4.71:1）；active ≈ #C31C16。禁止洗白/粉核。
+     warning = 中石油宝石花辅色（CNPC Baoshihua Accent Yellow · Pantone 137C 浅橘黄）：品牌锚 #FFA300（Lab 锚色块可见，禁 Filled）／btn #9E6400 Contrast-Safe（白字 4.91，hover 4.61；v2 抬亮更黄）。
+     success = 酷安绿（favicon 采样）：品牌锚 #18B458（Alert/online 识别）／btn #117E3E（白字 5.15，hover 4.83）。 */
+  /* —— danger（JD Red 同源分档；品牌锚 #E1251B） —— */
+  --glass-wb-btn-danger: #d91f18;
+  --glass-wb-btn-danger-text: var(--glass-wb-white);
+  --glass-wb-btn-danger-shadow: 0 6px 14px rgba(217, 31, 24, 0.28);
+  --glass-wb-btn-danger-hover-shadow: 0 10px 22px rgba(217, 31, 24, 0.32);
+  --glass-wb-btn-danger-active-shadow: 0 4px 12px rgba(217, 31, 24, 0.2);
+  /* —— warning（中石油宝石花辅色 / CNPC Baoshihua Accent Yellow · Pantone 137C 浅橘黄；锚 #FFA300 / 钮 #9E6400 Contrast-Safe；Alert / form 同源） —— */
+  --glass-wb-btn-warning: #9e6400;
+  --glass-wb-btn-warning-text: var(--glass-wb-white);
+  --glass-wb-btn-warning-shadow: 0 6px 14px rgba(158, 100, 0, 0.28);
+  --glass-wb-btn-warning-hover-shadow: 0 10px 22px rgba(158, 100, 0, 0.32);
+  --glass-wb-btn-warning-active-shadow: 0 4px 12px rgba(158, 100, 0, 0.2);
+  /* —— success（酷安绿·favicon 采样；锚 #18B458 / 钮 #117E3E；Alert / online 同源） —— */
+  --glass-wb-btn-success: #117e3e;
+  --glass-wb-btn-success-text: var(--glass-wb-white);
+  --glass-wb-btn-success-shadow: 0 6px 14px rgba(17, 126, 62, 0.28);
+  --glass-wb-btn-success-hover-shadow: 0 10px 22px rgba(17, 126, 62, 0.32);
+  --glass-wb-btn-success-active-shadow: 0 4px 12px rgba(17, 126, 62, 0.2);
+
+  /* Field Chrome 描边（hover / focus / error / warning）
+     遗留 --glass-wb-field-hover-border / --glass-wb-field-focus-border：Input/Capsule/Form 均停止消费
+     （Quiet Field Chrome 走 field-hairline + ring only）。
+     error / warning 边仅作柔和 hairline 色（inset 1px），禁止 focus 亮实线。 */
+  --glass-wb-field-hover-border: #c5d4ef;
+  --glass-wb-field-focus-border: rgba(47, 107, 246, 0.45);
+  --glass-wb-field-error-border: rgba(217, 74, 74, 0.45);
+  --glass-wb-field-warning-border: rgba(158, 100, 0, 0.4);
+
+  /* Input Quiet Chrome — Field / Capsule（裁定 C：rest inset hairline · hover Fade · focus ring only）
+     非 Tonal 按钮，但同 hairline 技法；focus 不用 hairline，仅 --glass-wb-field-focus-ring。 */
+  --glass-wb-field-hairline: inset 0 0 0 1px rgba(120, 160, 210, 0.2);
+  --glass-wb-field-hairline-hover: inset 0 0 0 1px rgba(120, 160, 210, 0.1);
+
+  /* TDesign 品牌色对齐 */
+  --td-brand-color: #4d7cfe;
+  --td-brand-color-hover: #3b66f0;
+  --td-brand-color-active: #2f56d6;
+  --td-brand-color-light: #e8eefc;
+
+  /* ── Chroma 八色守位（Glass Container · 4layer plan B.1）────────────────
+     小物件可满浓；大容器只作低对比染色；chroma 只承载色相语义。 */
+  --glass-chroma-alipay: #1677ff; /* 支付宝蓝：仅小物件主行动 */
+  --glass-chroma-zhihu: #0066ff; /* 知乎蓝：深字 / FAB / 链接强调；大面只作尾染 */
+  --glass-chroma-cyan: #4fc3ff; /* 冰青芯：仅 air bloom / 径向团 */
+  --glass-chroma-poster: #edf2f8; /* 海报灰白底：仅 L0 */
+  --glass-chroma-ice: rgba(240, 248, 255, 0.78); /* 冰晶白：L1 透层参考 */
+  --glass-chroma-frost: rgba(198, 222, 250, 0.44); /* 磨砂冰蓝：Rail / 冷区 L3 */
+  --glass-chroma-paper: rgba(252, 254, 255, 0.68); /* 暖纸白：L2 / 暖焦点 */
+  --glass-chroma-ai: #7c5cff; /* AI 紫：仅点缀，禁大面积 */
+
+  /* ── 四层栈 L0–L3 语义别名（Glass Container · 4layer plan C.2）──────────
+     组件优先读 --glass-layer-*；:root 唯一承载现网 Workbench 默认值。
+     本组变量是唯一材质入口，禁止在组件内写死色值。 */
+  /* L0 Page / Poster Wash —— page-level 近似（html body / .poster-air 的简化四径向）
+     fill = 实色回退 / Lab swatch；壳层接线：background: var(--glass-layer-l0-air), var(--glass-layer-l0-wash)
+     ⚠ 非整装权威场：完整 hero-air + hero-petals 走 --glass-poster-* / GlassPosterWash。
+     本组保留作页级小样对照，禁止冒充「整装工作台」全局底。 */
+  --glass-layer-l0-fill: var(--glass-chroma-poster);
+  --glass-layer-l0-wash: linear-gradient(180deg, #edf2f8 0%, #e7edf5 50%, #e1e9f2 100%);
+  /* poster-air 语义：多层半透明径向虚影（大径向模拟 blur 感）；禁满浓涂蓝大面 */
+  --glass-layer-l0-air:
+    radial-gradient(ellipse 420px 260px at 6% 0%, rgba(79, 195, 255, 0.28), transparent 70%),
+    radial-gradient(circle 340px at 96% 18%, rgba(0, 102, 255, 0.14), transparent 68%),
+    radial-gradient(ellipse 280px 180px at 32% 78%, rgba(22, 119, 255, 0.1), transparent 70%),
+    radial-gradient(circle 200px at 82% 92%, rgba(79, 195, 255, 0.16), transparent 70%);
+
+  /* ── PosterWash 整装权威场（GlassPosterWash）──────────────────────────
+     忠实对应 html「整装工作台 · 真实组件」区：body wash + .hero-air（含 ::before/::after）
+     + .hero-petals i.a–c；可选 pageAir = 页级 .poster-air span.a–d。
+     组件只读本组 var，禁止魔法色。与 --glass-layer-l0-* 并存，但整装裁决以本组为准。 */
+
+  /* body 长渐变底垫（边界露边时可见） */
+  --glass-poster-wash: linear-gradient(180deg, #edf2f8 0%, #e7edf5 50%, #e1e9f2 100%);
+
+  /* 设计画布与 cover 安全过冲（cover × boost，防四角裁花瓣芯） */
+  --glass-poster-board-w: 1280px;
+  --glass-poster-board-h: 720px;
+  --glass-poster-board-w-num: 1280;
+  --glass-poster-board-h-num: 720;
+  --glass-poster-safe-boost: 1.08;
+
+  /* hero-air：四径向 + 一线性；整层 blur + saturate；inset -10% */
+  --glass-poster-air-inset: -10%;
+  --glass-poster-air-blur: blur(36px) saturate(1.15);
+  --glass-poster-air-radial-a: radial-gradient(36% 42% at 78% 18%, rgba(22, 119, 255, 0.3), transparent 62%);
+  --glass-poster-air-radial-b: radial-gradient(30% 36% at 92% 72%, rgba(79, 195, 255, 0.26), transparent 60%);
+  --glass-poster-air-radial-c: radial-gradient(40% 48% at 18% 88%, rgba(0, 102, 255, 0.2), transparent 65%);
+  --glass-poster-air-radial-d: radial-gradient(28% 30% at 42% 12%, rgba(240, 248, 255, 0.62), transparent 70%);
+  --glass-poster-air-linear: linear-gradient(135deg, #f4f8fc, #eaf2fa 55%, #e2ecf7);
+  --glass-poster-air-bg:
+    var(--glass-poster-air-radial-a),
+    var(--glass-poster-air-radial-b),
+    var(--glass-poster-air-radial-c),
+    var(--glass-poster-air-radial-d),
+    var(--glass-poster-air-linear);
+
+  /* hero-air::before —— 横向条带二次 bloom */
+  --glass-poster-air-before-w: 55%;
+  --glass-poster-air-before-h: 32%;
+  --glass-poster-air-before-left: 30%;
+  --glass-poster-air-before-top: 12%;
+  --glass-poster-air-before-radius: 999px;
+  --glass-poster-air-before-bg: linear-gradient(
+    100deg,
+    rgba(210, 232, 255, 0.45),
+    rgba(79, 195, 255, 0.3) 40%,
+    rgba(0, 102, 255, 0.14)
+  );
+  --glass-poster-air-before-blur: blur(18px);
+  --glass-poster-air-before-opacity: 0.55;
+  --glass-poster-air-before-rotate: 8deg;
+
+  /* hero-air::after —— 左下有机形二次 bloom */
+  --glass-poster-air-after-w: 38%;
+  --glass-poster-air-after-h: 48%;
+  --glass-poster-air-after-left: 4%;
+  --glass-poster-air-after-bottom: 0;
+  --glass-poster-air-after-radius: 60% 40% 55% 45% / 55% 45% 55% 45%;
+  --glass-poster-air-after-bg: linear-gradient(
+    150deg,
+    rgba(210, 232, 255, 0.4),
+    rgba(79, 195, 255, 0.24),
+    rgba(22, 119, 255, 0.12)
+  );
+  --glass-poster-air-after-blur: blur(22px);
+  --glass-poster-air-after-opacity: 0.5;
+  --glass-poster-air-after-rotate: -16deg;
+
+  /* hero-petals 共性（有机圆角 + multiply） */
+  --glass-poster-petal-radius: 58% 42% 52% 48% / 48% 52% 48% 52%;
+  --glass-poster-petal-blend: multiply;
+
+  /* .hero-petals .a —— 左上大瓣 */
+  --glass-poster-petal-a-w: 340px;
+  --glass-poster-petal-a-h: 460px;
+  --glass-poster-petal-a-left: -6%;
+  --glass-poster-petal-a-top: -18%;
+  --glass-poster-petal-a-rotate: -32deg;
+  --glass-poster-petal-a-bg: linear-gradient(
+    155deg,
+    rgba(200, 230, 255, 0.2),
+    rgba(90, 190, 255, 0.35) 35%,
+    rgba(22, 119, 255, 0.32) 65%,
+    rgba(0, 82, 204, 0.1)
+  );
+  --glass-poster-petal-a-blur: blur(18px);
+  --glass-poster-petal-a-opacity: 0.7;
+
+  /* .hero-petals .b —— 右上中瓣 */
+  --glass-poster-petal-b-w: 280px;
+  --glass-poster-petal-b-h: 360px;
+  --glass-poster-petal-b-right: -4%;
+  --glass-poster-petal-b-top: 8%;
+  --glass-poster-petal-b-rotate: 24deg;
+  --glass-poster-petal-b-bg: linear-gradient(
+    145deg,
+    rgba(180, 220, 255, 0.18),
+    rgba(22, 119, 255, 0.3) 50%,
+    rgba(0, 102, 255, 0.14)
+  );
+  --glass-poster-petal-b-blur: blur(22px);
+  --glass-poster-petal-b-opacity: 0.65;
+
+  /* .hero-petals .c —— 底部淡出小瓣 */
+  --glass-poster-petal-c-w: 220px;
+  --glass-poster-petal-c-h: 300px;
+  --glass-poster-petal-c-left: 38%;
+  --glass-poster-petal-c-bottom: -20%;
+  --glass-poster-petal-c-rotate: -12deg;
+  --glass-poster-petal-c-bg: linear-gradient(160deg, rgba(140, 205, 255, 0.22), rgba(0, 102, 255, 0.2), transparent);
+  --glass-poster-petal-c-blur: blur(26px);
+  --glass-poster-petal-c-opacity: 0.55;
+
+  /* pageAir 可选页级 bokeh（html .poster-air span.a–d；非橱窗主权威） */
+  --glass-poster-page-air-radius: 50%;
+  --glass-poster-page-air-a-w: 420px;
+  --glass-poster-page-air-a-h: 260px;
+  --glass-poster-page-air-a-top: -4%;
+  --glass-poster-page-air-a-left: -6%;
+  --glass-poster-page-air-a-bg: radial-gradient(
+    ellipse,
+    rgba(79, 195, 255, 0.55),
+    rgba(22, 119, 255, 0.18),
+    transparent 70%
+  );
+  --glass-poster-page-air-a-rotate: -22deg;
+  --glass-poster-page-air-b-w: 340px;
+  --glass-poster-page-air-b-h: 340px;
+  --glass-poster-page-air-b-top: 12%;
+  --glass-poster-page-air-b-right: -8%;
+  --glass-poster-page-air-b-bg: radial-gradient(
+    circle,
+    rgba(0, 102, 255, 0.28),
+    rgba(22, 119, 255, 0.1),
+    transparent 68%
+  );
+  --glass-poster-page-air-c-w: 280px;
+  --glass-poster-page-air-c-h: 180px;
+  --glass-poster-page-air-c-bottom: 18%;
+  --glass-poster-page-air-c-left: 22%;
+  --glass-poster-page-air-c-bg: radial-gradient(ellipse, rgba(22, 119, 255, 0.22), transparent 70%);
+  --glass-poster-page-air-c-blur: blur(56px);
+  --glass-poster-page-air-c-opacity: 0.35;
+  --glass-poster-page-air-d-w: 200px;
+  --glass-poster-page-air-d-h: 200px;
+  --glass-poster-page-air-d-bottom: 6%;
+  --glass-poster-page-air-d-right: 18%;
+  --glass-poster-page-air-d-bg: radial-gradient(
+    circle,
+    rgba(79, 195, 255, 0.35),
+    rgba(0, 102, 255, 0.08),
+    transparent
+  );
+  --glass-poster-page-air-d-blur: blur(40px);
+  --glass-poster-page-air-d-opacity: 0.4;
+
+  /* L1 Host Tray / Surface —— 对齐现网 --glass-wb-surface-*，禁 pad=0 */
+  --glass-layer-l1-fill: var(--glass-wb-surface-fill);
+  --glass-layer-l1-blur: var(--glass-wb-surface-blur);
+  --glass-layer-l1-shadow: var(--glass-wb-surface-shadow);
+  --glass-layer-l1-radius: var(--glass-wb-surface-radius);
+  --glass-layer-l1-pad: var(--glass-wb-surface-pad);
+  --glass-layer-l1-air: var(--glass-wb-surface-air);
+  --glass-layer-l1-air-blur: var(--glass-wb-surface-air-blur);
+
+  /* L2 Region / PageHeader —— 扇形软过渡 + 磨砂微透 + lift 影（html .t1 .bph / --shadow-lift）
+     对齐 html .t1 .bph + 海报场降亮：左微透 + 冰蓝中段（chroma 更早进场），蓝染尾 ≤12%；
+     边界靠材质差 + 影，禁描边 / inset rim / 满浓糊边。
+     P1 返工：左端 .54→.46、冰蓝 stop 45%→32%，避免海报底上左 1/3 仍读成白条。 */
+  --glass-layer-l2-fill: linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0.46) 0%,
+    rgba(226, 242, 255, 0.4) 32%,
+    rgba(22, 119, 255, 0.12) 100%
+  );
+  /* Actions「重物压感」：左端再降、中段冰蓝、右端更实 + 影偏右下 */
+  --glass-layer-l2-fill-weighted: linear-gradient(
+    118deg,
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(226, 242, 255, 0.42) 30%,
+    rgba(22, 119, 255, 0.14) 72%,
+    rgba(0, 102, 255, 0.1) 100%
+  );
+  --glass-layer-l2-fill-solid: rgba(252, 254, 255, 0.92);
+  --glass-layer-l2-blur: blur(18px) saturate(1.2);
+  --glass-layer-l2-shadow: 0 18px 40px rgba(28, 72, 150, 0.14), 0 4px 12px rgba(28, 72, 150, 0.07);
+  --glass-layer-l2-shadow-weighted:
+    0 18px 40px rgba(28, 72, 150, 0.14),
+    0 4px 12px rgba(28, 72, 150, 0.07),
+    10px 10px 28px rgba(15, 60, 140, 0.1);
+  /* 显式关闭旧软 rim；组件 box-shadow 不得再拼本 token */
+  --glass-layer-l2-rim: none;
+  /* 极轻抬升；prefers-reduced-motion 时组件侧关掉位移 */
+  --glass-layer-l2-lift: 1px;
+  --glass-layer-l2-radius: 14px;
+  --glass-layer-l2-height: 56px;
+
+  /* L3 Focus Panel —— 冷蓝焦点；inset 无 lift / 无外轮廓 hairline，standalone 轻影
+     inset = Nested Chrome 扁板：在 L1 雾蓝露边之上用更冷、略深的蓝洗提升阅读边界；
+     分层靠明度 / 冷暖差与小 gap，禁止粉笔白实底、二次 blur、lift 影或 hairline。 */
+  --glass-layer-l3-fill: rgba(252, 254, 255, 0.56);
+  --glass-layer-l3-blur: blur(18px);
+  --glass-layer-l3-shadow: none;
+  --glass-layer-l3-radius: 14px;
+  --glass-layer-l3-inset-fill: linear-gradient(
+    155deg,
+    rgba(212, 234, 254, 0.82) 0%,
+    rgba(188, 219, 250, 0.68) 100%
+  );
+  --glass-layer-l3-inset-blur: none;
+  --glass-layer-l3-inset-shadow: none;
+  --glass-layer-l3-inset-hairline: none; /* 容器禁外轮廓 hairline；分层靠字色 / 明度冷暖 */
+  --glass-layer-l3-standalone-fill: rgba(252, 254, 255, 0.62);
+  --glass-layer-l3-standalone-blur: blur(18px);
+  --glass-layer-l3-standalone-shadow: 0 12px 30px rgba(15, 60, 140, 0.07);
+  --glass-layer-l3-hairline: inset 0 0 0 1px rgba(120, 160, 210, 0.12);
+}
+
+/* Overlay footer · 共享动作行（GlassDialog 默认 / GlassFormPane #footer / Lab 自定义 #footer）
+   统一右对齐、居中、gap 与换行；不覆盖按钮 variant / shape。
+   脚钮密度契约：取消 quiet（默认 Pill 38）；确认 primary/danger 必须 shape="round" 同入 Pill 38。 */
+.glass-overlay-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--glass-wb-dialog-footer-gap);
+  min-width: 0;
+}
+
+.glass-overlay-footer > .t-button {
+  flex: 0 0 auto;
+  width: auto;
+  max-width: 100%;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    'PingFang SC',
+    'Hiragino Sans GB',
+    'Microsoft YaHei',
+    sans-serif;
+  color: var(--glass-text-primary);
+  background: var(--glass-page-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Message / Soft Toast（全局主题层）──────────────────────────────────
+   MessagePlugin 会 teleport 到 body，因此不得依赖组件 scoped 样式。
+   复用 Alert Status Soft Plate；覆盖 TD 多层 inset 阴影与默认白卡。 */
+.t-message {
+  border: none;
+  border-radius: var(--glass-wb-message-radius);
+  padding: var(--glass-wb-message-padding-y) var(--glass-wb-message-padding-x);
+  -webkit-backdrop-filter: var(--glass-wb-message-blur);
+  backdrop-filter: var(--glass-wb-message-blur);
+  box-shadow: var(--glass-wb-message-shadow);
+  background: var(--glass-wb-message-info-fill);
+  color: var(--glass-text-primary);
+}
+
+.t-message.t-is-success {
+  background: var(--glass-wb-message-success-fill);
+}
+
+.t-message.t-is-info {
+  background: var(--glass-wb-message-info-fill);
+}
+
+.t-message.t-is-warning {
+  background: var(--glass-wb-message-warning-fill);
+}
+
+.t-message.t-is-error {
+  background: var(--glass-wb-message-error-fill);
+}
+
+.t-message.t-is-question {
+  background: var(--glass-wb-message-question-fill);
+}
+
+.t-message.t-is-loading {
+  background: var(--glass-wb-message-loading-fill);
+}
+
+.t-message > .t-icon,
+.t-message > [data-t-icon] > .t-icon,
+.t-message .t-loading {
+  color: var(--glass-wb-message-info-icon);
+}
+
+.t-message.t-is-success > .t-icon,
+.t-message.t-is-success > [data-t-icon] > .t-icon,
+.t-message.t-is-success .t-loading {
+  color: var(--glass-wb-message-success-icon);
+}
+
+.t-message.t-is-info > .t-icon,
+.t-message.t-is-info > [data-t-icon] > .t-icon,
+.t-message.t-is-info .t-loading {
+  color: var(--glass-wb-message-info-icon);
+}
+
+.t-message.t-is-warning > .t-icon,
+.t-message.t-is-warning > [data-t-icon] > .t-icon,
+.t-message.t-is-warning .t-loading {
+  color: var(--glass-wb-message-warning-icon);
+}
+
+.t-message.t-is-error > .t-icon,
+.t-message.t-is-error > [data-t-icon] > .t-icon,
+.t-message.t-is-error .t-loading {
+  color: var(--glass-wb-message-error-icon);
+}
+
+.t-message.t-is-question > .t-icon,
+.t-message.t-is-question > [data-t-icon] > .t-icon,
+.t-message.t-is-question .t-loading {
+  color: var(--glass-wb-message-question-icon);
+}
+
+.t-message.t-is-loading > .t-icon,
+.t-message.t-is-loading > [data-t-icon] > .t-icon,
+.t-message.t-is-loading .t-loading {
+  color: var(--glass-wb-message-loading-icon);
+}
+
+/* Dismissible Quiet：muted → secondary；清掉 TD close hover/active 灰底 */
+.t-message.t-is-closable .t-message__close {
+  color: var(--glass-text-muted);
+  transition:
+    color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.t-message.t-is-closable .t-message__close:hover {
+  color: var(--glass-text-secondary);
+}
+
+.t-message.t-is-closable .t-message__close .t-icon-close,
+.t-message.t-is-closable .t-message__close .t-icon-close:hover,
+.t-message.t-is-closable .t-message__close .t-icon-close:active {
+  background: transparent;
+}
+
+.t-message.t-is-closable .t-message__close .t-icon-close:focus-visible {
+  outline: none;
+  box-shadow: var(--glass-wb-control-focus-ring);
+}
+
+/* ── Glass Tabs（全局主题层）────────────────────────────────────────────
+   GlassTabs 只负责在 t-tabs 外层挂 .glass-tabs
+   + .glass-tabs--{line|soft|card|capsule}；本段是唯一视觉出处。
+   TD DOM 事实：line/soft 的文字与圆角在 .t-tabs__nav-item-wrapper；
+   card 的文字在 .t-tabs__nav-item-text-wrapper，且 nav--card 类同时挂容器与项。 */
+.glass-tabs,
+.glass-tabs .t-tabs {
+  background: transparent;
+}
+
+.glass-tabs .t-tabs {
+  overflow: visible;
+}
+
+.glass-tabs .t-tabs__content {
+  background: transparent;
+}
+
+.glass-tabs .t-tab-panel {
+  padding-top: var(--glass-wb-tabs-panel-pad-top);
+}
+
+/* 盖掉 TD 顶部/底部/侧向灰分割线；line 只保留品牌蓝 ink bar。 */
+.glass-tabs .t-tabs__nav-container::after {
+  background-color: var(--glass-wb-tabs-divider);
+}
+
+/* 溢出箭钮与 addable 区不得带出 TD 的灰底、灰边。 */
+.glass-tabs .t-tabs__operations,
+.glass-tabs .t-tabs__scroll-btn {
+  border-color: transparent;
+  background-color: transparent;
+}
+
+.glass-tabs .t-tabs__nav-item {
+  height: var(--glass-wb-tabs-item-height);
+  color: var(--glass-wb-tabs-color);
+  font-size: var(--glass-wb-tabs-font-size);
+  font-weight: var(--glass-wb-tabs-font-weight);
+  line-height: normal;
+  border-radius: var(--glass-wb-tabs-item-radius);
+  text-shadow: none;
+  transition: var(--glass-wb-tabs-item-transition);
+  --ripple-color: var(--glass-wb-text-cta-ripple);
+}
+
+.glass-tabs .t-tabs__nav-item-wrapper {
+  height: 100%;
+  padding: 0 var(--glass-wb-tabs-item-pad-x);
+  margin: 0 calc(var(--glass-wb-tabs-item-gap) / 2);
+  border-radius: var(--glass-wb-tabs-item-radius);
+  transition: var(--glass-wb-tabs-item-transition);
+  --ripple-color: var(--glass-wb-text-cta-ripple);
+}
+
+/* TD 的 size=large 会给 wrapper 加高；Glass 仍保持紧凑行高，避免同页节奏被拉开。 */
+.glass-tabs .t-tabs__nav-item.t-size-l .t-tabs__nav-item-wrapper {
+  height: 100%;
+  padding: 0 var(--glass-wb-tabs-item-pad-x);
+}
+
+.glass-tabs .t-tabs__nav-item.t-is-active {
+  color: var(--glass-wb-tabs-color-active);
+  font-weight: var(--glass-wb-tabs-font-weight-active);
+  text-shadow: none;
+}
+
+.glass-tabs .t-tabs__nav-item:not(.t-is-disabled):not(.t-is-active):hover .t-tabs__nav-item-wrapper {
+  background-color: var(--glass-wb-tabs-item-hover-bg);
+  color: var(--glass-wb-tabs-color-hover);
+}
+
+/* Hover Whisper → Active Press：只压 item wrapper，不改变宽高与轨道布局。 */
+.glass-tabs:not(.glass-tabs--card) .t-tabs__nav-item:not(.t-is-disabled):active .t-tabs__nav-item-wrapper {
+  transform: scale(var(--glass-wb-control-active-scale));
+}
+
+.glass-tabs--card .t-tabs__nav-item:not(.t-is-disabled):active .t-tabs__nav-item-text-wrapper {
+  transform: scale(var(--glass-wb-control-active-scale));
+}
+
+.glass-tabs .t-tabs__nav-item.t-is-disabled {
+  color: var(--glass-wb-tabs-item-disabled-color);
+  cursor: not-allowed;
+  opacity: var(--glass-wb-control-disabled-opacity);
+}
+
+.glass-tabs .t-tabs__nav-item.t-is-disabled .t-tabs__nav-item-wrapper {
+  background-color: transparent;
+  box-shadow: none;
+  transform: none;
+}
+
+/* Focus Ring 贴 item 圆角，不另画方框。 */
+.glass-tabs .t-tabs__nav-item:focus-visible {
+  outline: none;
+}
+
+.glass-tabs:not(.glass-tabs--card) .t-tabs__nav-item:focus-visible .t-tabs__nav-item-wrapper,
+.glass-tabs--card .t-tabs__nav-item:focus-visible {
+  box-shadow: var(--glass-wb-control-focus-ring);
+}
+
+.glass-tabs .t-tabs__nav-item:focus-visible .t-tabs__nav-item-text-wrapper {
+  outline: none;
+}
+
+/* ── line · Quiet Ink Track ───────────────────────────────────────────── */
+.glass-tabs--line .t-tabs__nav-item.t-is-active {
+  background-color: var(--glass-wb-tabs-item-active-bg);
+}
+
+.glass-tabs--line .t-tabs__bar {
+  background-color: var(--glass-wb-tabs-bar-color);
+  border-radius: var(--glass-wb-tabs-bar-radius);
+}
+
+.glass-tabs--line .t-tabs__bar.t-is-top,
+.glass-tabs--line .t-tabs__bar.t-is-bottom {
+  height: var(--glass-wb-tabs-bar-height);
+}
+
+.glass-tabs--line .t-tabs__bar.t-is-left,
+.glass-tabs--line .t-tabs__bar.t-is-right {
+  width: var(--glass-wb-tabs-bar-height);
+}
+
+/* ── soft / capsule · Soft Segment Track ───────────────────────────────
+   二者共享轨道材质、选中 Soft Active Wash 与全部交互态；仅圆角不同。 */
+:is(.glass-tabs--soft, .glass-tabs--capsule) .t-tabs__nav {
+  overflow: visible;
+}
+
+:is(.glass-tabs--soft, .glass-tabs--capsule) .t-tabs__nav-container {
+  display: inline-flex;
+  width: max-content;
+  max-width: 100%;
+  vertical-align: top;
+  box-sizing: border-box;
+  padding: var(--glass-wb-tabs-soft-track-pad);
+  border-radius: var(--glass-wb-tabs-soft-track-radius);
+  background-color: var(--glass-wb-tabs-soft-track-bg);
+  -webkit-backdrop-filter: var(--glass-wb-tabs-soft-track-blur);
+  backdrop-filter: var(--glass-wb-tabs-soft-track-blur);
+  box-shadow: var(--glass-wb-tabs-soft-track-hairline), var(--glass-wb-tabs-soft-track-shadow);
+}
+
+:is(.glass-tabs--soft, .glass-tabs--capsule) .t-tabs__nav-item {
+  height: var(--glass-wb-tabs-soft-item-height);
+}
+
+:is(.glass-tabs--soft, .glass-tabs--capsule) .t-tabs__nav-item-wrapper {
+  border-radius: var(--glass-wb-tabs-soft-item-radius);
+}
+
+:is(.glass-tabs--soft, .glass-tabs--capsule)
+  .t-tabs__nav-item.t-is-active
+  .t-tabs__nav-item-wrapper {
+  background-color: var(--glass-wb-tabs-soft-item-active-bg);
+  color: var(--glass-wb-tabs-soft-item-active-color);
+  box-shadow: var(--glass-wb-tonal-hairline);
+}
+
+:is(.glass-tabs--soft, .glass-tabs--capsule) .t-tabs__bar {
+  display: none;
+}
+
+/* ── capsule · Soft Segment Track（pill）───────────────────────────────
+   与 soft 的唯一差分：轨道与项改真胶囊圆角；不套用 Radio filled 满浓蓝选中。 */
+.glass-tabs--capsule .t-tabs__nav-container {
+  border-radius: var(--glass-wb-tabs-capsule-track-radius-pill);
+}
+
+.glass-tabs--capsule .t-tabs__nav-item {
+  border-radius: var(--glass-wb-tabs-capsule-item-radius-pill);
+}
+
+.glass-tabs--capsule .t-tabs__nav-item-wrapper {
+  border-radius: var(--glass-wb-tabs-capsule-item-radius-pill);
+}
+
+/* ── card · Soft Card Track ───────────────────────────────────────────── */
+.glass-tabs--card .t-tabs__nav {
+  overflow: visible;
+}
+
+.glass-tabs--card .t-tabs__nav-container {
+  display: inline-flex;
+  width: max-content;
+  max-width: 100%;
+  vertical-align: top;
+  box-sizing: border-box;
+  padding: var(--glass-wb-tabs-card-nav-pad);
+  border-radius: var(--glass-wb-tabs-card-nav-radius);
+  background-color: var(--glass-wb-tabs-card-nav-bg);
+  box-shadow: var(--glass-wb-tabs-soft-track-hairline);
+}
+
+.glass-tabs--card .t-tabs__scroll-btn {
+  border: none;
+}
+
+/* 清掉 TD card 的各项灰边、left/right 竖线与 active 底边。 */
+.glass-tabs--card .t-tabs__nav-item.t-tabs__nav--card {
+  height: var(--glass-wb-tabs-item-height);
+  padding: 0 var(--glass-wb-tabs-item-pad-x);
+  border: none;
+  border-radius: var(--glass-wb-tabs-card-item-radius);
+  background-color: transparent;
+  color: var(--glass-wb-tabs-color);
+  box-shadow: none;
+  text-shadow: none;
+  transition: var(--glass-wb-tabs-item-transition);
+}
+
+.glass-tabs--card .t-tabs__nav-item.t-tabs__nav--card:not(.t-is-disabled):not(.t-is-active):hover {
+  background-color: var(--glass-wb-tabs-item-hover-bg);
+  color: var(--glass-wb-tabs-color-hover);
+}
+
+.glass-tabs--card .t-tabs__nav-item.t-tabs__nav--card.t-is-active {
+  background-color: var(--glass-wb-tabs-card-item-active-bg);
+  color: var(--glass-wb-tabs-card-item-active-color);
+  box-shadow:
+    var(--glass-wb-tabs-card-item-active-hairline),
+    var(--glass-wb-tabs-card-item-active-shadow);
+}
+
+.glass-tabs--card .t-tabs__nav-item-text-wrapper {
+  transition: transform 0.15s var(--glass-wb-control-ease-lift);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glass-tabs .t-tabs__bar,
+  .glass-tabs .t-tabs__nav-item,
+  .glass-tabs .t-tabs__nav-item-wrapper,
+  .glass-tabs--card .t-tabs__nav-item-text-wrapper {
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+
+  .glass-tabs:not(.glass-tabs--card)
+    .t-tabs__nav-item:not(.t-is-disabled):active
+    .t-tabs__nav-item-wrapper,
+  .glass-tabs--card .t-tabs__nav-item:not(.t-is-disabled):active .t-tabs__nav-item-text-wrapper {
+    transform: none;
+  }
+}
+
+/* ── Glass Radio（全局主题层）────────────────────────────────────────────
+   GlassRadioGroup 挂 .glass-radio-group + --{default|rounded|capsule}；
+   GlassRadio 在 t-radio 根上挂 .glass-radio。
+   default → t-radio 圆点 Action Blue；rounded / capsule → t-radio-button 分段轨
+   （rounded = 圆角矩形，capsule = 真胶囊，二者只差圆角半径）。
+   视觉数值全部在本文件收口；组件内禁止魔法 hex/rgba。 */
+
+.glass-radio-group,
+.glass-radio-group .t-radio-group {
+  background: transparent;
+}
+
+/* ── default · Action Blue Dot ───────────────────────────────────────────
+   覆盖两种入口：Group options 渲染的裸 .t-radio，以及 default slot 里的
+   GlassRadio（.glass-radio）/ 独立单选项。 */
+.glass-radio-group--default .t-radio,
+.glass-radio {
+  color: var(--glass-wb-radio-color);
+  font-size: var(--glass-wb-radio-font-size);
+}
+
+.glass-radio-group--default .t-radio-group {
+  gap: var(--glass-wb-radio-gap);
+}
+
+.glass-radio-group--default .t-radio-group .t-radio {
+  margin-right: 0;
+}
+
+.glass-radio-group--default .t-radio__label,
+.glass-radio .t-radio__label {
+  margin-left: var(--glass-wb-radio-label-gap);
+  color: var(--glass-wb-radio-color);
+  font-size: var(--glass-wb-radio-font-size);
+}
+
+.glass-radio-group--default .t-radio__input,
+.glass-radio .t-radio__input {
+  width: var(--glass-wb-radio-dot-size);
+  height: var(--glass-wb-radio-dot-size);
+  border-color: var(--glass-wb-radio-dot-border-color);
+  background-color: var(--glass-wb-radio-dot-bg);
+  transition: var(--glass-wb-radio-transition);
+}
+
+.glass-radio-group--default .t-radio__input::after,
+.glass-radio .t-radio__input::after {
+  background-color: var(--glass-wb-radio-dot-inner-color);
+}
+
+.glass-radio-group--default .t-radio:not(.t-is-disabled):hover .t-radio__input,
+.glass-radio:not(.t-is-disabled):hover .t-radio__input {
+  border-color: var(--glass-wb-radio-dot-hover-border-color);
+}
+
+.glass-radio-group--default .t-radio:not(.t-is-disabled):active .t-radio__input,
+.glass-radio:not(.t-is-disabled):active .t-radio__input {
+  transform: scale(var(--glass-wb-control-active-scale));
+}
+
+/* checked — 默认（outline）：蓝边 + 白底 + Action Blue 点芯（现状）；
+   appearance-filled 由下方更高特异性规则覆盖为整圆实心。 */
+.glass-radio-group--default .t-radio.t-is-checked .t-radio__input,
+.glass-radio.t-is-checked .t-radio__input {
+  border-color: var(--glass-wb-radio-dot-checked-border-color);
+  background-color: var(--glass-wb-radio-dot-bg);
+}
+
+/* checked — filled：整圆实心 Action Blue；无点（::after 透明），禁白核高光 */
+.glass-radio-group--default.glass-radio-group--appearance-filled .t-radio.t-is-checked .t-radio__input {
+  border-color: var(--glass-wb-radio-dot-filled-bg);
+  background-color: var(--glass-wb-radio-dot-filled-bg);
+}
+
+.glass-radio-group--default.glass-radio-group--appearance-filled
+  .t-radio.t-is-checked
+  .t-radio__input::after {
+  background-color: transparent;
+}
+
+/* Focus Ring：去掉 TD 的粗描边，改走 token ring，贴圆点。 */
+.glass-radio-group--default .t-radio:focus-visible,
+.glass-radio:focus-visible:focus-visible {
+  outline: none;
+}
+
+.glass-radio-group--default .t-radio:focus-visible .t-radio__input,
+.glass-radio:focus-visible:focus-visible .t-radio__input {
+  box-shadow: var(--glass-wb-control-focus-ring);
+}
+
+/* disabled：降透 + 不抢戏；点芯仍保持 Action Blue 色相（透明度交给 opacity） */
+.glass-radio-group--default .t-radio.t-is-disabled,
+.glass-radio.t-is-disabled {
+  cursor: not-allowed;
+  opacity: var(--glass-wb-radio-disabled-opacity);
+}
+
+.glass-radio-group--default .t-radio.t-is-disabled .t-radio__label,
+.glass-radio.t-is-disabled .t-radio__label {
+  color: var(--glass-wb-radio-color);
+}
+
+.glass-radio-group--default .t-radio.t-is-disabled .t-radio__input,
+.glass-radio-group--default .t-radio.t-is-disabled.t-is-checked .t-radio__input,
+.glass-radio.t-is-disabled .t-radio__input,
+.glass-radio.t-is-disabled.t-is-checked .t-radio__input {
+  border-color: var(--glass-wb-radio-dot-border-color);
+  background-color: var(--glass-wb-radio-dot-bg);
+}
+
+/* filled disabled-checked：保持实心 Action Blue 色相（透明度交给 opacity） */
+.glass-radio-group--default.glass-radio-group--appearance-filled
+  .t-radio.t-is-disabled.t-is-checked
+  .t-radio__input {
+  border-color: var(--glass-wb-radio-dot-filled-bg);
+  background-color: var(--glass-wb-radio-dot-filled-bg);
+}
+
+.glass-radio-group--default .t-radio.t-is-disabled.t-is-checked .t-radio__input::after,
+.glass-radio.t-is-disabled.t-is-checked .t-radio__input::after {
+  background-color: var(--glass-wb-radio-dot-inner-color);
+}
+
+.glass-radio-group--default.glass-radio-group--appearance-filled
+  .t-radio.t-is-disabled.t-is-checked
+  .t-radio__input::after {
+  background-color: transparent;
+}
+
+/* ── segmented · rounded（圆角矩形） / capsule（真胶囊）──────────────────
+   二者共享 Soft Segment 轨与项逻辑样式，仅圆角半径不同：
+   rounded = 圆角矩形分段；capsule = 真胶囊（pill，两端半圆）。
+   共享规则用 :is(--rounded, --capsule) 收敛，半径差异单独覆盖。 */
+:is(.glass-radio-group--rounded, .glass-radio-group--capsule) .t-radio-group {
+  display: inline-flex;
+  align-items: center;
+  width: max-content;
+  max-width: 100%;
+  padding: var(--glass-wb-radio-segment-track-pad);
+  border-radius: var(--glass-wb-radio-segment-track-radius);
+  background-color: var(--glass-wb-radio-segment-track-bg);
+  -webkit-backdrop-filter: var(--glass-wb-radio-segment-track-blur);
+  backdrop-filter: var(--glass-wb-radio-segment-track-blur);
+  box-shadow:
+    var(--glass-wb-radio-segment-track-hairline),
+    var(--glass-wb-radio-segment-track-shadow);
+}
+
+/* 真胶囊：轨两端半圆（pill） */
+.glass-radio-group--capsule .t-radio-group {
+  border-radius: var(--glass-wb-radio-segment-track-radius-pill);
+}
+
+/* 盖掉 TD outline 按钮的边框 / 首尾圆角 / 灰底；first/last/only 用 (0,4,0) 压过 */
+:is(.glass-radio-group--rounded, .glass-radio-group--capsule)
+  .t-radio-group
+  .t-radio-button,
+:is(.glass-radio-group--rounded, .glass-radio-group--capsule)
+  .t-radio-group__outline
+  .t-radio-button:first-child,
+:is(.glass-radio-group--rounded, .glass-radio-group--capsule)
+  .t-radio-group__outline
+  .t-radio-button:last-child,
+:is(.glass-radio-group--rounded, .glass-radio-group--capsule)
+  .t-radio-group__outline
+  .t-radio-button:only-child {
+  height: var(--glass-wb-radio-segment-item-height);
+  padding: 0 var(--glass-wb-radio-segment-item-pad-x);
+  border: none;
+  border-right: none;
+  border-radius: var(--glass-wb-radio-segment-item-radius);
+  background-color: transparent;
+  color: var(--glass-wb-radio-segment-item-color);
+  font-size: var(--glass-wb-radio-font-size);
+  box-shadow: none;
+  transition: var(--glass-wb-radio-transition);
+}
+
+/* 真胶囊：项两端半圆（item 半径 = height/2） */
+.glass-radio-group--capsule .t-radio-group .t-radio-button,
+.glass-radio-group--capsule .t-radio-group__outline .t-radio-button:first-child,
+.glass-radio-group--capsule .t-radio-group__outline .t-radio-button:last-child,
+.glass-radio-group--capsule .t-radio-group__outline .t-radio-button:only-child {
+  border-radius: var(--glass-wb-radio-segment-item-radius-pill);
+}
+
+:is(.glass-radio-group--rounded, .glass-radio-group--capsule) .t-radio-button__label {
+  color: inherit;
+}
+
+/* Hover Whisper：仅未选未禁用项，轻提亮不脏灰 */
+:is(.glass-radio-group--rounded, .glass-radio-group--capsule)
+  .t-radio-group
+  .t-radio-button:not(.t-is-disabled):not(.t-is-checked):hover {
+  background-color: var(--glass-wb-radio-segment-item-hover-bg);
+  color: var(--glass-wb-radio-segment-item-hover-color);
+}
+
+/* Active Press：压入不改变宽高，无布局抖动 */
+:is(.glass-radio-group--rounded, .glass-radio-group--capsule)
+  .t-radio-group
+  .t-radio-button:not(.t-is-disabled):active {
+  transform: scale(var(--glass-wb-control-active-scale));
+}
+
+/* checked — filled：满浓 Action Blue 白字（小物件，禁白核）；hover/active 不回落灰边 */
+:is(.glass-radio-group--rounded, .glass-radio-group--capsule).glass-radio-group--appearance-filled
+  .t-radio-group
+  .t-radio-button.t-is-checked,
+:is(.glass-radio-group--rounded, .glass-radio-group--capsule).glass-radio-group--appearance-filled
+  .t-radio-group
+  .t-radio-button.t-is-checked:hover,
+:is(.glass-radio-group--rounded, .glass-radio-group--capsule).glass-radio-group--appearance-filled
+  .t-radio-group
+  .t-radio-button.t-is-checked:active {
+  border: none;
+  background-color: var(--glass-wb-radio-segment-item-active-bg);
+  color: var(--glass-wb-radio-segment-item-active-color);
+  box-shadow: var(--glass-wb-radio-segment-item-active-shadow);
+  transform: none;
+}
+
+/* checked — outline：蓝描边 + 淡冷 wash 底 + Action Blue 字（非满铺实心）；
+   描边走 inset hairline，避免 border 改变宽高导致布局抖动。 */
+:is(.glass-radio-group--rounded, .glass-radio-group--capsule).glass-radio-group--appearance-outline
+  .t-radio-group
+  .t-radio-button.t-is-checked,
+:is(.glass-radio-group--rounded, .glass-radio-group--capsule).glass-radio-group--appearance-outline
+  .t-radio-group
+  .t-radio-button.t-is-checked:hover,
+:is(.glass-radio-group--rounded, .glass-radio-group--capsule).glass-radio-group--appearance-outline
+  .t-radio-group
+  .t-radio-button.t-is-checked:active {
+  border: none;
+  background-color: var(--glass-wb-radio-segment-item-outline-bg);
+  color: var(--glass-wb-radio-segment-item-outline-color);
+  box-shadow: inset 0 0 0 1px var(--glass-wb-radio-segment-item-outline-border-color);
+  transform: none;
+}
+
+/* disabled：透明底 + muted 字，无抬升；disabled-checked 满浓底 + 降透 */
+:is(.glass-radio-group--rounded, .glass-radio-group--capsule)
+  .t-radio-group
+  .t-radio-button.t-is-disabled {
+  cursor: not-allowed;
+  background-color: transparent;
+  color: var(--glass-wb-radio-segment-item-disabled-color);
+  box-shadow: none;
+}
+
+:is(.glass-radio-group--rounded, .glass-radio-group--capsule).glass-radio-group--appearance-filled
+  .t-radio-group
+  .t-radio-button.t-is-disabled.t-is-checked {
+  background-color: var(--glass-wb-radio-segment-item-active-bg);
+  color: var(--glass-wb-radio-segment-item-active-color);
+  opacity: var(--glass-wb-radio-disabled-opacity);
+}
+
+:is(.glass-radio-group--rounded, .glass-radio-group--capsule).glass-radio-group--appearance-outline
+  .t-radio-group
+  .t-radio-button.t-is-disabled.t-is-checked {
+  background-color: var(--glass-wb-radio-segment-item-outline-bg);
+  color: var(--glass-wb-radio-segment-item-outline-color);
+  box-shadow: inset 0 0 0 1px var(--glass-wb-radio-segment-item-outline-border-color);
+  opacity: var(--glass-wb-radio-disabled-opacity);
+}
+
+/* Focus Ring：贴分段项圆角；选中项保留实心影 + ring */
+:is(.glass-radio-group--rounded, .glass-radio-group--capsule)
+  .t-radio-group
+  .t-radio-button:focus-visible {
+  outline: none;
+  box-shadow: var(--glass-wb-control-focus-ring);
+}
+
+:is(.glass-radio-group--rounded, .glass-radio-group--capsule).glass-radio-group--appearance-filled
+  .t-radio-group
+  .t-radio-button.t-is-checked:focus-visible {
+  box-shadow:
+    var(--glass-wb-radio-segment-item-active-shadow),
+    var(--glass-wb-control-focus-ring);
+}
+
+:is(.glass-radio-group--rounded, .glass-radio-group--capsule).glass-radio-group--appearance-outline
+  .t-radio-group
+  .t-radio-button.t-is-checked:focus-visible {
+  box-shadow:
+    inset 0 0 0 1px var(--glass-wb-radio-segment-item-outline-border-color),
+    var(--glass-wb-control-focus-ring);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glass-radio-group--default .t-radio__input,
+  .glass-radio .t-radio__input,
+  :is(.glass-radio-group--rounded, .glass-radio-group--capsule) .t-radio-group .t-radio-button {
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease,
+      border-color 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+
+  .glass-radio-group--default .t-radio:not(.t-is-disabled):active .t-radio__input,
+  .glass-radio:not(.t-is-disabled):active .t-radio__input,
+  :is(.glass-radio-group--rounded, .glass-radio-group--capsule)
+    .t-radio-group
+    .t-radio-button:not(.t-is-disabled):active {
+    transform: none;
+  }
+}
+
+/* ── Notification / Soft Notice（全局主题层）────────────────────────────
+   NotificationPlugin 会 teleport 到 body，因此不得依赖组件 scoped 样式。
+   复用 Message Status Soft Plate；密度略松以容纳 title + content + footer。
+   盖掉 TD 默认白卡与多层 inset 阴影；无左侧色带、无 Surface blur36。 */
+.t-notification {
+  border: none;
+  width: var(--glass-wb-notification-width);
+  border-radius: var(--glass-wb-notification-radius);
+  padding: var(--glass-wb-notification-padding-y) var(--glass-wb-notification-padding-x);
+  -webkit-backdrop-filter: var(--glass-wb-notification-blur);
+  backdrop-filter: var(--glass-wb-notification-blur);
+  box-shadow: var(--glass-wb-notification-shadow);
+  background: var(--glass-wb-notification-info-fill);
+  color: var(--glass-wb-notification-title-color);
+}
+
+/* 四态 fill 双保险：TD 把 theme 类挂在图标上；Plugin/声明式壳再补根节点 --theme。 */
+.t-notification:has(.t-icon.t-is-success),
+.t-notification.glass-notification--success {
+  background: var(--glass-wb-notification-success-fill);
+}
+
+.t-notification:has(.t-icon.t-is-info),
+.t-notification.glass-notification--info {
+  background: var(--glass-wb-notification-info-fill);
+}
+
+.t-notification:has(.t-icon.t-is-warning),
+.t-notification.glass-notification--warning {
+  background: var(--glass-wb-notification-warning-fill);
+}
+
+.t-notification:has(.t-icon.t-is-error),
+.t-notification.glass-notification--error {
+  background: var(--glass-wb-notification-error-fill);
+}
+
+.t-notification .t-icon.t-is-success {
+  color: var(--glass-wb-notification-success-icon);
+}
+
+.t-notification .t-icon.t-is-info {
+  color: var(--glass-wb-notification-info-icon);
+}
+
+.t-notification .t-icon.t-is-warning {
+  color: var(--glass-wb-notification-warning-icon);
+}
+
+.t-notification .t-icon.t-is-error {
+  color: var(--glass-wb-notification-error-icon);
+}
+
+.t-notification__title {
+  color: var(--glass-wb-notification-title-color);
+}
+
+.t-notification__main {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.t-notification__content {
+  color: var(--glass-wb-notification-content-color);
+}
+
+/* #footer 挂载点：主栏底部行动条，水平从右向左排列。
+   TD renderTNode('footer') 默认不包 __detail；GlassNotification 槽会包
+   .t-notification__detail.glass-notification__footer，故两选择器同规则。 */
+.t-notification__detail,
+.glass-notification__footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--glass-wb-notification-footer-gap);
+  margin-top: var(--glass-wb-notification-footer-margin-top);
+  text-align: right;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 行动钮保持内容宽，禁止被 __main 列 stretch 拉满。 */
+.t-notification__detail > .t-button,
+.glass-notification__footer > .t-button {
+  flex: 0 0 auto;
+  width: auto;
+  max-width: 100%;
+}
+
+/* gap 是 action bar 的唯一横向节奏；清掉 TD 相邻 detail-item 的额外左外边距。 */
+.t-notification__detail .t-notification__detail-item + .t-notification__detail-item {
+  margin-left: 0;
+}
+
+/* Dismissible Quiet：TD notification 复用 message 的 close 壳；清掉灰底 hover/active。 */
+.t-notification .t-message__close .t-icon-close {
+  color: var(--glass-text-muted);
+  background: transparent;
+  transition:
+    color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.t-notification .t-message__close:hover .t-icon-close,
+.t-notification .t-message__close .t-icon-close:hover,
+.t-notification .t-message__close .t-icon-close:active {
+  color: var(--glass-text-secondary);
+  background: transparent;
+}
+
+.t-notification .t-message__close .t-icon-close:focus-visible {
+  outline: none;
+  box-shadow: var(--glass-wb-control-focus-ring);
+}
+
+/* ── Glass Steps（全局主题层）────────────────────────────────────────────
+   GlassSteps 只挂 .glass-steps + .glass-steps--{default|dot}；
+   TD 行为底座仍是 t-steps。视觉只做 Action Number / Soft Dot 两条路径：
+   process = Action Blue 小物件，finish = Soft Active Wash，default = 次要描边，
+   error = Validation Whisper 红。禁止紫蓝渐变轨、白核与 Primary Pill 大块。 */
+.glass-steps .t-steps,
+.glass-steps.t-steps {
+  color: var(--glass-text-primary);
+  font-family: inherit;
+  background: transparent;
+}
+
+.glass-steps .t-steps-item {
+  margin-right: var(--glass-wb-steps-item-gap);
+}
+
+.glass-steps .t-steps-item:last-child {
+  margin-right: 0;
+}
+
+.glass-steps .t-steps-item__inner {
+  position: relative;
+  border-radius: var(--glass-wb-picker-cell-radius);
+  transition: var(--glass-wb-steps-transition);
+}
+
+/* Hover Whisper：用伪层扩出极淡冷洗，不改变 icon / 文案的占位与连接线位置。 */
+.glass-steps .t-steps-item__inner.t-steps-item--clickable::before {
+  content: '';
+  position: absolute;
+  inset: -4px -6px;
+  z-index: 0;
+  border-radius: 8px;
+  background-color: transparent;
+  pointer-events: none;
+  transition: background-color 0.15s ease;
+}
+
+.glass-steps .t-steps-item__inner > * {
+  position: relative;
+  z-index: 1;
+}
+
+.glass-steps .t-steps-item__inner.t-steps-item--clickable:hover::before {
+  background-color: var(--glass-wb-steps-hover-bg);
+}
+
+.glass-steps
+  .t-steps-item--default
+  .t-steps-item__inner.t-steps-item--clickable:hover
+  .t-steps-item__title {
+  color: var(--glass-wb-steps-title-color-process);
+}
+
+.glass-steps .t-steps-item__inner.t-steps-item--clickable:active {
+  transform: scale(var(--glass-wb-control-active-scale));
+}
+
+.glass-steps .t-steps-item__inner.t-steps-item--clickable:focus-visible {
+  outline: none;
+  box-shadow: var(--glass-wb-control-focus-ring);
+}
+
+.glass-steps .t-steps-item__icon {
+  margin-right: var(--glass-wb-steps-content-gap);
+  color: var(--glass-wb-steps-icon-default-color);
+  transition: var(--glass-wb-steps-transition);
+}
+
+.glass-steps .t-steps-item__title {
+  color: var(--glass-wb-steps-title-color);
+  font-size: var(--glass-wb-steps-title-size);
+  font-weight: var(--glass-wb-steps-title-weight);
+  line-height: 1.55;
+  transition: var(--glass-wb-steps-transition);
+}
+
+.glass-steps .t-steps-item__description {
+  color: var(--glass-wb-steps-desc-color);
+  font-size: var(--glass-wb-steps-desc-size);
+  line-height: 1.5;
+}
+
+.glass-steps .t-steps-item--process .t-steps-item__title {
+  color: var(--glass-wb-steps-title-color-process);
+  font-weight: var(--glass-wb-steps-title-weight-process);
+}
+
+.glass-steps .t-steps-item--finish .t-steps-item__title {
+  color: var(--glass-wb-steps-title-color-finish);
+  font-weight: var(--glass-wb-steps-title-weight);
+}
+
+.glass-steps .t-steps-item--error .t-steps-item__title {
+  color: var(--glass-wb-steps-title-color-error);
+}
+
+/* ── default · Quiet Number Path ─────────────────────────────────────── */
+.glass-steps--default .t-steps-item__icon--number {
+  width: var(--glass-wb-steps-icon-size);
+  height: var(--glass-wb-steps-icon-size);
+  border: 1px solid var(--glass-wb-steps-icon-default-border-color);
+  border-radius: 50%;
+  color: var(--glass-wb-steps-icon-default-color);
+  background-color: transparent;
+  box-shadow: none;
+  font-size: var(--glass-wb-steps-icon-font);
+  font-weight: 600;
+  line-height: 1;
+  transition: var(--glass-wb-steps-transition);
+}
+
+.glass-steps--default .t-steps-item--process .t-steps-item__icon--number {
+  border-color: var(--glass-wb-steps-icon-process-bg);
+  color: var(--glass-wb-steps-icon-process-color);
+  background-color: var(--glass-wb-steps-icon-process-bg);
+  box-shadow: var(--glass-wb-steps-icon-process-shadow);
+}
+
+.glass-steps--default .t-steps-item--process .t-steps-item__icon .t-icon {
+  color: var(--glass-wb-steps-icon-process-color);
+}
+
+.glass-steps--default .t-steps-item--finish .t-steps-item__icon--number {
+  border-color: transparent;
+  color: var(--glass-wb-steps-icon-finish-color);
+  background-color: var(--glass-wb-steps-icon-finish-bg);
+  box-shadow: none;
+}
+
+.glass-steps--default .t-steps-item--finish .t-steps-item__icon .t-icon {
+  color: var(--glass-wb-steps-icon-finish-color);
+  font-size: var(--glass-wb-steps-icon-font);
+}
+
+.glass-steps--default .t-steps-item--error .t-steps-item__icon--number {
+  border-color: var(--glass-wb-steps-icon-error-border-color);
+  color: var(--glass-wb-steps-icon-error-color);
+  background-color: var(--glass-wb-steps-icon-error-bg);
+  box-shadow: none;
+}
+
+.glass-steps--default .t-steps-item--error .t-steps-item__icon .t-icon {
+  color: var(--glass-wb-steps-icon-error-color);
+  font-size: var(--glass-wb-steps-icon-font);
+}
+
+/* Horizontal default-anchor：连接线细克制，finish 只换成 Quiet 冷蓝，不用渐变。 */
+.glass-steps--default
+  .t-steps--horizontal.t-steps--default-anchor
+  .t-steps-item:not(:last-child)
+  .t-steps-item__title::after {
+  border-bottom-width: var(--glass-wb-steps-line-width);
+  border-color: var(--glass-wb-steps-line-color);
+}
+
+.glass-steps--default
+  .t-steps--horizontal.t-steps--default-anchor
+  .t-steps-item--finish:not(:last-child)
+  .t-steps-item__title::after {
+  border-bottom-color: var(--glass-wb-steps-line-color-finish);
+}
+
+/* Vertical default-anchor：圆标 26px，轨道从圆心起算，1px 冷灰蓝。 */
+.glass-steps--default
+  .t-steps--vertical
+  .t-steps-item:not(:last-child)::before {
+  border-right-width: var(--glass-wb-steps-line-width);
+  border-color: var(--glass-wb-steps-line-color);
+  left: calc((var(--glass-wb-steps-icon-size) - var(--glass-wb-steps-line-width)) / 2);
+}
+
+.glass-steps--default
+  .t-steps--vertical
+  .t-steps-item--finish:not(:last-child)::before {
+  border-color: var(--glass-wb-steps-line-color-finish);
+}
+
+/* ── dot · Soft Dot Path ───────────────────────────────────────────────
+   必须压过 TD：`.t-steps--{horizontal|vertical}.t-steps--dot-anchor .t-steps-item--* .t-steps-item__icon`
+   （4 class + 1 el）。故挂满 layout+anchor；用 `background` 简写（TD process 写 background）。 */
+.glass-steps--dot .t-steps--horizontal.t-steps--dot-anchor .t-steps-item__icon,
+.glass-steps--dot .t-steps--vertical.t-steps--dot-anchor .t-steps-item__icon {
+  width: var(--glass-wb-steps-dot-size);
+  height: var(--glass-wb-steps-dot-size);
+  border: var(--glass-wb-steps-dot-border-width) solid var(--glass-wb-steps-icon-default-border-color);
+  border-radius: 50%;
+  margin-right: 0;
+  margin-bottom: var(--glass-wb-steps-content-gap);
+  background: transparent;
+  box-shadow: none;
+}
+
+.glass-steps--dot .t-steps--horizontal.t-steps--dot-anchor .t-steps-item--process .t-steps-item__icon,
+.glass-steps--dot .t-steps--vertical.t-steps--dot-anchor .t-steps-item--process .t-steps-item__icon {
+  border-color: var(--glass-wb-steps-icon-process-bg);
+  background: var(--glass-wb-steps-icon-process-bg);
+}
+
+.glass-steps--dot .t-steps--horizontal.t-steps--dot-anchor .t-steps-item--finish .t-steps-item__icon,
+.glass-steps--dot .t-steps--vertical.t-steps--dot-anchor .t-steps-item--finish .t-steps-item__icon {
+  border-color: var(--glass-wb-steps-icon-finish-bg);
+  background: var(--glass-wb-steps-icon-finish-bg);
+}
+
+.glass-steps--dot .t-steps--horizontal.t-steps--dot-anchor .t-steps-item--error .t-steps-item__icon,
+.glass-steps--dot .t-steps--vertical.t-steps--dot-anchor .t-steps-item--error .t-steps-item__icon {
+  border-color: var(--glass-wb-steps-icon-error-color);
+  background: var(--glass-wb-steps-icon-error-color);
+}
+
+.glass-steps--dot
+  .t-steps--horizontal.t-steps--dot-anchor
+  .t-steps-item:not(:last-child)::after {
+  border-bottom-width: var(--glass-wb-steps-line-width);
+  border-color: var(--glass-wb-steps-line-color);
+}
+
+.glass-steps--dot
+  .t-steps--horizontal.t-steps--dot-anchor
+  .t-steps-item--finish:not(:last-child)::after {
+  border-bottom-color: var(--glass-wb-steps-line-color-finish);
+  border-bottom-width: var(--glass-wb-steps-line-width);
+}
+
+.glass-steps--dot .t-steps--vertical .t-steps-item:not(:last-child)::before {
+  border-right-width: var(--glass-wb-steps-line-width);
+  border-color: var(--glass-wb-steps-line-color);
+  left: calc((var(--glass-wb-steps-dot-size) - var(--glass-wb-steps-line-width)) / 2);
+}
+
+.glass-steps--dot .t-steps--vertical .t-steps-item--finish:not(:last-child)::before {
+  border-color: var(--glass-wb-steps-line-color-finish);
+}
+
+/* readonly / disabled：整体降强调；TDesign 已移除 clickable，hover 不触发。 */
+.glass-steps.is-readonly .t-steps-item__inner,
+.glass-steps.is-disabled .t-steps-item__inner,
+.glass-steps--readonly .t-steps-item__inner,
+.glass-steps
+  .t-steps:is(.is-readonly, .is-disabled, .t-is-readonly, .t-is-disabled)
+  .t-steps-item__inner {
+  opacity: var(--glass-wb-steps-disabled-opacity);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glass-steps .t-steps-item__inner,
+  .glass-steps .t-steps-item__icon,
+  .glass-steps .t-steps-item__title {
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+
+  .glass-steps .t-steps-item__inner.t-steps-item--clickable:active {
+    transform: none;
+  }
+}
+
+/* ── Glass Collapse（全局主题层）────────────────────────────────────────
+   GlassCollapse 只负责在 t-collapse 外层挂 .glass-collapse
+   + --{borderless|bordered}；GlassCollapsePanel 挂 .glass-collapse-panel。
+   本段是唯一视觉出处。TD DOM 事实：容器 .t-collapse（borderless → .t--border-less），
+   面板 .t-collapse-panel > __wrapper > __header / __body / __content。 */
+.glass-collapse,
+.glass-collapse .t-collapse {
+  background: transparent;
+}
+
+.glass-collapse .t-collapse {
+  box-sizing: border-box;
+  border: none;
+  color: var(--glass-text-primary);
+}
+
+.glass-collapse .glass-collapse-panel,
+.glass-collapse .glass-collapse-panel__core {
+  display: block;
+}
+
+/* ── borderless · Borderless Glass Rail ──────────────────────────────── */
+.glass-collapse--borderless .t-collapse {
+  overflow: hidden;
+  border-radius: var(--glass-wb-collapse-track-radius);
+  background: var(--glass-wb-collapse-track-fill);
+  -webkit-backdrop-filter: var(--glass-wb-collapse-track-blur);
+  backdrop-filter: var(--glass-wb-collapse-track-blur);
+  box-shadow: var(--glass-wb-collapse-track-hairline), var(--glass-wb-collapse-track-shadow);
+}
+
+/* ── bordered · 保留分栏但换 Quiet hairline（对照态）────────────────── */
+.glass-collapse--bordered .t-collapse {
+  overflow: hidden;
+  border: 1px solid var(--glass-border-soft);
+  border-bottom: none;
+  border-radius: var(--glass-wb-collapse-track-radius);
+}
+
+.glass-collapse--bordered .t-collapse .t-collapse-panel__header {
+  border-bottom: 1px solid var(--glass-border-soft);
+}
+
+.glass-collapse--bordered .t-collapse .t-collapse-panel__body {
+  border-bottom: 1px solid var(--glass-border-soft);
+}
+
+/* ── 面板 header · 玻璃微透 Quiet Header ──────────────────────────────── */
+.glass-collapse .t-collapse-panel__header {
+  display: flex;
+  align-items: center;
+  min-height: var(--glass-wb-collapse-header-height);
+  padding: 0 var(--glass-wb-collapse-header-pad-x);
+  border-bottom: none;
+  font-size: var(--glass-wb-collapse-header-font-size);
+  font-weight: var(--glass-wb-collapse-header-font-weight);
+  line-height: 1.35;
+  color: var(--glass-wb-collapse-header-color);
+  background: var(--glass-wb-collapse-header-fill);
+  -webkit-backdrop-filter: var(--glass-wb-collapse-header-blur);
+  backdrop-filter: var(--glass-wb-collapse-header-blur);
+  transition: var(--glass-wb-collapse-transition);
+}
+
+/* Hover Whisper / Active Press：仅整行可点（expandOnRowClick）时抬亮 / 压深，
+   不改变宽高导致布局抖动。 */
+.glass-collapse .t-collapse-panel__header.t-is-clickable:hover {
+  background: var(--glass-wb-collapse-header-hover-fill);
+}
+
+.glass-collapse .t-collapse-panel__header.t-is-clickable:active {
+  background: var(--glass-wb-collapse-header-active-fill);
+}
+
+.glass-collapse .t-collapse-panel__header:focus-visible {
+  outline: none;
+  box-shadow: inset var(--glass-wb-control-focus-ring);
+}
+
+/* ── 展开图标 · Action Blue 仅用于必要交互强调 ───────────────────────── */
+.glass-collapse .t-collapse-panel__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--glass-wb-collapse-icon-size);
+  height: var(--glass-wb-collapse-icon-size);
+  border-radius: var(--glass-wb-collapse-icon-radius);
+  color: var(--glass-wb-collapse-icon-color);
+  transition: var(--glass-wb-collapse-transition);
+}
+
+.glass-collapse .t-collapse-panel__icon .t-fake-arrow path {
+  stroke: currentColor;
+  stroke-opacity: 1;
+}
+
+.glass-collapse .t-collapse-panel__icon:hover {
+  background-color: var(--glass-wb-collapse-icon-hover-bg);
+  color: var(--glass-wb-collapse-icon-hover-color);
+}
+
+.glass-collapse .t-collapse-panel__icon:active {
+  transform: scale(var(--glass-wb-control-active-scale));
+}
+
+.glass-collapse .t-collapse-panel__icon:focus-visible {
+  outline: none;
+  box-shadow: var(--glass-wb-control-focus-ring);
+}
+
+.glass-collapse .t-collapse-panel__icon--active {
+  color: var(--glass-wb-collapse-icon-active-color);
+}
+
+/* ── 展开内容 · Quiet 分隔（去 TD 灰底，顶部淡 hairline）────────────── */
+.glass-collapse .t-collapse-panel__body {
+  border: none;
+  background: transparent;
+}
+
+.glass-collapse--borderless .t-collapse .t-collapse-panel__body {
+  border-top: 1px solid var(--glass-wb-collapse-content-divider);
+}
+
+.glass-collapse .t-collapse-panel__content {
+  padding: var(--glass-wb-collapse-content-pad-y) var(--glass-wb-collapse-content-pad-x);
+  color: var(--glass-wb-collapse-content-color);
+  line-height: 1.6;
+}
+
+/* ── disabled · 降强调 + not-allowed（collapse 级 disableAll 同挂 t-is-disabled）── */
+.glass-collapse .t-collapse-panel.t-is-disabled .t-collapse-panel__header {
+  color: var(--glass-wb-collapse-disabled-color);
+  cursor: not-allowed;
+}
+
+.glass-collapse .t-collapse-panel.t-is-disabled .t-collapse-panel__icon {
+  color: var(--glass-wb-collapse-disabled-color);
+  cursor: not-allowed;
+  background-color: transparent;
+}
+
+.glass-collapse .t-collapse-panel.t-is-disabled .t-collapse-panel__body {
+  background: transparent;
+}
+
+.glass-collapse .t-collapse-panel.t-is-disabled .t-collapse-panel__content {
+  color: var(--glass-wb-collapse-disabled-color);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glass-collapse .t-collapse-panel__header,
+  .glass-collapse .t-collapse-panel__icon {
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+
+  .glass-collapse .t-collapse-panel__icon:active {
+    transform: none;
+  }
+}
+
+/* ── Glass Picker Trigger（全局兜底）───────────────────────────────────
+   Contract 若已在外壳 SFC scoped 写 Quiet Field Chrome，则以 scoped 为准；
+   本段只提供同族最小兜底：38 / 12 / inset hairline / focus ring only。
+   不在 theme 重复 Select 式 Kill Inner Rect 的 !important 战争。 */
+.glass-picker,
+.glass-datepicker,
+.glass-timepicker,
+.glass-daterangepicker,
+.glass-timerangepicker {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  height: var(--glass-wb-picker-field-height);
+  padding: 0 var(--glass-wb-picker-field-pad-x);
+  border: none;
+  border-radius: var(--glass-wb-picker-field-radius);
+  background-color: var(--glass-wb-picker-field-bg);
+  box-shadow: var(--glass-wb-picker-field-hairline);
+  transition: box-shadow 0.15s ease;
+}
+
+.glass-picker:hover:not(.is-disabled):not(:focus-within):not(.is-popup-open),
+.glass-datepicker:hover:not(.is-disabled):not(:focus-within):not(.is-popup-open),
+.glass-timepicker:hover:not(.is-disabled):not(:focus-within):not(.is-popup-open),
+.glass-daterangepicker:hover:not(.is-disabled):not(:focus-within):not(.is-popup-open),
+.glass-timerangepicker:hover:not(.is-disabled):not(:focus-within):not(.is-popup-open) {
+  box-shadow: var(--glass-wb-picker-field-hairline-hover);
+}
+
+.glass-picker:focus-within:not(.is-disabled),
+.glass-picker.is-popup-open:not(.is-disabled),
+.glass-datepicker:focus-within:not(.is-disabled),
+.glass-datepicker.is-popup-open:not(.is-disabled),
+.glass-timepicker:focus-within:not(.is-disabled),
+.glass-timepicker.is-popup-open:not(.is-disabled),
+.glass-daterangepicker:focus-within:not(.is-disabled),
+.glass-daterangepicker.is-popup-open:not(.is-disabled),
+.glass-timerangepicker:focus-within:not(.is-disabled),
+.glass-timerangepicker.is-popup-open:not(.is-disabled) {
+  border: none;
+  box-shadow: var(--glass-wb-picker-field-focus-ring);
+}
+
+.glass-picker.is-disabled,
+.glass-datepicker.is-disabled,
+.glass-timepicker.is-disabled,
+.glass-daterangepicker.is-disabled,
+.glass-timerangepicker.is-disabled {
+  opacity: var(--glass-wb-control-disabled-opacity);
+  cursor: not-allowed;
+}
+
+.glass-picker > .t-date-picker,
+.glass-picker > .t-time-picker,
+.glass-datepicker > .t-date-picker,
+.glass-timepicker > .t-time-picker,
+.glass-daterangepicker > .t-date-range-picker,
+.glass-timerangepicker > .t-time-range-picker {
+  min-width: 0;
+  background: transparent;
+}
+
+.glass-picker .t-date-picker .t-input,
+.glass-picker .t-date-picker .t-input__wrap,
+.glass-picker .t-date-picker .t-select-input,
+.glass-picker .t-time-picker .t-input,
+.glass-picker .t-time-picker .t-input__wrap,
+.glass-picker .t-time-picker .t-select-input,
+.glass-datepicker .t-date-picker .t-input,
+.glass-datepicker .t-date-picker .t-input__wrap,
+.glass-datepicker .t-date-picker .t-select-input,
+.glass-timepicker .t-time-picker .t-input,
+.glass-timepicker .t-time-picker .t-input__wrap,
+.glass-timepicker .t-time-picker .t-select-input {
+  border-color: transparent;
+  background-color: transparent;
+  box-shadow: none;
+  outline: none;
+}
+
+/* Range 触发器兜底：外壳 Quiet Field 由 Glass* 承担，这里只杀
+   t-range-input / t-input 的内框与脏底，避免与 SFC scoped 形成双重矩形。
+   Contract 未挂 range class 时选择器自然不生效。 */
+.glass-daterangepicker .t-date-range-picker,
+.glass-timerangepicker .t-time-range-picker {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  background: transparent;
+}
+
+.glass-daterangepicker .t-range-input-popup,
+.glass-timerangepicker .t-range-input-popup {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.glass-daterangepicker .t-range-input,
+.glass-timerangepicker .t-range-input,
+.glass-daterangepicker .t-range-input--borderless,
+.glass-timerangepicker .t-range-input--borderless,
+.glass-daterangepicker .t-range-input.t-is-focused,
+.glass-timerangepicker .t-range-input.t-is-focused {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0;
+  height: 100%;
+  padding: 0;
+  border: none;
+  border-radius: inherit;
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.glass-daterangepicker .t-range-input__inner,
+.glass-timerangepicker .t-range-input__inner {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  min-height: 0;
+  gap: 2px;
+}
+
+.glass-daterangepicker .t-range-input__inner .t-input,
+.glass-timerangepicker .t-range-input__inner .t-input,
+.glass-daterangepicker .t-range-input__inner .t-input__wrap,
+.glass-timerangepicker .t-range-input__inner .t-input__wrap {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background-color: transparent;
+  box-shadow: none;
+  outline: none;
+}
+
+.glass-daterangepicker .t-range-input__inner-left,
+.glass-timerangepicker .t-range-input__inner-left,
+.glass-daterangepicker .t-range-input__inner-right,
+.glass-timerangepicker .t-range-input__inner-right {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.glass-daterangepicker .t-range-input__inner-separator,
+.glass-timerangepicker .t-range-input__inner-separator {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  flex: none;
+  padding: 0 4px;
+  line-height: normal;
+  color: var(--glass-text-muted);
+}
+
+.glass-daterangepicker .t-range-input__suffix,
+.glass-timerangepicker .t-range-input__suffix {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  color: var(--glass-text-muted);
+}
+
+.glass-daterangepicker .t-range-input__inner .t-input__inner,
+.glass-timerangepicker .t-range-input__inner .t-input__inner {
+  height: auto;
+  line-height: normal;
+  font-size: 13px;
+  color: var(--glass-text-primary);
+}
+
+.glass-picker .t-input__inner,
+.glass-datepicker .t-input__inner,
+.glass-timepicker .t-input__inner {
+  font-size: 13px;
+  color: var(--glass-text-primary);
+}
+
+.glass-picker .t-input__inner::placeholder,
+.glass-datepicker .t-input__inner::placeholder,
+.glass-timepicker .t-input__inner::placeholder {
+  color: var(--glass-text-muted);
+}
+
+.glass-picker .t-input__suffix-icon,
+.glass-datepicker .t-input__suffix-icon,
+.glass-timepicker .t-input__suffix-icon {
+  color: var(--glass-text-muted);
+}
+
+/* ── Glass Picker Panel · Floating Plate ───────────────────────────────
+   Contract 把 .glass-picker-panel 挂到 popupProps.overlayInnerClassName，
+   即 .t-popup__content 本体；面板材质统一吃 dropdown token，去 TD 灰脏边。 */
+.glass-picker-panel {
+  position: relative;
+  padding: 0;
+  border: none;
+  border-radius: var(--glass-wb-picker-panel-radius);
+  color: var(--glass-text-primary);
+  background: var(--glass-wb-picker-panel-fill);
+  -webkit-backdrop-filter: var(--glass-wb-picker-panel-blur);
+  backdrop-filter: var(--glass-wb-picker-panel-blur);
+  box-shadow: var(--glass-wb-picker-panel-shadow);
+  overflow: hidden;
+}
+
+.glass-picker-panel .t-date-picker__panel,
+.glass-picker-panel .t-time-picker__panel,
+.glass-picker-panel .t-date-range-picker__panel {
+  border-radius: inherit;
+  background: transparent;
+}
+
+.glass-picker-panel .t-date-picker__panel-content,
+.glass-picker-panel .t-date-range-picker__panel-content-wrapper {
+  background: transparent;
+}
+
+.glass-picker-panel .t-date-picker__panel-date,
+.glass-picker-panel .t-date-picker__panel-week,
+.glass-picker-panel .t-date-picker__panel-month,
+.glass-picker-panel .t-date-picker__panel-year,
+.glass-picker-panel .t-date-picker__panel-quarter {
+  gap: var(--glass-wb-picker-panel-gap);
+  padding: var(--glass-wb-picker-panel-pad);
+  background: transparent;
+}
+
+.glass-picker-panel .t-date-picker__header {
+  color: var(--glass-wb-picker-header-color);
+}
+
+.glass-picker-panel .t-date-picker__header-controller-month,
+.glass-picker-panel .t-date-picker__header-controller-year {
+  color: var(--glass-wb-picker-header-color);
+  font-size: var(--glass-wb-picker-header-size);
+  font-weight: var(--glass-wb-picker-header-weight);
+}
+
+.glass-picker-panel
+  .t-date-picker__header-controller
+  :is(.t-select, .t-select-input, .t-input, .t-input__wrap) {
+  border: none;
+  background: transparent;
+  box-shadow: none;
+}
+
+.glass-picker-panel .t-date-picker__header-controller .t-input__inner {
+  color: var(--glass-wb-picker-header-color);
+  font-size: var(--glass-wb-picker-header-size);
+  font-weight: var(--glass-wb-picker-header-weight);
+}
+
+.glass-picker-panel .t-date-picker__header-controller .t-input__suffix-icon {
+  color: var(--glass-text-muted);
+}
+
+.glass-picker-panel .t-date-picker__table th,
+.glass-picker-panel .t-date-picker__table th.t-date-picker__table-header-cell {
+  color: var(--glass-wb-picker-weekday-color);
+  font-size: var(--glass-wb-picker-weekday-size);
+  font-weight: 400;
+}
+
+.glass-picker-panel .t-date-picker__table td.t-date-picker__cell {
+  color: var(--glass-wb-picker-cell-color);
+  font-weight: 400;
+}
+
+.glass-picker-panel .t-date-picker__cell::before,
+.glass-picker-panel .t-date-picker__cell::after {
+  /* 覆盖 TD left/right:-5%：带与 cell-inner 同宽居中，邻格自然留缝、无半透明叠色 */
+  top: 50%;
+  left: 50%;
+  right: auto;
+  width: var(--glass-wb-picker-range-band-width);
+  height: var(--glass-wb-picker-range-band-height);
+  border-radius: var(--glass-wb-picker-cell-radius);
+  background-color: transparent;
+  transform: translate(-50%, -50%);
+}
+
+.glass-picker-panel .t-date-picker__cell-inner {
+  width: var(--glass-wb-picker-cell-size);
+  height: var(--glass-wb-picker-cell-size);
+  margin: var(--glass-wb-picker-cell-margin-y) 0;
+  border-radius: var(--glass-wb-picker-cell-radius);
+  color: var(--glass-wb-picker-cell-color);
+  background-color: transparent;
+  box-shadow: none;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s var(--glass-wb-control-ease-lift);
+}
+
+/* 月 / 年 / 季度面板保留 TD 的横向 year-cell 宽度，避免被日期格 30px 收窄。 */
+.glass-picker-panel .t-date-picker__panel-year .t-date-picker__cell-inner,
+.glass-picker-panel .t-date-picker__panel-month .t-date-picker__cell-inner,
+.glass-picker-panel .t-date-picker__panel-quarter .t-date-picker__cell-inner {
+  width: var(--td-comp-size-xxl);
+  height: var(--td-comp-size-xs);
+  margin: calc(var(--td-comp-margin-xs) - 1px);
+}
+
+/* 日格 Hover Whisper：淡冷底 + Quiet 字，不画 1px 亮框。 */
+.glass-picker-panel .t-date-picker__cell:hover .t-date-picker__cell-inner {
+  color: var(--glass-wb-picker-cell-hover-color);
+  background-color: var(--glass-wb-picker-cell-hover-bg);
+  box-shadow: none;
+}
+
+.glass-picker-panel
+  .t-date-picker__cell:not(.t-date-picker__cell--disabled):active
+  .t-date-picker__cell-inner {
+  transform: scale(var(--glass-wb-control-active-scale));
+}
+
+/* today：淡环提示，不抢选中；选中态在后方覆盖。 */
+.glass-picker-panel .t-date-picker__cell--now .t-date-picker__cell-inner {
+  color: var(--glass-wb-picker-cell-hover-color);
+  background-color: transparent;
+  box-shadow: var(--glass-wb-picker-cell-today-ring);
+}
+
+/* 选中：Action Blue 实心蓝底 + 白字。端点 / today+active 均由本段落胜出。 */
+.glass-picker-panel .t-date-picker__cell--active .t-date-picker__cell-inner,
+.glass-picker-panel
+  .t-date-picker__cell--active:hover
+  .t-date-picker__cell-inner {
+  color: var(--glass-wb-picker-cell-active-color);
+  background-color: var(--glass-wb-picker-cell-active-bg);
+  box-shadow: var(--glass-wb-picker-cell-active-hairline);
+}
+
+/* Range 中间带：wash 画在 cell-inner 上（与日格同 footprint），关掉 TD ::before 连片，杜绝邻格 rgba 叠缝。 */
+.glass-picker-panel .t-date-picker__cell--highlight::before,
+.glass-picker-panel .t-date-picker__cell--hover-highlight::after,
+.glass-picker-panel
+  .t-date-picker__cell--highlight.t-date-picker__cell--hover-highlight::after,
+.glass-picker-panel .t-date-picker__cell--active-start::before,
+.glass-picker-panel .t-date-picker__cell--active-end::before,
+.glass-picker-panel .t-date-picker__cell--active-start:hover::before,
+.glass-picker-panel .t-date-picker__cell--active-end:hover::before {
+  opacity: 0;
+  background-color: transparent;
+}
+
+.glass-picker-panel
+  .t-date-picker__cell--highlight:not(.t-date-picker__cell--active)
+  .t-date-picker__cell-inner,
+.glass-picker-panel
+  .t-date-picker__cell--hover-highlight:not(.t-date-picker__cell--active)
+  .t-date-picker__cell-inner {
+  color: var(--glass-wb-picker-cell-hover-color);
+  background-color: var(--glass-wb-picker-range-band-bg);
+}
+
+/* 选中格仍要保留键盘焦点环：焦点在实心底上以 ring 呈现。 */
+.glass-picker-panel .t-date-picker__cell:focus-visible {
+  outline: none;
+}
+
+.glass-picker-panel .t-date-picker__cell:focus-visible .t-date-picker__cell-inner {
+  box-shadow: var(--glass-wb-control-focus-ring);
+}
+
+.glass-picker-panel .t-date-picker__cell--additional .t-date-picker__cell-inner {
+  color: var(--glass-wb-picker-cell-disabled-color);
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.glass-picker-panel .t-date-picker__cell--additional:hover .t-date-picker__cell-inner {
+  background-color: var(--glass-wb-picker-cell-hover-bg);
+}
+
+.glass-picker-panel .t-date-picker__cell--disabled .t-date-picker__cell-inner,
+.glass-picker-panel .t-date-picker__cell--disabled:hover .t-date-picker__cell-inner {
+  color: var(--glass-wb-picker-cell-disabled-color);
+  background-color: transparent;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* TD 会给连续禁用日期画一条灰色底带；改为完全透明，避免面板脏灰块。 */
+.glass-picker-panel
+  .t-date-picker__cell--disabled
+  + .t-date-picker__cell--disabled::before {
+  opacity: 0;
+  background-color: transparent;
+}
+
+/* Week Row：整周只铺淡带，首尾日期给实心端帽；周号列保持安静。 */
+.glass-picker-panel .t-date-picker__table-week-row--active::after,
+.glass-picker-panel .t-date-picker__table-week-row--range::after {
+  top: 50%;
+  height: var(--glass-wb-picker-range-band-height);
+  border-radius: var(--glass-wb-picker-cell-radius);
+  background-color: var(--glass-wb-picker-range-band-bg);
+  transform: translateY(-50%);
+}
+
+.glass-picker-panel
+  .t-date-picker__table-week-row--active
+  .t-date-picker__cell
+  .t-date-picker__cell-inner {
+  color: var(--glass-wb-picker-cell-hover-color);
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.glass-picker-panel
+  .t-date-picker__table-week-row--active
+  .t-date-picker__cell:nth-child(2)
+  .t-date-picker__cell-inner,
+.glass-picker-panel
+  .t-date-picker__table-week-row--active
+  .t-date-picker__cell:last-child
+  .t-date-picker__cell-inner {
+  color: var(--glass-wb-picker-cell-active-color);
+  background-color: var(--glass-wb-picker-cell-active-bg);
+  box-shadow: none;
+}
+
+.glass-picker-panel .t-date-picker__footer {
+  padding: var(--glass-wb-picker-footer-pad);
+  border: none;
+  box-shadow: var(--glass-wb-picker-footer-divider);
+  gap: 8px;
+  background: transparent;
+}
+
+.glass-picker-panel .t-date-picker__footer--top {
+  border: none;
+  box-shadow: var(--glass-wb-dialog-divider-bottom);
+}
+
+.glass-picker-panel .t-date-picker__footer--left {
+  border: none;
+  box-shadow: inset -1px 0 0 var(--glass-wb-picker-panel-divider);
+}
+
+.glass-picker-panel .t-date-picker__footer--right {
+  border: none;
+  box-shadow: inset 1px 0 0 var(--glass-wb-picker-panel-divider);
+}
+
+.glass-picker-panel .t-date-picker__presets {
+  gap: 6px;
+}
+
+.glass-picker-panel .t-date-picker__presets a {
+  color: var(--glass-wb-pill-quiet-color);
+}
+
+.glass-picker-panel .t-date-picker__presets a:hover {
+  color: var(--glass-wb-soft-active-color);
+}
+
+.glass-picker-panel .t-date-picker__panel-time,
+.glass-picker-panel .t-date-range-picker__panel-time {
+  gap: 6px;
+  padding: var(--glass-wb-picker-panel-pad);
+  border-left: none;
+  box-shadow: inset 1px 0 0 var(--glass-wb-picker-panel-divider);
+}
+
+.glass-picker-panel .t-date-picker__panel-time-viewer,
+.glass-picker-panel .t-date-range-picker__panel-time-viewer {
+  height: var(--glass-wb-picker-time-row-height);
+  color: var(--glass-text-secondary);
+  font-size: 13px;
+}
+
+/* enableTimePicker：同窗日历 | 时间分栏。Pure Spacing + 极淡 divider，
+   时间列吃 TimePicker 同高 active-mask；面板材质仍由 Floating Plate 提供。 */
+.glass-picker-panel--with-time .t-date-picker__panel-content {
+  align-items: stretch;
+}
+
+.glass-picker-panel--with-time
+  :is(.t-date-picker__panel-time, .t-date-range-picker__panel-time) {
+  flex: 0 0 auto;
+  min-width: 216px;
+  padding: var(--glass-wb-picker-panel-pad);
+  border-left: none;
+  box-shadow: inset 1px 0 0 var(--glass-wb-picker-panel-divider);
+  background: transparent;
+}
+
+.glass-picker-panel--with-time
+  :is(.t-date-picker__panel-time, .t-date-range-picker__panel-time)
+  .t-time-picker__panel {
+  width: 100%;
+}
+
+.glass-picker-panel--with-time
+  :is(.t-date-picker__panel-time, .t-date-range-picker__panel-time)
+  .t-time-picker__panel-section-body {
+  padding: 0;
+}
+
+.glass-picker-panel--with-time
+  :is(.t-date-picker__panel-time, .t-date-range-picker__panel-time)
+  .t-time-picker__panel-body {
+  height: var(--glass-wb-picker-time-panel-height);
+}
+
+.glass-picker-panel--with-time
+  .t-date-picker__footer:not(.t-date-picker__footer--left):not(.t-date-picker__footer--right) {
+  justify-content: flex-end;
+}
+
+.glass-picker-panel--with-time
+  .t-date-picker__footer:not(.t-date-picker__footer--left):not(.t-date-picker__footer--right)
+  .t-date-picker__presets {
+  margin-right: auto;
+}
+
+/* ── Time Column ────────────────────────────────────────────────────── */
+.glass-picker-panel .t-time-picker__panel-section-body {
+  padding: var(--glass-wb-picker-panel-pad);
+}
+
+.glass-picker-panel .t-time-picker__panel-body {
+  height: var(--glass-wb-picker-time-panel-height);
+}
+
+.glass-picker-panel .t-time-picker__panel-body-active-mask {
+  height: var(--glass-wb-picker-time-item-height);
+}
+
+.glass-picker-panel .t-time-picker__panel-body-active-mask > div {
+  height: var(--glass-wb-picker-time-item-height);
+  margin: var(--glass-wb-picker-time-item-gap) 6px;
+  border-radius: var(--glass-wb-picker-time-item-radius);
+  background-color: var(--glass-wb-picker-time-item-active-bg);
+  box-shadow: var(--glass-wb-picker-cell-active-hairline);
+  transform: translateY(calc(var(--glass-wb-picker-time-row-height) / -2));
+}
+
+.glass-picker-panel .t-time-picker__panel-body-scroll {
+  padding: 0 4px;
+}
+
+.glass-picker-panel .t-time-picker__panel-body-scroll::before,
+.glass-picker-panel .t-time-picker__panel-body-scroll::after {
+  height: calc(50% - var(--glass-wb-picker-time-row-height) / 2);
+}
+
+.glass-picker-panel .t-time-picker__panel-body-scroll-item {
+  height: var(--glass-wb-picker-time-item-height);
+  margin: var(--glass-wb-picker-time-item-gap) 6px;
+  border-radius: var(--glass-wb-picker-time-item-radius);
+  color: var(--glass-wb-picker-time-item-color);
+  font-size: 13px;
+  line-height: var(--glass-wb-picker-time-item-height);
+  background-color: transparent;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.15s var(--glass-wb-control-ease-lift);
+}
+
+.glass-picker-panel
+  .t-time-picker__panel-body-scroll-item:not(.t-is-current):not(.t-is-disabled):hover {
+  color: var(--glass-wb-picker-cell-hover-color);
+  background-color: var(--glass-wb-picker-time-item-hover-bg);
+}
+
+.glass-picker-panel
+  .t-time-picker__panel-body-scroll-item:not(.t-is-current):not(.t-is-disabled):active {
+  color: var(--glass-wb-picker-time-item-active-color);
+  background-color: var(--glass-wb-picker-time-item-active-bg);
+  transform: scale(var(--glass-wb-control-active-scale));
+}
+
+.glass-picker-panel .t-time-picker__panel-body-scroll-item.t-is-current {
+  color: var(--glass-wb-picker-time-item-active-color);
+  font-weight: 600;
+}
+
+.glass-picker-panel .t-time-picker__panel-body-scroll-item:focus-visible {
+  outline: none;
+  box-shadow: var(--glass-wb-control-focus-ring);
+}
+
+.glass-picker-panel .t-time-picker__panel-body-scroll-item.t-is-disabled,
+.glass-picker-panel .t-time-picker__panel-body-scroll-item.t-is-disabled:hover {
+  color: var(--glass-wb-picker-cell-disabled-color);
+  background-color: transparent;
+  cursor: not-allowed;
+}
+
+.glass-picker-panel .t-time-picker__panel-section-footer {
+  padding: var(--glass-wb-picker-footer-pad);
+  border-top: none;
+  box-shadow: var(--glass-wb-picker-footer-divider);
+  background: transparent;
+}
+
+/* 面板脚钮：优先吃已有 Quiet / Primary 观感；无白核、无浮层内二次玻璃壳。 */
+.glass-picker-panel .t-button {
+  height: var(--glass-wb-picker-button-height);
+  min-height: 0;
+  padding: 0 var(--glass-wb-picker-button-pad-x);
+  border: none;
+  border-radius: var(--glass-wb-picker-button-radius);
+  font-size: var(--glass-wb-picker-button-font-size);
+  font-weight: 500;
+  box-shadow: none;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    filter 0.15s ease,
+    transform 0.15s var(--glass-wb-control-ease-lift);
+}
+
+.glass-picker-panel .t-button:not(.t-button--variant-base) {
+  color: var(--glass-wb-pill-quiet-color);
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.glass-picker-panel .t-button:not(.t-button--variant-base):hover {
+  color: var(--glass-wb-pill-quiet-color);
+  background-color: var(--glass-wb-picker-button-hover-bg);
+}
+
+.glass-picker-panel .t-button:not(.t-button--variant-base):active {
+  color: var(--glass-wb-picker-button-active-color);
+  background-color: var(--glass-wb-picker-button-active-bg);
+  transform: scale(var(--glass-wb-control-active-scale));
+}
+
+.glass-picker-panel .t-button.t-button--variant-base.t-button--theme-primary {
+  color: var(--glass-wb-white);
+  background-color: var(--glass-wb-btn-blue);
+  box-shadow: none;
+}
+
+.glass-picker-panel .t-button.t-button--variant-base.t-button--theme-primary:hover {
+  filter: var(--glass-wb-control-hover-bright);
+}
+
+.glass-picker-panel .t-button.t-button--variant-base.t-button--theme-primary:active {
+  filter: brightness(0.98);
+  transform: scale(var(--glass-wb-control-active-scale));
+}
+
+.glass-picker-panel
+  .t-button.t-button--variant-base:not(.t-button--theme-primary) {
+  color: var(--glass-wb-pill-quiet-color);
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.glass-picker-panel .t-button.t-is-disabled,
+.glass-picker-panel .t-button.t-is-disabled:hover,
+.glass-picker-panel .t-button.t-is-disabled:active {
+  opacity: var(--glass-wb-control-disabled-opacity);
+  filter: none;
+  transform: none;
+  cursor: not-allowed;
+}
+
+.glass-picker-panel .t-button:focus-visible {
+  outline: none;
+  box-shadow: var(--glass-wb-control-focus-ring);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glass-picker-panel .t-date-picker__cell-inner,
+  .glass-picker-panel .t-time-picker__panel-body-scroll-item,
+  .glass-picker-panel .t-button {
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+
+  .glass-picker-panel
+    .t-date-picker__cell:not(.t-date-picker__cell--disabled):active
+    .t-date-picker__cell-inner,
+  .glass-picker-panel
+    .t-time-picker__panel-body-scroll-item:not(.t-is-current):not(.t-is-disabled):active,
+  .glass-picker-panel .t-button:not(.t-button--variant-base):active,
+  .glass-picker-panel .t-button.t-button--variant-base.t-button--theme-primary:active {
+    transform: none;
+  }
+}
+
+/* ── Glass Calendar ────────────────────────────────────────────────────
+   GlassCalendar = Compound Wrapper 盖 t-calendar。外壳只挂 class 钩子，
+   视觉全部在本段收口。full 透明整幅（宿主承载材质）；card 玻璃卡片
+   （Floating Plate 近白微透 + soft shadow + hairline；禁 Host Tray / 双托盘）。
+   选中日实心 Action Blue（--glass-wb-btn-blue）白字，与 picker 日格同语言。 */
+.glass-calendar {
+  box-sizing: border-box;
+}
+
+.glass-calendar--full {
+  display: block;
+  width: 100%;
+}
+
+.glass-calendar--card {
+  display: inline-flex;
+  border-radius: var(--glass-wb-calendar-card-radius);
+  background: var(--glass-wb-calendar-card-fill);
+  -webkit-backdrop-filter: var(--glass-wb-calendar-card-blur);
+  backdrop-filter: var(--glass-wb-calendar-card-blur);
+  box-shadow: var(--glass-wb-calendar-card-shadow), var(--glass-wb-calendar-card-hairline);
+  overflow: hidden;
+}
+
+/* Kill TD 根脏边 / 脏底：full 透明、card 吃外壳玻璃 */
+.glass-calendar .t-calendar {
+  border: none;
+  color: var(--glass-wb-calendar-color);
+  font-size: var(--glass-wb-calendar-font-size);
+}
+
+.glass-calendar .t-calendar--full {
+  background: var(--glass-wb-calendar-full-fill);
+  box-shadow: var(--glass-wb-calendar-full-shadow);
+  padding: var(--glass-wb-calendar-full-pad);
+}
+
+.glass-calendar .t-calendar--card {
+  background: transparent;
+  border-radius: 0;
+  padding: var(--glass-wb-calendar-card-pad-y) var(--glass-wb-calendar-card-pad-x);
+}
+
+/* card 面板高度自适应：日格 30px 比 TD 默认更松，避免固定 200px 内行高相叠 */
+.glass-calendar .t-calendar--card .t-calendar__panel--month,
+.glass-calendar .t-calendar--card .t-calendar__panel--year {
+  height: auto;
+}
+
+/* 控制器 Quiet：标题 / 分区节奏 */
+.glass-calendar .t-calendar__control {
+  gap: var(--glass-wb-calendar-control-gap);
+}
+
+.glass-calendar .t-calendar__title {
+  color: var(--glass-wb-calendar-title-color);
+  font-size: var(--glass-wb-calendar-title-size);
+  font-weight: var(--glass-wb-calendar-title-weight);
+}
+
+.glass-calendar .t-calendar__control-section {
+  gap: var(--glass-wb-calendar-control-gap);
+}
+
+.glass-calendar .t-calendar__control-section-cell {
+  margin-right: 0;
+  gap: 6px;
+}
+
+/* Select（年/月）：Quiet Field Chrome + Kill Inner Rect */
+.glass-calendar .t-calendar__control-section-cell .t-select {
+  display: inline-flex;
+  align-items: center;
+  height: var(--glass-wb-calendar-control-height);
+  padding: 0 10px;
+  border: none;
+  border-radius: var(--glass-wb-field-radius);
+  background-color: var(--glass-wb-picker-field-bg);
+  box-shadow: var(--glass-wb-field-hairline);
+  transition: box-shadow 0.15s ease;
+}
+
+.glass-calendar .t-calendar__control-section-cell .t-select:hover {
+  box-shadow: var(--glass-wb-field-hairline-hover);
+}
+
+.glass-calendar .t-calendar__control-section-cell .t-select:focus-within,
+.glass-calendar .t-calendar__control-section-cell .t-select.t-is-focused {
+  box-shadow: var(--glass-wb-field-focus-ring);
+}
+
+.glass-calendar .t-calendar__control-section-cell :is(.t-input, .t-input__wrap) {
+  height: 100%;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  outline: none;
+}
+
+.glass-calendar .t-calendar__control-section-cell .t-input__inner {
+  font-size: var(--glass-wb-calendar-font-size);
+  color: var(--glass-text-primary);
+}
+
+/* Radio（月/年模式）：Soft Segment Track + Action Blue 实心块 */
+.glass-calendar .t-calendar__control-section-cell .t-radio-group--filled {
+  border: none;
+  border-radius: var(--glass-wb-field-radius);
+  background-color: var(--glass-layer-l3-fill);
+  box-shadow: var(--glass-layer-l3-hairline);
+  padding: 3px;
+}
+
+.glass-calendar .t-calendar__control-section-cell .t-radio-group--filled .t-radio-group__bg-block {
+  /* 外轨 12px + 3px padding：内缩同心圆角，竖排滑动块两端与轨道曲率一致 */
+  border-radius: calc(var(--glass-wb-field-radius) - 3px);
+  background-color: var(--glass-wb-calendar-cell-active-bg);
+}
+
+.glass-calendar .t-calendar__control-section-cell .t-radio-button {
+  color: var(--glass-text-secondary);
+  border: 0;
+}
+
+.glass-calendar .t-calendar__control-section-cell .t-radio-button:hover {
+  color: var(--glass-wb-calendar-cell-hover-color);
+}
+
+.glass-calendar .t-calendar__control-section-cell .t-radio-button.t-is-checked {
+  color: var(--glass-wb-calendar-cell-active-color);
+}
+
+/* CheckTag（显示/隐藏周末）：Quiet 轮廓 toggle */
+.glass-calendar .t-calendar__control-tag {
+  height: var(--glass-wb-calendar-control-height);
+  padding: 0 12px;
+  border: none;
+  border-radius: var(--glass-wb-field-radius);
+  color: var(--glass-text-secondary);
+  background-color: transparent;
+  box-shadow: var(--glass-wb-field-hairline);
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.glass-calendar .t-calendar__control-tag:hover {
+  color: var(--glass-wb-calendar-cell-hover-color);
+  box-shadow: var(--glass-wb-field-hairline-hover);
+}
+
+.glass-calendar .t-calendar__control-tag.t-tag--checked {
+  color: var(--glass-wb-calendar-cell-active-bg);
+  background-color: var(--glass-wb-picker-range-band-bg);
+  box-shadow: inset 0 0 0 1px var(--glass-wb-calendar-cell-active-bg);
+}
+
+/* Button（今天/本月）：Quiet Action Blue 按钮 */
+.glass-calendar .t-calendar__control-section-cell .t-button {
+  height: var(--glass-wb-calendar-control-height);
+  min-height: 0;
+  padding: 0 12px;
+  border: none;
+  border-radius: var(--glass-wb-field-radius);
+  font-size: var(--glass-wb-calendar-font-size);
+  color: var(--glass-wb-calendar-cell-active-bg);
+  background-color: transparent;
+  box-shadow: var(--glass-wb-field-hairline);
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s var(--glass-wb-control-ease-lift);
+}
+
+.glass-calendar .t-calendar__control-section-cell .t-button:hover {
+  color: var(--glass-wb-calendar-cell-hover-color);
+  background-color: var(--glass-wb-calendar-cell-hover-bg);
+  box-shadow: var(--glass-wb-field-hairline-hover);
+}
+
+.glass-calendar .t-calendar__control-section-cell .t-button:active {
+  color: var(--glass-wb-picker-button-active-color);
+  background-color: var(--glass-wb-picker-button-active-bg);
+  transform: scale(var(--glass-wb-control-active-scale));
+}
+
+.glass-calendar .t-calendar__control-section-cell .t-button:focus-visible,
+.glass-calendar .t-calendar__control-section-cell .t-select:focus-visible,
+.glass-calendar .t-calendar__control-section-cell .t-radio-button:focus-visible {
+  outline: none;
+  box-shadow: var(--glass-wb-control-focus-ring);
+}
+
+/* 周表头：静默 secondary */
+.glass-calendar .t-calendar__table-head-cell {
+  color: var(--glass-wb-calendar-weekday-color);
+  font-size: var(--glass-wb-calendar-weekday-size);
+  font-weight: var(--glass-wb-calendar-weekday-weight);
+}
+
+/* full：静默 hairline 分割，去 TD 2px 灰硬线 / brand 顶线 */
+.glass-calendar .t-calendar--full .t-calendar__table-body-cell {
+  border-top: 1px solid var(--glass-wb-calendar-divider);
+  color: var(--glass-wb-calendar-cell-color);
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.glass-calendar .t-calendar--full .t-calendar__table-body-cell:hover {
+  background-color: var(--glass-wb-calendar-cell-hover-bg);
+}
+
+.glass-calendar .t-calendar--full .t-calendar__table-body-cell--now {
+  border-top-color: var(--glass-wb-calendar-divider);
+}
+
+/* 日格 display：pickup 日格同 footprint（选中实心 / hover wash / today ring） */
+.glass-calendar .t-calendar__table-body-cell-display {
+  width: var(--glass-wb-calendar-cell-size);
+  height: var(--glass-wb-calendar-cell-size);
+  line-height: var(--glass-wb-calendar-cell-size);
+  text-align: center;
+  border-radius: var(--glass-wb-calendar-cell-radius);
+  color: var(--glass-wb-calendar-cell-color);
+  box-sizing: border-box;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s var(--glass-wb-control-ease-lift);
+}
+
+/* 年面板（mode=year）：月标签保留 TD 横向宽度，避免被日格 30px 收窄 */
+.glass-calendar .t-calendar__panel--year .t-calendar__table-body-cell-display {
+  width: var(--td-comp-size-xxl);
+  height: var(--td-comp-size-xs);
+  line-height: var(--td-comp-size-xs);
+  border-radius: var(--glass-wb-calendar-cell-radius);
+}
+
+.glass-calendar .t-calendar__table-body-cell:not(.t-is-disabled):hover .t-calendar__table-body-cell-display {
+  color: var(--glass-wb-calendar-cell-hover-color);
+  background-color: var(--glass-wb-calendar-cell-hover-bg);
+}
+
+.glass-calendar .t-calendar__table-body-cell:not(.t-is-disabled):active .t-calendar__table-body-cell-display {
+  transform: scale(var(--glass-wb-control-active-scale));
+}
+
+.glass-calendar .t-calendar__table-body-cell--now .t-calendar__table-body-cell-display {
+  color: var(--glass-wb-calendar-cell-now-color);
+  box-shadow: var(--glass-wb-calendar-cell-now-ring);
+}
+
+/* 选中：实心 Action Blue 白字；full 的整格浅蓝底清掉，只留数字实心（小物件满浓） */
+.glass-calendar .t-calendar__table-body-cell.t-is-checked {
+  background-color: transparent;
+}
+
+.glass-calendar .t-calendar__table-body-cell.t-is-checked .t-calendar__table-body-cell-display,
+.glass-calendar .t-calendar__table-body-cell.t-is-checked:hover .t-calendar__table-body-cell-display {
+  border-radius: var(--glass-wb-calendar-cell-radius);
+  color: var(--glass-wb-calendar-cell-active-color);
+  background-color: var(--glass-wb-calendar-cell-active-bg);
+  box-shadow: none;
+}
+
+.glass-calendar .t-calendar__table-body-cell.t-is-disabled .t-calendar__table-body-cell-display,
+.glass-calendar .t-calendar__table-body-cell.t-is-disabled:hover .t-calendar__table-body-cell-display {
+  color: var(--glass-wb-calendar-cell-disabled-color);
+  background-color: transparent;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glass-calendar .t-calendar__table-body-cell-display,
+  .glass-calendar .t-calendar__control-section-cell .t-button {
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+
+  .glass-calendar .t-calendar__table-body-cell:not(.t-is-disabled):active .t-calendar__table-body-cell-display,
+  .glass-calendar .t-calendar__control-section-cell .t-button:active {
+    transform: none;
+  }
+}
+
+/* ── Soft Cite Card · GlassCard（html .card-soft）─────────────────────
+   原生玻璃壳 + 默认 slot；非 Host Tray / Surface / Panel，不包 t-card。 */
+.glass-card {
+  align-self: flex-start;
+  max-width: var(--glass-wb-card-soft-max-width);
+  border-radius: var(--glass-wb-card-soft-radius);
+  padding: var(--glass-wb-card-soft-pad);
+  font-size: var(--glass-wb-card-soft-font-size);
+  line-height: 1.55;
+  color: var(--glass-wb-card-soft-color);
+  background: var(--glass-wb-card-soft-fill);
+  box-shadow: var(--glass-wb-card-soft-shadow), var(--glass-wb-card-soft-hairline);
+}
+
+.glass-card b {
+  color: var(--glass-wb-card-soft-emphasis);
+}
+
+/* ── Conversation Bubble · GlassBubble（html .bub-a / .bub-u）──────────
+   会话消息内容态：assistant=左齐冷近白微透；user=右齐满浓蓝 + 白字。
+   与 GlassDetailPlate 分工：气泡不承载 KV 详情，详情板不承担消息对齐。 */
+.glass-bubble {
+  box-sizing: border-box;
+  max-width: var(--glass-wb-bubble-max-width-ai);
+  padding: var(--glass-wb-bubble-pad);
+  border-radius: var(--glass-wb-bubble-ai-radius);
+  font-size: var(--glass-wb-bubble-font-size);
+  line-height: var(--glass-wb-bubble-line-height);
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.glass-bubble--ai {
+  align-self: flex-start;
+  color: var(--glass-wb-bubble-ai-color);
+  background: var(--glass-wb-bubble-ai-fill);
+  -webkit-backdrop-filter: var(--glass-wb-bubble-ai-blur);
+  backdrop-filter: var(--glass-wb-bubble-ai-blur);
+  box-shadow: var(--glass-wb-bubble-ai-shadow);
+}
+
+.glass-bubble--ai b {
+  color: var(--glass-wb-bubble-ai-emphasis);
+}
+
+.glass-bubble--user {
+  align-self: flex-end;
+  max-width: var(--glass-wb-bubble-max-width-user);
+  color: var(--glass-wb-bubble-user-color);
+  background: var(--glass-wb-bubble-user-fill);
+  border-radius: var(--glass-wb-bubble-user-radius);
+  box-shadow: var(--glass-wb-bubble-user-shadow);
+}
+
+.glass-bubble--user b {
+  color: inherit;
+}
+
+/* ── Quiet Progress Whisper · GlassProgress（html .bar / .bar-cap）──────
+   t-progress 只作内芯；外壳保持透明，轨 / 填充 / label 全走 token。 */
+.glass-progress {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  margin: var(--glass-wb-progress-margin);
+}
+
+.glass-progress__core {
+  width: 100%;
+}
+
+.glass-progress .t-progress__bar {
+  height: var(--glass-wb-progress-height);
+  border-radius: var(--glass-wb-progress-radius);
+  background: var(--glass-wb-progress-track);
+}
+
+.glass-progress .t-progress__inner {
+  border-radius: var(--glass-wb-progress-radius);
+  background: var(--glass-wb-progress-fill);
+  transition: width 200ms ease;
+}
+
+/* active 语义保留；Quiet 静气质无扫光 → 不生成 TDesign shimmer 伪元素 */
+.glass-progress .t-progress__inner::before {
+  content: none;
+}
+
+.glass-progress[data-status='success'] .t-progress__inner {
+  background: var(--glass-wb-progress-success-fill);
+}
+
+.glass-progress[data-status='warning'] .t-progress__inner {
+  background: var(--glass-wb-progress-warning-fill);
+}
+
+.glass-progress[data-status='error'] .t-progress__inner {
+  background: var(--glass-wb-progress-error-fill);
+}
+
+.glass-progress__label {
+  display: block;
+  margin-top: var(--glass-wb-progress-label-gap);
+  font-size: var(--glass-wb-progress-label-font-size);
+  line-height: 1.4;
+  color: var(--glass-wb-progress-label-color);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glass-progress .t-progress__inner {
+    transition: none;
+  }
+}
+
+/* ── Comment · GlassComment（Quiet 排版 · 盖 t-comment）────────────────
+   会话流评论 / 引用槽：avatar 40 圆角 12 · 无硬描边 · quote 嵌 GlassCard
+   自带 hairline（不重复左描边）· reply 微透近白底左缩进对齐头像。 */
+.glass-comment.t-comment {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--glass-wb-comment-detail-color);
+}
+
+.glass-comment .t-comment__avatar {
+  margin-right: var(--glass-wb-comment-avatar-gap);
+}
+
+.glass-comment .t-comment__avatar-image {
+  width: var(--glass-wb-comment-avatar-size);
+  height: var(--glass-wb-comment-avatar-size);
+  border-radius: var(--glass-wb-comment-avatar-radius);
+  object-fit: cover;
+}
+
+.glass-comment .t-comment__author {
+  margin-bottom: var(--glass-wb-comment-gap);
+}
+
+.glass-comment .t-comment__name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--glass-wb-comment-name-color);
+}
+
+.glass-comment .t-comment__time {
+  font-size: 12px;
+  color: var(--glass-wb-comment-time-color);
+}
+
+.glass-comment .t-comment__detail {
+  color: var(--glass-wb-comment-detail-color);
+}
+
+.glass-comment .t-comment__quote {
+  margin-top: var(--glass-wb-comment-gap);
+  padding: 0;
+  border-left: none;
+}
+
+.glass-comment .t-comment__quote .t-comment__name,
+.glass-comment .t-comment__quote .t-comment__detail {
+  color: var(--glass-wb-comment-detail-color);
+}
+
+.glass-comment .t-comment__actions {
+  margin-top: var(--glass-wb-comment-gap);
+}
+
+.glass-comment .t-comment__actions .t-button--variant-text {
+  color: var(--glass-wb-comment-action-color);
+}
+
+.glass-comment .t-comment__reply {
+  margin-top: var(--glass-wb-comment-gap);
+  margin-left: var(--glass-wb-comment-reply-offset);
+  border-radius: var(--glass-wb-comment-reply-radius);
+  padding: var(--glass-wb-comment-reply-pad);
+  background: var(--glass-wb-comment-reply-bg);
+  color: var(--glass-wb-comment-detail-color);
+}
+
+/* ── Glass Badge · GlassBadge（全局主题层）───────────────────────────
+   variant=status → 底层 t-tag（在线值守绿点 · --glass-wb-online-*）；
+   variant=count  → 底层 t-badge（满浓双蓝小物件 · 禁白核）。
+   组件只挂 .glass-badge + --status / --count；本段是唯一视觉出处。 */
+
+/* status：t-tag 默认 light 灰底 → online 绿浅底 + 绿字；圆点同源绿。
+   3 class 特异性压过 TD `.t-tag--default.t-tag--light`。 */
+.t-tag.glass-badge.glass-badge--status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: none;
+  background: var(--glass-wb-online-bg);
+  color: var(--glass-wb-online-text);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.glass-badge--status .glass-badge__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--glass-wb-online-text);
+}
+
+.glass-badge--status .glass-badge__text {
+  line-height: 1;
+}
+
+/* count：t-badge 满浓蓝底白字（dot / circle / round 统一）；size / padding / radius 仍由 TD 管。
+   color 显式传入时 inline background 优先于本规则，实现 token / TD 语义覆盖。 */
+.glass-badge--count.t-badge .t-badge--dot,
+.glass-badge--count.t-badge .t-badge--circle,
+.glass-badge--count.t-badge .t-badge--round {
+  background-color: var(--glass-wb-badge-bg);
+  color: var(--glass-wb-badge-text);
+}
+
+/* ── Glass Descriptions · GlassDescriptions（全局主题层）────────────────
+   Compound Wrapper 盖 t-descriptions；组件只挂 .glass-descriptions
+   + __core，本段是唯一视觉出处。
+   阅读焦点三档：label（secondary）/ content（primary）/ secondary 内容（muted）；
+   bordered 用 Tone Grid + soft hairline：矩阵 wash + 偶数行底色差 +
+   label 淡染 + 柔和 1px 网格线；13px 节奏对齐 Form Quiet；host-first，content 透明。
+   容器外轮廓（DetailPlate / Surface）仍不加 hairline。 */
+
+.glass-descriptions {
+  display: block;
+}
+
+.glass-descriptions .t-descriptions {
+  font-size: var(--glass-wb-descriptions-content-font-size);
+  color: var(--glass-wb-descriptions-content-color);
+}
+
+.glass-descriptions .t-descriptions__header {
+  margin: 0 0 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--glass-wb-descriptions-header-color);
+}
+
+.glass-descriptions .t-descriptions__label {
+  font-size: var(--glass-wb-descriptions-label-font-size);
+  font-weight: 500;
+  color: var(--glass-wb-descriptions-label-color);
+}
+
+.glass-descriptions .t-descriptions__content {
+  font-size: var(--glass-wb-descriptions-content-font-size);
+  color: var(--glass-wb-descriptions-content-color);
+}
+
+/* bordered：Tone Grid + soft hairline。外框与格线只属于 Descriptions
+   组件网格；DetailPlate / Surface 等容器外轮廓仍不加 hairline。
+   层次由底 wash、偶数行 content 条纹（html table zebra）、label 淡染
+   与柔和 1px 网格共同承担。 */
+.glass-descriptions .t-descriptions__body--border {
+  border: 1px solid var(--glass-wb-descriptions-hairline);
+  border-radius: var(--glass-wb-descriptions-radius);
+  border-collapse: separate;
+  border-spacing: 0;
+  box-sizing: border-box;
+  background-color: var(--glass-wb-descriptions-bordered-fill);
+  overflow: hidden;
+}
+
+.glass-descriptions .t-descriptions__body--border > tbody > tr > td {
+  border: 0;
+  border-right: 1px solid var(--glass-wb-descriptions-hairline);
+  border-bottom: 1px solid var(--glass-wb-descriptions-hairline);
+  background-color: var(--glass-wb-descriptions-content-fill);
+}
+
+.glass-descriptions .t-descriptions__body--border > tbody > tr:nth-child(even) > td.t-descriptions__content {
+  background-color: var(--glass-wb-descriptions-row-stripe);
+}
+
+.glass-descriptions .t-descriptions__body--border > tbody > tr > td:last-child {
+  border-right: 0;
+}
+
+.glass-descriptions .t-descriptions__body--border > tbody > tr:last-child > td {
+  border-bottom: 0;
+}
+
+.glass-descriptions .t-descriptions__body--border > tbody > tr:first-child > td:first-child {
+  border-top-left-radius: var(--glass-wb-descriptions-radius);
+}
+
+.glass-descriptions .t-descriptions__body--border > tbody > tr:first-child > td:last-child {
+  border-top-right-radius: var(--glass-wb-descriptions-radius);
+}
+
+.glass-descriptions .t-descriptions__body--border > tbody > tr:last-child > td:first-child {
+  border-bottom-left-radius: var(--glass-wb-descriptions-radius);
+}
+
+.glass-descriptions .t-descriptions__body--border > tbody > tr:last-child > td:last-child {
+  border-bottom-right-radius: var(--glass-wb-descriptions-radius);
+}
+
+.glass-descriptions .t-descriptions__body--border > tbody > tr > td.t-descriptions__label {
+  background-color: var(--glass-wb-descriptions-label-fill);
+}
+
+.glass-descriptions .t-descriptions__body--border > tbody > tr > td.t-descriptions__label:hover {
+  background-color: var(--glass-wb-descriptions-label-fill-hover);
+}
+
+/* ── Glass Empty · GlassEmpty（全局主题层）──────────────────────────────
+   Compound Wrapper 盖 t-empty；组件只挂 .glass-empty，本段是唯一视觉出处。
+   Quiet 空态：透明底、无蓝染满铺；title primary、description muted；
+   action 间距走 token，不干预 TDesign 布局与 a11y。 */
+.glass-empty {
+  display: block;
+}
+
+.glass-empty .t-empty__title {
+  color: var(--glass-wb-empty-title-color);
+  font-size: var(--glass-wb-empty-title-font-size);
+  font-weight: var(--glass-wb-empty-title-font-weight);
+}
+
+.glass-empty .t-empty__description {
+  color: var(--glass-wb-empty-description-color);
+  font-size: var(--glass-wb-empty-description-font-size);
+}
+
+.glass-empty .t-empty__action {
+  margin-top: var(--glass-wb-empty-action-margin-top);
+}
+
+/* 多个 action 控件并排时横向节奏；单按钮不受影响 */
+.glass-empty .t-empty__action > * + * {
+  margin-left: var(--glass-wb-empty-action-gap);
+}
+
+/* ── Quiet List · GlassList / GlassListItem / GlassListItemMeta ─────
+   Compound Wrapper 盖 t-list / t-list-item / t-list-item-meta。
+   通用 Quiet 列表：透明底、无托盘满铺（非 Host Tray / Surface，禁双托盘）。
+   Item 行高 Quiet + Hover Whisper（复用 table/session hover token，勿另造脏蓝）；
+   Meta 头像圆角对齐 Comment。组件只挂 class 钩子，本段是唯一视觉出处。 */
+
+/* List 壳：透明底，去 TD 容器白底；滚动容器语义保留 */
+.glass-list.t-list {
+  background: var(--glass-wb-list-fill);
+  padding: var(--glass-wb-list-padding);
+}
+
+.glass-list .t-list__header {
+  background: transparent;
+  padding: 0 0 var(--glass-wb-list-header-pad-bottom);
+  color: var(--glass-wb-list-header-color);
+}
+
+.glass-list .t-list__footer {
+  background: transparent;
+  padding: var(--glass-wb-list-footer-pad-top) 0 0;
+  color: var(--glass-wb-list-footer-color);
+}
+
+.glass-list .t-list__load {
+  background: transparent;
+  color: var(--glass-wb-list-loading-color);
+}
+
+.glass-list .t-list__load:not(:empty) {
+  padding: var(--glass-wb-list-load-pad);
+}
+
+/* Item：Quiet 行高 + Hover Whisper（透明底，行悬停近白微洗） */
+.glass-list.t-list .glass-list-item.t-list-item {
+  padding: var(--glass-wb-list-item-pad);
+  border-radius: var(--glass-wb-list-item-radius);
+  transition: var(--glass-wb-list-item-transition);
+}
+
+.glass-list.t-list.t-size-s .glass-list-item.t-list-item {
+  padding: var(--glass-wb-list-item-pad-s);
+}
+
+.glass-list.t-list.t-size-l .glass-list-item.t-list-item {
+  padding: var(--glass-wb-list-item-pad-l);
+}
+
+.glass-list.t-list .t-list__inner .glass-list-item.t-list-item:hover {
+  background: var(--glass-wb-list-item-hover-bg);
+}
+
+/* split：软分隔线（去 TD 灰），只画非末行 */
+.glass-list.t-list--split .glass-list-item.t-list-item:not(:last-child)::after {
+  background: var(--glass-wb-list-split-color);
+}
+
+/* stripe：偶数行近白微洗（非粉笔白实色）；hover 态由更高特异性覆盖 */
+.glass-list.t-list--stripe .glass-list-item.t-list-item:nth-child(even) {
+  background: var(--glass-wb-list-stripe-bg);
+}
+
+/* Meta：头像圆角对齐 Comment；title primary / description secondary */
+.glass-list-item-meta.t-list-item__meta {
+  align-items: center;
+}
+
+.glass-list-item-meta .t-list-item__meta-avatar {
+  width: var(--glass-wb-list-meta-avatar-size);
+  height: var(--glass-wb-list-meta-avatar-size);
+  border-radius: var(--glass-wb-list-meta-avatar-radius);
+  margin-right: var(--glass-wb-list-meta-gap);
+}
+
+.glass-list-item-meta .t-list-item__meta-title {
+  color: var(--glass-wb-list-title-color);
+}
+
+.glass-list-item-meta .t-list-item__meta-description {
+  color: var(--glass-wb-list-description-color);
+}
+
+/* ── Frost Disc Loading · GlassLoading（全局主题层）────────────────────
+   Compound Wrapper 盖 t-loading；组件只挂 .glass-loading + .glass-loading__disc，
+   本段是唯一视觉出处。默认指示器对齐 html `.disc-on-gan` / `.cell-float .disc`：
+   径向冰蓝长程渐变、柔影、无描边；12s 慢旋 + 1.8s 强呼吸双轨合成，
+   呼吸幅度 0.38→1 / 0.82→1.14，reduced-motion 时静止。
+   文本走 secondary（Quiet）；包裹态 / fullscreen 遮罩用轻 mask，禁实白盖板。 */
+
+/* 独立 spinner 根 = .glass-loading.t-loading；包裹态 overlay = 后代 .t-loading；
+   attach 目标 = teleport 出的 .glass-loading.t-loading。两选择器并写覆盖全部形态。 */
+.glass-loading.t-loading,
+.glass-loading .t-loading {
+  color: var(--glass-wb-loading-color);
+}
+
+/* 文本 Quiet secondary：不抢 Frost Disc 盘面 */
+.glass-loading .t-loading__text {
+  color: var(--glass-wb-loading-text-color);
+}
+
+.glass-loading__disc {
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: var(--glass-wb-loading-disc-size-medium);
+  height: var(--glass-wb-loading-disc-size-medium);
+  border: 0;
+  border-radius: 50%;
+  background: var(--glass-wb-loading-disc-fill);
+  box-shadow: var(--glass-wb-loading-disc-shadow);
+  -webkit-backdrop-filter: var(--glass-wb-loading-disc-blur);
+  backdrop-filter: var(--glass-wb-loading-disc-blur);
+  transform-origin: center;
+  animation:
+    glass-loading--disc-spin var(--glass-wb-loading-disc-rotate-duration)
+      linear infinite,
+    glass-loading--disc-breathe var(--glass-wb-loading-disc-breathe-duration)
+      var(--glass-wb-loading-disc-ease) infinite alternate;
+}
+
+.glass-loading.t-size-s .glass-loading__disc,
+.glass-loading .t-size-s .glass-loading__disc {
+  width: var(--glass-wb-loading-disc-size-small);
+  height: var(--glass-wb-loading-disc-size-small);
+}
+
+.glass-loading.t-size-l .glass-loading__disc,
+.glass-loading .t-size-l .glass-loading__disc {
+  width: var(--glass-wb-loading-disc-size-large);
+  height: var(--glass-wb-loading-disc-size-large);
+}
+
+@keyframes glass-loading--disc-spin {
+  from {
+    rotate: 0deg;
+  }
+  to {
+    rotate: 360deg;
+  }
+}
+
+@keyframes glass-loading--disc-breathe {
+  from {
+    scale: 0.82;
+    opacity: 0.38;
+  }
+  to {
+    scale: 1.14;
+    opacity: 1;
+  }
+}
+
+/* 包裹态 / fullscreen 轻 mask：覆盖 TD --td-mask-disabled（0.6 实白），勿实白盖板 */
+.glass-loading.t-loading__overlay,
+.glass-loading .t-loading__overlay {
+  background-color: var(--glass-wb-loading-overlay);
+}
+
+/* ── 微透 · 叠压染色 Skeleton · GlassSkeleton（全局主题层）───────────────
+   Compound Wrapper 盖 t-skeleton；组件只挂 .glass-skeleton，本段是唯一视觉出处。
+   Quiet 骨块对齐 html `.cell-see`：半透冷蓝底 + 两层低透明度蓝染区缓慢漂移，
+   交叠处自然加深；无近白高光带、无 chalk / 冰白扫光。flashed 只呼吸染层透明度。 */
+
+/* 骨块底：覆盖 TD --td-bg-color-secondarycontainer 软灰；Statistic 内嵌骨架同源 */
+:is(.glass-skeleton, .glass-statistic) .t-skeleton__col {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--glass-wb-skeleton-fill);
+}
+
+/* 骨块圆角：text/rect 对齐 Quiet 骨块（circle 沿用 TD 圆形） */
+.glass-skeleton .t-skeleton--type-text,
+.glass-skeleton .t-skeleton--type-rect {
+  border-radius: var(--glass-wb-skeleton-radius);
+}
+
+/* 两层软染：::before = Cyan→支付宝蓝团，::after = Zhihu→软蓝染带；
+   各自慢移 + 透明度呼吸，交叠处染色加深，全程无锐白 / 高光核。 */
+:is(.glass-skeleton, .glass-statistic) .t-skeleton--animation-gradient::before,
+:is(.glass-skeleton, .glass-statistic) .t-skeleton--animation-gradient::after,
+:is(.glass-skeleton, .glass-statistic) .t-skeleton--animation-flashed::before,
+:is(.glass-skeleton, .glass-statistic) .t-skeleton--animation-flashed::after {
+  content: '';
+  position: absolute;
+  inset: -26%;
+  border-radius: inherit;
+  pointer-events: none;
+  filter: blur(3px);
+  will-change: transform, opacity;
+}
+
+:is(.glass-skeleton, .glass-statistic) .t-skeleton--animation-gradient::before,
+:is(.glass-skeleton, .glass-statistic) .t-skeleton--animation-flashed::before {
+  background: var(--glass-wb-skeleton-dye-cyan);
+  opacity: var(--glass-wb-skeleton-dye-opacity);
+}
+
+:is(.glass-skeleton, .glass-statistic) .t-skeleton--animation-gradient::after,
+:is(.glass-skeleton, .glass-statistic) .t-skeleton--animation-flashed::after {
+  background: var(--glass-wb-skeleton-dye-blue);
+  opacity: var(--glass-wb-skeleton-dye-breath-opacity);
+}
+
+/* flashed 的呼吸只落在两层染层上；关掉 TD 骨块本体的灰白 background-color 色跳 */
+:is(.glass-skeleton, .glass-statistic) .t-skeleton--animation-flashed {
+  animation: none;
+}
+
+:is(.glass-skeleton, .glass-statistic) .t-skeleton--animation-gradient::before {
+  animation: glass-skeleton--dye-cyan var(--glass-wb-skeleton-dye-duration) ease-in-out infinite alternate;
+}
+
+:is(.glass-skeleton, .glass-statistic) .t-skeleton--animation-gradient::after {
+  animation: glass-skeleton--dye-blue var(--glass-wb-skeleton-dye-duration) ease-in-out infinite alternate;
+}
+
+@keyframes glass-skeleton--dye-cyan {
+  from {
+    transform: translate3d(-12%, -4%, 0) scale(1) rotate(-4deg);
+    opacity: 0.1;
+  }
+  to {
+    transform: translate3d(12%, 4%, 0) scale(1.18) rotate(4deg);
+    opacity: 0.95;
+  }
+}
+
+@keyframes glass-skeleton--dye-blue {
+  from {
+    transform: translate3d(11%, 4%, 0) scale(1.16) rotate(4deg);
+    opacity: 0.08;
+  }
+  to {
+    transform: translate3d(-11%, -4%, 0) scale(1) rotate(-4deg);
+    opacity: 0.92;
+  }
+}
+
+/* flashed：骨块不变灰白，只让两层染色的深浅交替呼吸 */
+:is(.glass-skeleton, .glass-statistic) .t-skeleton--animation-flashed::before {
+  animation: glass-skeleton--dye-breathe-cyan var(--glass-wb-skeleton-breath-duration) ease-in-out infinite;
+}
+
+:is(.glass-skeleton, .glass-statistic) .t-skeleton--animation-flashed::after {
+  animation: glass-skeleton--dye-breathe-blue var(--glass-wb-skeleton-breath-duration) ease-in-out infinite;
+}
+
+@keyframes glass-skeleton--dye-breathe-cyan {
+  0%,
+  100% {
+    opacity: 0.08;
+  }
+  50% {
+    opacity: 0.98;
+  }
+}
+
+@keyframes glass-skeleton--dye-breathe-blue {
+  0%,
+  100% {
+    opacity: 0.95;
+  }
+  50% {
+    opacity: 0.06;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glass-loading__disc {
+    animation: none;
+    rotate: none;
+    scale: none;
+    opacity: 1;
+  }
+
+  :is(.glass-skeleton, .glass-statistic) .t-skeleton--animation-gradient::before,
+  :is(.glass-skeleton, .glass-statistic) .t-skeleton--animation-gradient::after,
+  :is(.glass-skeleton, .glass-statistic) .t-skeleton--animation-flashed::before,
+  :is(.glass-skeleton, .glass-statistic) .t-skeleton--animation-flashed::after {
+    animation: none;
+  }
+}
+
+/* ── Glass Statistic · GlassStatistic（全局主题层）──────────────────────
+   Compound Wrapper 盖 t-statistic；组件只挂 .glass-statistic + --tone-* + --trend-*，
+   本段是唯一视觉出处。
+   Quiet 数字气质：透明底、非 Host Tray / Surface / Soft Cite Card（禁双托盘）。
+   标题 / 单位 Quiet secondary、extra muted；数值 tone 五态；
+   trend 图标色跟语义（increase 酷安绿 / decrease 危险红），与 tone 解耦；
+   loading 用 TD 内建 skeleton（轻骨块，勿实白盖板）。 */
+
+.glass-statistic {
+  background: transparent;
+  padding: 0;
+}
+
+.glass-statistic .t-statistic-title {
+  color: var(--glass-wb-statistic-title-color);
+  font-size: var(--glass-wb-statistic-title-font-size);
+  font-weight: var(--glass-wb-statistic-title-font-weight);
+}
+
+/* 数值 + prefix/suffix 继承 tone 色；unit 单独 Quiet secondary 覆盖 */
+.glass-statistic .t-statistic-content {
+  color: var(--glass-wb-statistic-value-color);
+}
+
+.glass-statistic .t-statistic-content-value {
+  font-weight: var(--glass-wb-statistic-value-font-weight);
+}
+
+.glass-statistic--tone-brand .t-statistic-content {
+  color: var(--glass-wb-statistic-brand);
+}
+
+.glass-statistic--tone-success .t-statistic-content {
+  color: var(--glass-wb-statistic-success);
+}
+
+.glass-statistic--tone-warning .t-statistic-content {
+  color: var(--glass-wb-statistic-warning);
+}
+
+.glass-statistic--tone-danger .t-statistic-content {
+  color: var(--glass-wb-statistic-danger);
+}
+
+.glass-statistic .t-statistic-content-unit {
+  color: var(--glass-wb-statistic-unit-color);
+  font-size: var(--glass-wb-statistic-unit-font-size);
+}
+
+.glass-statistic .t-statistic-extra {
+  color: var(--glass-wb-statistic-extra-color);
+  font-size: var(--glass-wb-statistic-extra-font-size);
+}
+
+/* trend 图标色跟语义（与 tone 解耦）：increase 酷安绿 / decrease 危险红 */
+.glass-statistic--trend-increase .t-statistic-content-prefix .t-icon,
+.glass-statistic--trend-increase .t-statistic-content-suffix .t-icon {
+  color: var(--glass-wb-statistic-increase);
+}
+
+.glass-statistic--trend-decrease .t-statistic-content-prefix .t-icon,
+.glass-statistic--trend-decrease .t-statistic-content-suffix .t-icon {
+  color: var(--glass-wb-statistic-decrease);
+}
+
+/* loading：TD 内建 skeleton（theme=text）复用同源微透叠压染色 token，勿实白盖板 */

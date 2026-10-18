@@ -1,0 +1,78 @@
+---
+description: Glass 组件库纪律：可发布面、Tone、Overlay 拆分、Nested Chrome、Interaction 红线
+globs: glass-frontend/src/components/glass/**/*.{vue,ts},glass-frontend/src/styles/theme.css,glass-frontend/src/views/system/lab/**/*.{vue,css}
+alwaysApply: false
+---
+
+# Glass Component Kit 纪律
+
+## 可发布面
+
+- 可复用玻璃组件只放 `glass-frontend/src/components/glass/`，经 `index.ts` 具名导出。
+- Token 只写 `glass-frontend/src/styles/theme.css`（`--glass-wb-*` / `--glass-*`）；组件内禁止魔法 hex/rgba。
+- 底层 UI **仅** TDesign Vue Next；禁止第二 UI 库。Compound Wrapper 盖 `t-*`，不重造行为。
+- 未来兄弟项目消费：peer `vue` + `tdesign-vue-next`；本仓未拆包前勿臆造包路径 import。
+
+## 权威顺序
+
+已定 glass token（`theme.css`）> Lab Living / 已导出 `Glass*` > TDesign 默认。  
+不确定 → 停笔列待确认；禁止另起第二套色板。
+
+## Overlay 选型（Confirm vs 表单整装）
+
+| 场景 | 组件 |
+|---|---|
+| 短确认 / 危险确认 | **GlassDialog**（Confirm Sheet） |
+| 多段表单「开一窗填表」 | **GlassFormPane**（表单整装会话窗） |
+| 页内非浮层焦点面 | **GlassPanel** |
+
+- Dialog **默认脚钮**；FormPane **无默认脚钮**（`#footer` 自备 GlassButton）。  
+- 拼写 **FormPane**（禁止 FromPane）。聊天气泡+Composer ≠ Overlay；ChatPane 另案，禁止塞进 Dialog。  
+- 详表：`.agents/skills/glass-ui/references/overlay-chrome.md`。
+
+## Nested Chrome 禁令（Overlay 面板）
+
+仅对齐 t1 **Bchat** 面板材质语义。禁止把 `.air` / 花瓣径向 / PosterWash / `.bph` 扇形头 / `.bsurf` / 气泡 / `.bin` 搬进 Dialog 或 FormPane 面板。
+
+## Overlay 视觉铁律
+
+- **Scrim**：`--glass-wb-dialog-scrim`（当前 `rgba(15,40,80,0.14)`，降浅换微透）；FormPane 共用。禁止抬 fill / 白渐变「补白」。再调须用户裁决。  
+- **分区**：header / footer / Section `divider` 用**纯间距**；禁止 inset hairline 当分界（≠ 按钮 Tonal Quiet 的 tonal-hairline 轮廓）。  
+- **radius 18 / shell padding 32**：相对历史 bchat 12 / 10×12 为自觉例外；改前须用户裁决。
+
+## Tone
+
+- 小物件（Pill / 发送 / FAB）：可满浓蓝；**禁止白色高光核**。
+- 大容器：低对比微透，蓝染约 5–15%；禁止粉笔白实色大卡、1px 硬描边当玻璃。
+
+## Interaction 红线（Hover Whisper / Active Press / Focus Ring）
+
+- 可点击控件必须具备：**hover**（轻提亮或 quiet bg whisper）、**active**（scale 0.96–0.98 或等价压入，影收紧）、**focus-visible**（可见 ring，走 token）。
+- 自定义可点节点（含 `role="button"`）须有 **`cursor: pointer`**。
+- 禁止 active 改变宽高导致周围布局抖动；禁止仅靠 hover、无键盘焦点态。
+- `disabled` / `loading` 须透传 TDesign 语义；disabled 无抬升交互。
+- 尊重 `prefers-reduced-motion: reduce`（关掉 scale/位移，保留颜色态）。
+- Icon-only 必须 `aria-label`；装饰图标旁已有可见文案时须 `aria-hidden`。
+- 状态/对错 **禁止仅靠颜色**传达（须文案或图标）。
+- 焦点不得被 sticky / FAB / Overlay 持久遮挡（focus-not-obscured；FAB Safe Offset；Scrim 降浅后仍抽检）。
+- 作者控制的拖拽须另有单指针 / 键盘替代（触及 Table 等再验）。
+- Toast / Soft Notice 不抢焦点；表单错误走 live/alert（详见 ux-delivery-checklist）。
+- 同一区域视觉上只突出一个 Primary CTA；其余走 Quiet。
+
+## UX 内化边界（ui-ux-pro-max）
+
+- 交付 / a11y 清单见 `.agents/skills/glass-ui/references/ux-delivery-checklist.md`。
+- **禁止**把 pro-max 的 `--design-system`、通用字体配对、glassmorphism dark/purple/白硬边教条写入 theme 或组件。
+- **禁止** vendor 整包 skill / 搜索脚本进本仓；只维护改写后的清单。
+
+## Lab
+
+- 扁平 Lab 路由（`/actions` · `/overlay` · `/feedback` …）用于 State Matrix 与活文档；须演示 FormPane vs Dialog 边界。
+- 可并列裸 `t-button` 对照区，但不得把对照 API 泄漏进 Glass 导出面。
+- Lab 目录以 `docs-nav.ts` 为唯一数据源；禁止写入示范壳业务导航。
+
+## 必检
+
+- `npm --prefix glass-frontend run build` 通过。
+- 不自动 commit。
+- 改交互后对照 `.agents/skills/glass-ui/` 短 checklist；收口或用户点名专业度时再跑 `references/ux-delivery-checklist.md`。

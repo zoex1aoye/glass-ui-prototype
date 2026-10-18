@@ -1,0 +1,19 @@
+---
+description: Codex CLI 派发纪律（默认执行面；sandbox ≠ Cursor Shell 无沙箱）
+alwaysApply: true
+---
+
+# Codex 派发纪律
+
+- **默认执行面**：实现 / 视觉 QA / 重读码用 Codex CLI（`codex` / `codex exec`）。Cursor 是总规划师，默认不亲自改产品代码（见 `cursor-planner`）。不再默认走 mimo。
+- Headless：`codex exec -m <MODEL> -s <sandbox> --skip-git-repo-check …`。
+- **Sandbox 跟落盘走**（不跟「是否改产品代码」走）：有工作区落盘（含 `.agents/tmp-*` QA / refs 截图 / 实现改文件）→ `-s workspace-write`；仅无落盘探查 / dry-run → `-s read-only`。禁止 Vision QA 等「要写 QA md」却派 `read-only`。
+- **必须显式 `-m`**：Codex 不会按任务内容自选模型。`deepseek-flash` = **默认档 + 唯一 Vision**；`deepseek-v4-pro` = **无 Vision、贵约 3–7×、仅例外**（硬推理 / 用户点名）。看图与常规实现 → flash；视觉目标默认 V(flash 看图) + I(默认 flash 改码)。禁止「无图就默认 pro」。细则见 skill。
+- **`-i` 附图**：prompt 走 stdin（`… - < prompt.txt`），避免 positional 空跑。
+- 环境：npm 版 `@openai/codex`（禁止 ChatGPT.app 捆绑作默认）；非交互须 `export DEEPSEEK_API_KEY`；登录冲突时 `codex logout`。
+- **Cursor Shell 派发必须无沙箱**：一切 `codex exec`（尤其 **`-i` Vision**）须 `required_permissions: ["all"]`。与 Codex 自身 `-s …` 是两件事；关 Cursor 沙箱 ≠ 放宽 Codex sandbox。缺 `all` → `failed to initialize in-process app-server` / PATH aliases `Operation not permitted`；重派一律带 `all`。
+- **假成功门禁**：run.log 仅有上述 EPERM、无 QA md → **FAIL**，禁止凭 Shell/`tee` exit 0 勾完成；细则见 skill。
+- **飞轮**：部分 Codex session 仍拒写 `.agents/**`（即使 `workspace-write`）。规范轨优先 Cursor 落盘（`cursor-planner` 白名单）；`.agents/tmp-*` 若被拦 → Cursor 写，或先落 `output/qa/` 再挪入。细则见 skill。
+- **飞轮（listen EPERM）**：`-s workspace-write` 不能 bind；Codex 自启 vite 会 `EPERM 127.0.0.1:5173`。默认禁止 Codex 自启服；prompt 写已有 `DEV_URL` 或「浏览器验收由 Cursor」；仅用户知情时才用 `-s danger-full-access`。- 禁止把 API key 写入仓库。禁止自动 `git commit`。
+- mimo 仅当用户点名：见 `.agents/skills/mimo-dispatch/`（DEPRECATED）。
+- 派发模板与 dry-run 见 `.agents/skills/codex-dispatch/SKILL.md`；编排节奏见 `.agents/skills/cursor-planner/`。

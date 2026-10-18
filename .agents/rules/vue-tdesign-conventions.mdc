@@ -1,0 +1,44 @@
+---
+description: Vue3 + TDesign 目录与组件使用纪律（改 glass-frontend 时生效）
+globs: glass-frontend/**/*.{vue,ts,tsx}
+alwaysApply: false
+---
+
+# Vue + TDesign 约定
+
+## 目录约定（glass-frontend/）
+
+```
+glass-frontend/
+├── src/
+│   ├── assets/          # 静态资源（图标、图片）
+│   ├── components/      # 跨页可复用组件（≥2 处使用才进这里）
+│   ├── layouts/         # 应用壳层（导航壳 + 顶栏 + 内容槽）
+│   ├── router/          # vue-router 路由定义
+│   ├── stores/          # Pinia（启用后才创建）
+│   ├── styles/          # 全局样式与 TDesign 主题变量覆盖
+│   ├── views/           # 路由级页面（每个功能区一个目录）
+│   ├── App.vue
+│   └── main.ts
+├── index.html
+├── vite.config.ts
+├── tsconfig.json
+└── package.json
+```
+
+- 别名固定：`@` → `src`；不自造新别名。
+- 页面进 `views/`，壳层进 `layouts/`，可复用块进 `components/`；禁止组件反向 import `views/`。
+
+## 组件与样式
+
+- UI 控件优先 TDesign Vue Next（`t-` 前缀）；禁止引入 Element / Ant Design/naive-ui 等第二套 UI 库。
+- TDesign 没有的装饰块用原生元素 + 项目样式变量实现，禁止为此引入新组件库。
+- 颜色、间距、圆角取值来自已定 `--glass-wb-*` / `--glass-*` token，写入 `src/styles/` 变量；禁止组件内散落魔法色值。
+- 组合式 API（`<script setup lang="ts">`）；Props / Emits 显式类型；禁止 `any` 泛滥。
+- 新公共组件进 `components/` 前确认 ≥2 处复用；否则留在 `views/` 对应目录内。
+
+## 必检
+
+- 改功能前搜索同目录已有类似实现，优先复用。
+- 路由变更同步 `src/router/`，禁止在组件内用硬编码跳转替代路由表。
+- `npm --prefix glass-frontend run build` 通过后才算完成；TS 类型错误视同 error。

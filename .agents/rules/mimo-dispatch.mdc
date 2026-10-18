@@ -1,0 +1,15 @@
+---
+description: DEPRECATED — mimo 仅当用户点名；默认派发见 codex-dispatch
+alwaysApply: false
+---
+
+# mimo 派发纪律（DEPRECATED）
+
+> **已非默认**。默认派发纪律见 `.agents/rules/codex-dispatch.mdc` 与 `.agents/skills/codex-dispatch/`。  
+> 下列条文仅在用户明确点名「派 mimo」时适用。
+
+- Headless 用 `mimo run`：**必须**带 `--yolo`（或 `--dangerously-skip-permissions`）。
+- **禁止** `mimo run … --trust`：`run` 子命令不接受 `--trust`，会打 help 并退出。
+- `--trust` 仅用于 TUI：`mimo --trust …`（跳过工作区信任确认）。
+- **Cursor Shell 派发必须无沙箱**：`required_permissions: ["all"]`。Sandbox 会挡本机 mimocode SQLite 写入，日志见 `PRAGMA wal_checkpoint(PASSIVE)` 失败；`--yolo` 不能代替无沙箱。
+- 派发模板与 dry-run 见 `.agents/skills/mimo-dispatch/SKILL.md`。
