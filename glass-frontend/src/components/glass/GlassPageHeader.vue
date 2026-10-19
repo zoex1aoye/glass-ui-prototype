@@ -1,38 +1,29 @@
 <script setup lang="ts">
 /**
  * GlassPageHeader — Region / PageHeader（四层栈 L2 · Glass Container 4layer plan）
- * html 锚点：`.ph` / `.t1 .bph`（扇形软过渡页头 · 左微透 + 冰蓝中段 · shadow-lift）
+ * html 锚点：`.ph` / `.t1 .bph`
  * 坐在 L1 Surface 内的分区条 / 页头条；可多条同层并列。
- * 边界靠扇形材质差 + lift 影，无描边 / 无 rim。
- * `--weighted`：默认有 `#actions` 时自动开启（右端更实 + 非对称影偏右）；
- *   也可显式 `weighted` 开关（true/false 覆盖 auto，便于 Lab Living 对齐橱窗气质）。
+ * 定稿 A · 2026-10-20：112° 半透扇形 + blur + lift 0 + 轻软影；无白 rim。
+ * `--weighted`：默认 true（同扇形 tip 略提）；可显式 false 关闭。
  * 材质只吃 `--glass-layer-l2-*`；薄原生壳，禁止包 t-card、禁止白核实色核、禁止第二 Host Tray。
  * slots: leading / default（标题区补充）/ actions
  */
-import { computed, useSlots } from 'vue'
-
-const props = withDefaults(
+withDefaults(
   defineProps<{
     title?: string
     subtitle?: string
     /** 默认 true：微透条；false 走更实 fill（仍走 token，不写死色） */
     glass?: boolean
-    /**
-     * 重物压感。undefined = 有 `#actions` 时自动；
-     * true/false 显式覆盖（Lab Living 可 false 对齐橱窗 default fan）。
-     */
+    /** 重物压感。默认 true；false 回落 default 扇形。 */
     weighted?: boolean
   }>(),
   {
     title: undefined,
     subtitle: undefined,
     glass: true,
-    weighted: undefined,
+    weighted: true,
   },
 )
-
-const slots = useSlots()
-const isWeighted = computed(() => props.weighted ?? Boolean(slots.actions))
 </script>
 
 <template>
@@ -40,7 +31,7 @@ const isWeighted = computed(() => props.weighted ?? Boolean(slots.actions))
     class="glass-page-header"
     :class="[
       glass ? undefined : 'glass-page-header--solid',
-      isWeighted ? 'glass-page-header--weighted' : undefined,
+      weighted ? 'glass-page-header--weighted' : undefined,
     ]"
   >
     <div v-if="$slots.leading" class="glass-page-header__leading">
@@ -64,7 +55,7 @@ const isWeighted = computed(() => props.weighted ?? Boolean(slots.actions))
 </template>
 
 <style scoped>
-/* L2 分区壳：扇形软过渡 + 左微透 + 冰蓝中段；边界 = 材质差 + lift 影（无描边 / 无 rim） */
+/* L2 分区壳 · 定稿 A：112° 半透扇形 + blur + lift 0 + 轻软影；无白 rim */
 .glass-page-header {
   flex: none;
   display: flex;
@@ -76,7 +67,7 @@ const isWeighted = computed(() => props.weighted ?? Boolean(slots.actions))
   background: var(--glass-layer-l2-fill);
   -webkit-backdrop-filter: var(--glass-layer-l2-blur);
   backdrop-filter: var(--glass-layer-l2-blur);
-  box-shadow: var(--glass-layer-l2-shadow);
+  box-shadow: var(--glass-layer-l2-rim), var(--glass-layer-l2-shadow);
   transform: translateY(var(--glass-layer-l2-lift, 0));
 }
 
@@ -87,7 +78,7 @@ const isWeighted = computed(() => props.weighted ?? Boolean(slots.actions))
   }
 }
 
-/* 有 actions：重物压感 —— 右端更实 + 非对称影偏右 */
+/* 有 actions：同扇形 tip 略提；影与 default 同档 */
 .glass-page-header--weighted {
   background: var(--glass-layer-l2-fill-weighted);
   box-shadow: var(--glass-layer-l2-shadow-weighted);

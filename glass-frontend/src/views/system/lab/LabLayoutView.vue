@@ -52,7 +52,7 @@ const demoBlocks: DocsDemoBlock[] = [
     label: 'Page Header',
     description: 'GlassPageHeader · weighted / glass',
     props: [
-      { key: 'weighted', label: 'weighted', type: 'boolean', defaultValue: false },
+      { key: 'weighted', label: 'weighted', type: 'boolean', defaultValue: true },
       { key: 'glass', label: 'glass', type: 'boolean', defaultValue: true },
     ],
   },
@@ -102,7 +102,7 @@ const focusPanel = computed(() => {
 const pageHeader = computed(() => {
   const v = docsProps.state.values['page-header'] ?? {}
   return {
-    weighted: Boolean(v.weighted ?? false),
+    weighted: Boolean(v.weighted ?? true),
     glass: Boolean(v.glass ?? true),
   }
 })
@@ -356,8 +356,8 @@ const gapCards = [
         验收：托盘=GlassSurface · L1 / Lab frame=20 · Region=16 · Flush 外角=8（PageHeader / Panel / DetailPlate 同档 Region）· Surface
         <code>__body</code> 外轮廓=flush(L1-pad)=16px；贴缝无 gutter。能指出玻璃底板在 Surface 四周露边；
         Panel 间隙不是露边；整树只有一个 L1；须能指出
-        PageHeader 相对 Tray 的扇形材质差 + lift 影（无描边）；Panel 读成 Fan Tip 过渡 + frosted
-        微透 + 悬浮影（lift 1px），影不超过 L2 PageHeader 且无外轮廓 hairline。L0 为简化 page-level
+        PageHeader 读成定稿 A 半透扇形 + lift 0 + 轻软影（无白 rim）；Panel 读成 Fan Tip 过渡 + frosted
+        微透 + 悬浮影（lift 1px），维持 L3 自身轻软档且无外轮廓 hairline。L0 为简化 page-level
         小样；完整整装底见「实验室·整装背景」。
       </div>
     </section>

@@ -73,7 +73,7 @@ const demoBlocks: DocsDemoBlock[] = [
     label: 'Page Header',
     description: 'GlassPageHeader · weighted / glass',
     props: [
-      { key: 'weighted', label: 'weighted', type: 'boolean', defaultValue: false },
+      { key: 'weighted', label: 'weighted', type: 'boolean', defaultValue: true },
       { key: 'glass', label: 'glass', type: 'boolean', defaultValue: true },
     ],
   },
@@ -106,7 +106,7 @@ const panelDemo = computed(() => {
 const pageHeaderDemo = computed(() => {
   const v = docsProps.state.values['page-header-weighted'] ?? {}
   return {
-    weighted: Boolean(v.weighted ?? false),
+    weighted: Boolean(v.weighted ?? true),
     glass: Boolean(v.glass ?? true),
   }
 })

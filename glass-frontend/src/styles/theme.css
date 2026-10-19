@@ -1225,35 +1225,36 @@
   --glass-layer-l1-air: var(--glass-wb-surface-air);
   --glass-layer-l1-air-blur: var(--glass-wb-surface-air-blur);
 
-  /* L2 Region / PageHeader —— 扇形软过渡 + 磨砂微透 + lift 影（html .t1 .bph / --shadow-lift）
-     对齐 html .t1 .bph + 海报场降亮：左微透 + 冰蓝中段后移减重，蓝染尾 ≤10%；
-     边界靠材质差 + 影，禁描边 / inset rim / 满浓糊边。
-     Track I：冰蓝 stop 32%→42%、alpha .4→.28，尖端 .12→.10，保持单扇形语言。 */
+  /* L2 Region / PageHeader —— 定稿 A · 2026-10-20
+     112° 白→冰蓝半透扇形 + blur(18px) saturate(1.12)；lift 0；
+     无白 rim / 无描边；轻软影与加权态同档，禁旧 chip 影 / lift 重影。 */
   --glass-layer-l2-fill: linear-gradient(
-    115deg,
-    rgba(255, 255, 255, 0.46) 0%,
-    rgba(226, 242, 255, 0.28) 42%,
-    rgba(22, 119, 255, 0.1) 100%
+    112deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(248, 252, 255, 0.8) 42%,
+    rgba(232, 244, 255, 0.74) 66%,
+    rgba(180, 216, 255, 0.58) 100%
   );
-  /* Actions「重物压感」：中段与 default 同步减重，右端保留更实蓝染 + 影偏右下 */
+  /* Actions「重物压感」：同 112° 扇形，仅 tip 略提；影与 default 同档。 */
   --glass-layer-l2-fill-weighted: linear-gradient(
-    118deg,
-    rgba(255, 255, 255, 0.4) 0%,
-    rgba(226, 242, 255, 0.27) 40%,
-    rgba(22, 119, 255, 0.12) 72%,
-    rgba(0, 102, 255, 0.085) 100%
+    112deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(248, 252, 255, 0.8) 42%,
+    rgba(232, 244, 255, 0.74) 66%,
+    rgba(168, 208, 255, 0.66) 100%
   );
   --glass-layer-l2-fill-solid: rgba(252, 254, 255, 0.92);
-  --glass-layer-l2-blur: blur(18px) saturate(1.2);
-  --glass-layer-l2-shadow: 0 18px 40px rgba(28, 72, 150, 0.14), 0 4px 12px rgba(28, 72, 150, 0.07);
+  --glass-layer-l2-blur: blur(18px) saturate(1.12);
+  --glass-layer-l2-shadow:
+    0 10px 26px rgba(20, 60, 130, 0.1),
+    0 2px 6px rgba(20, 60, 130, 0.045);
   --glass-layer-l2-shadow-weighted:
-    0 18px 40px rgba(28, 72, 150, 0.14),
-    0 4px 12px rgba(28, 72, 150, 0.07),
-    10px 10px 28px rgba(15, 60, 140, 0.1);
-  /* 显式关闭旧软 rim；组件 box-shadow 不得再拼本 token */
+    0 10px 26px rgba(20, 60, 130, 0.1),
+    0 2px 6px rgba(20, 60, 130, 0.045);
+  /* 用户纠偏：不要白边；边界只靠材质差 + 轻软影。 */
   --glass-layer-l2-rim: none;
-  /* 极轻抬升；prefers-reduced-motion 时组件侧关掉位移 */
-  --glass-layer-l2-lift: 1px;
+  /* 定稿 A：平面轻浮，不再位移抬升。 */
+  --glass-layer-l2-lift: 0;
   --glass-layer-l2-radius: var(--glass-wb-stack-radius-region);
   --glass-layer-l2-height: 56px;
 
@@ -1272,7 +1273,7 @@
     rgba(22, 119, 255, 0.1) 100%
   );
   --glass-layer-l3-inset-blur: blur(14px) saturate(1.14);
-  /* 双层柔影抬悬浮；首层仍弱于 L2 PageHeader（40 blur / .14） */
+  /* 双层柔影抬悬浮；L3 保持自身轻软档，不与 L2 定稿 A 轻软影混用 */
   --glass-layer-l3-inset-shadow:
     0 14px 36px rgba(15, 60, 140, 0.1),
     0 4px 12px rgba(15, 60, 140, 0.05);
@@ -1280,7 +1281,7 @@
   --glass-layer-l3-inset-hairline: none; /* 容器禁外轮廓 hairline；分层靠字色 / 明度冷暖 */
   --glass-layer-l3-standalone-fill: rgba(252, 254, 255, 0.62);
   --glass-layer-l3-standalone-blur: blur(18px);
-  /* 橱窗同步略抬；standalone 略强于 inset，且两者仍弱于 L2 PageHeader */
+  /* 橱窗同步略抬；standalone 略强于 inset，维持 L3 自身层级 */
   --glass-layer-l3-standalone-shadow:
     0 16px 40px rgba(15, 60, 140, 0.105),
     0 4px 12px rgba(15, 60, 140, 0.055);
