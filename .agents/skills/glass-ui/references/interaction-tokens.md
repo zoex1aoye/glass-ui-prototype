@@ -113,7 +113,7 @@ Don't：`GlassStage`（会话画布）· `GlassCard`（Cite）· Host Tray / 二
 
 Lab `/data` 橱窗宿主（Descriptions / Empty / List / Loading / Skeleton / Statistic 同路径）：`GlassSurface → GlassDetailPlate → GlassXxx`。组件本体仍透明底 host-first；禁再用 Soft Surface + `border-soft` 小卡冒充容器。
 
-**Loading 动效**：默认 Frost Disc（`.disc` / `.disc-on-gan`：径向冰蓝长程、柔影、无描边；12s 慢旋 + 1.8s 强呼吸 `opacity 0.38→1` / `scale 0.82→1.14`）。禁 TD 硬圆环 / 锐白核。
+**Loading 动效**：默认三条竖向音浪（`.glass-loading__wave` / `__wave-bar`：三根冷蓝胶囊、条宽 16% / 间隙 14%、`border-radius: 999px`；1.05s 错峰 `height 38%→100%`，禁 `scaleY` 以免圆角压扁成矩形；整组不旋转）。禁 TD 硬圆环 / 锐白核；`prefers-reduced-motion` 下三根等高中等高度静止。
 
 **Skeleton 动效**：微透 · 叠压染色（`.cell-see` / `.lay`：冷蓝半透底 + cyan/zhihu 双层软染强呼吸叠压；**禁**近白高光 / chalk 扫光）。gradient 染层 opacity 约 `0.1→0.95`（2.2s）；flashed 对呼吸约 `0.06↔0.98`（1.2s）。`prefers-reduced-motion` 下静止。
 

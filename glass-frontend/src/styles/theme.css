@@ -845,31 +845,37 @@
   --glass-wb-list-meta-avatar-radius: var(--glass-wb-comment-avatar-radius); /* circle 50% 对齐 Comment */
   --glass-wb-list-meta-gap: 12px;
 
-  /* Frost Disc Loading · GlassLoading（盖 t-loading）
-     默认指示器是磨砂液态盘：径向冰蓝长程渐变对齐 html `.disc-on-gan` / `.cell-float .disc`，
-     12s 慢旋 + 1.8s 强呼吸（opacity 0.38→1 / scale 0.82→1.14）；
-     禁 TD 硬圆环、纯色实心核、1px 描边与锐白高光点。
+  /* Sound Wave Loading · GlassLoading（盖 t-loading）
+     默认指示器是三条竖向音浪条：冷蓝胶囊竖条水平居中、错峰 height 起伏
+     （禁 scaleY，避免圆角被非等比拉伸成矩形）；全程 border-radius: 999px 胶囊态。
+     三档包围盒沿用原圆盘 16 / 24 / 32，条宽与间隙按容器比例缩放。
+     禁 TD 硬圆环、整组旋转、纯色实心核、1px 描边与锐白高光点。
      包裹态与 fullscreen 遮罩对齐 table loading mask（近白微透），禁实白盖板；
      文本走 secondary（Quiet），不抢指示。 */
   --glass-wb-loading-color: var(--glass-wb-message-loading-icon); /* 自定义 indicator / fallback */
   --glass-wb-loading-text-color: var(--glass-text-secondary); /* 文本 Quiet secondary */
   --glass-wb-loading-overlay: var(--glass-wb-table-loading-mask); /* 轻 mask，勿实白盖板 */
-  --glass-wb-loading-disc-size-small: 16px;
-  --glass-wb-loading-disc-size-medium: 24px;
-  --glass-wb-loading-disc-size-large: 32px;
-  --glass-wb-loading-disc-fill: radial-gradient(
-    ellipse at 40% 32%,
-    color-mix(in srgb, var(--glass-chroma-cyan) 58%, transparent) 0%,
-    color-mix(in srgb, var(--glass-chroma-cyan) 45%, transparent) 30%,
-    color-mix(in srgb, var(--glass-chroma-alipay) 30%, transparent) 60%,
-    color-mix(in srgb, var(--glass-chroma-zhihu) 12%, transparent) 86%,
-    color-mix(in srgb, var(--glass-chroma-ice) 3%, transparent) 100%
-  ); /* html .disc-on-gan：冰蓝芯 → 青 → 支付宝蓝 → 知乎蓝淡出；无锐白高光核 */
-  --glass-wb-loading-disc-shadow: 0 5px 12px rgba(0, 80, 180, 0.16); /* 柔影，无描边 */
-  --glass-wb-loading-disc-blur: blur(6px) saturate(1.16);
-  --glass-wb-loading-disc-rotate-duration: 12s;
-  --glass-wb-loading-disc-breathe-duration: 1.8s;
-  --glass-wb-loading-disc-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --glass-wb-loading-wave-size-small: 16px;
+  --glass-wb-loading-wave-size-medium: 24px;
+  --glass-wb-loading-wave-size-large: 32px;
+  --glass-wb-loading-wave-bar-width: 16%;
+  --glass-wb-loading-wave-bar-gap: 14%;
+  --glass-wb-loading-wave-bar-radius: 999px;
+  --glass-wb-loading-wave-fill: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--glass-chroma-cyan) 86%, var(--glass-chroma-ice)) 0%,
+    var(--glass-chroma-cyan) 28%,
+    var(--glass-chroma-alipay) 68%,
+    var(--glass-chroma-zhihu) 100%
+  ); /* 冷蓝音浪：冰青 → 支付宝蓝 → 知乎蓝；无锐白高光核 */
+  --glass-wb-loading-wave-duration: 1.05s;
+  --glass-wb-loading-wave-ease: cubic-bezier(0.45, 0, 0.55, 1);
+  --glass-wb-loading-wave-min-height: 38%;
+  --glass-wb-loading-wave-peak-height: 100%;
+  --glass-wb-loading-wave-rest-height: 68%; /* reduced-motion 三根等高中等高度 */
+  --glass-wb-loading-wave-delay-1: -0.28s;
+  --glass-wb-loading-wave-delay-2: -0.14s;
+  --glass-wb-loading-wave-delay-3: 0s;
 
   /* 微透 · 叠压染色 Skeleton · GlassSkeleton（盖 t-skeleton）
      骨块对齐 html `.cell-see`：半透冷蓝底 + 两层蓝染强呼吸叠压（opacity 摆幅加大），
@@ -4103,11 +4109,11 @@ body {
   color: var(--glass-wb-list-description-color);
 }
 
-/* ── Frost Disc Loading · GlassLoading（全局主题层）────────────────────
-   Compound Wrapper 盖 t-loading；组件只挂 .glass-loading + .glass-loading__disc，
-   本段是唯一视觉出处。默认指示器对齐 html `.disc-on-gan` / `.cell-float .disc`：
-   径向冰蓝长程渐变、柔影、无描边；12s 慢旋 + 1.8s 强呼吸双轨合成，
-   呼吸幅度 0.38→1 / 0.82→1.14，reduced-motion 时静止。
+/* ── Sound Wave Loading · GlassLoading（全局主题层）────────────────────
+   Compound Wrapper 盖 t-loading；组件只挂 .glass-loading + .glass-loading__wave，
+   本段是唯一视觉出处。默认指示器为三条竖向音浪条：冷蓝胶囊、横向居中、
+   错峰 height 起伏（保持 999px 胶囊，禁 scaleY 压扁圆角），无整组旋转 / 描边 /
+   实心核；reduced-motion 时三根等高静止。
    文本走 secondary（Quiet）；包裹态 / fullscreen 遮罩用轻 mask，禁实白盖板。 */
 
 /* 独立 spinner 根 = .glass-loading.t-loading；包裹态 overlay = 后代 .t-loading；
@@ -4117,59 +4123,67 @@ body {
   color: var(--glass-wb-loading-color);
 }
 
-/* 文本 Quiet secondary：不抢 Frost Disc 盘面 */
+/* 文本 Quiet secondary：不抢三条竖向音浪 */
 .glass-loading .t-loading__text {
   color: var(--glass-wb-loading-text-color);
 }
 
-.glass-loading__disc {
+.glass-loading__wave {
   display: inline-flex;
+  align-items: center;
+  justify-content: center;
   flex: 0 0 auto;
-  width: var(--glass-wb-loading-disc-size-medium);
-  height: var(--glass-wb-loading-disc-size-medium);
+  gap: var(--glass-wb-loading-wave-bar-gap);
+  width: var(--glass-wb-loading-wave-size-medium);
+  height: var(--glass-wb-loading-wave-size-medium);
+  line-height: 0;
+}
+
+.glass-loading__wave-bar {
+  display: block;
+  flex: 0 0 auto;
+  align-self: center;
+  width: var(--glass-wb-loading-wave-bar-width);
+  height: var(--glass-wb-loading-wave-peak-height);
   border: 0;
-  border-radius: 50%;
-  background: var(--glass-wb-loading-disc-fill);
-  box-shadow: var(--glass-wb-loading-disc-shadow);
-  -webkit-backdrop-filter: var(--glass-wb-loading-disc-blur);
-  backdrop-filter: var(--glass-wb-loading-disc-blur);
-  transform-origin: center;
-  animation:
-    glass-loading--disc-spin var(--glass-wb-loading-disc-rotate-duration)
-      linear infinite,
-    glass-loading--disc-breathe var(--glass-wb-loading-disc-breathe-duration)
-      var(--glass-wb-loading-disc-ease) infinite alternate;
+  border-radius: var(--glass-wb-loading-wave-bar-radius);
+  background: var(--glass-wb-loading-wave-fill);
+  animation: glass-loading--wave var(--glass-wb-loading-wave-duration)
+    var(--glass-wb-loading-wave-ease) infinite;
+  will-change: height;
 }
 
-.glass-loading.t-size-s .glass-loading__disc,
-.glass-loading .t-size-s .glass-loading__disc {
-  width: var(--glass-wb-loading-disc-size-small);
-  height: var(--glass-wb-loading-disc-size-small);
+.glass-loading__wave-bar:nth-child(1) {
+  animation-delay: var(--glass-wb-loading-wave-delay-1);
 }
 
-.glass-loading.t-size-l .glass-loading__disc,
-.glass-loading .t-size-l .glass-loading__disc {
-  width: var(--glass-wb-loading-disc-size-large);
-  height: var(--glass-wb-loading-disc-size-large);
+.glass-loading__wave-bar:nth-child(2) {
+  animation-delay: var(--glass-wb-loading-wave-delay-2);
 }
 
-@keyframes glass-loading--disc-spin {
-  from {
-    rotate: 0deg;
+.glass-loading__wave-bar:nth-child(3) {
+  animation-delay: var(--glass-wb-loading-wave-delay-3);
+}
+
+.glass-loading.t-size-s .glass-loading__wave,
+.glass-loading .t-size-s .glass-loading__wave {
+  width: var(--glass-wb-loading-wave-size-small);
+  height: var(--glass-wb-loading-wave-size-small);
+}
+
+.glass-loading.t-size-l .glass-loading__wave,
+.glass-loading .t-size-l .glass-loading__wave {
+  width: var(--glass-wb-loading-wave-size-large);
+  height: var(--glass-wb-loading-wave-size-large);
+}
+
+@keyframes glass-loading--wave {
+  0%,
+  100% {
+    height: var(--glass-wb-loading-wave-min-height);
   }
-  to {
-    rotate: 360deg;
-  }
-}
-
-@keyframes glass-loading--disc-breathe {
-  from {
-    scale: 0.82;
-    opacity: 0.38;
-  }
-  to {
-    scale: 1.14;
-    opacity: 1;
+  50% {
+    height: var(--glass-wb-loading-wave-peak-height);
   }
 }
 
@@ -4289,11 +4303,9 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .glass-loading__disc {
+  .glass-loading__wave-bar {
     animation: none;
-    rotate: none;
-    scale: none;
-    opacity: 1;
+    height: var(--glass-wb-loading-wave-rest-height);
   }
 
   :is(.glass-skeleton, .glass-statistic) .t-skeleton--animation-gradient::before,

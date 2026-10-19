@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * 实验室·反馈与加载 — Inline Banner / Soft Toast / Soft Notice / Frost Disc Loading。
+ * 实验室·反馈与加载 — Inline Banner / Soft Toast / Soft Notice / Sound Wave Loading。
  * Overlay（Dialog / FormPane / Popconfirm）与 GlassBadge 已按控件职能迁出。
  */
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
@@ -187,7 +187,7 @@ const collapseMessage: string[] = [
   '若遇延迟或冲突，请至「设置 · 同步任务」查看失败明细。',
 ]
 
-/* ---------- Loading · Frost Disc / Fullscreen ---------- */
+/* ---------- Loading · Sound Wave / Fullscreen ---------- */
 const fullscreenLoading = ref(false)
 let fullscreenLoadingTimer: ReturnType<typeof setTimeout> | undefined
 
@@ -210,7 +210,7 @@ onBeforeUnmount(() => {
 <template>
   <LabPageShell
     title="实验室·反馈与加载"
-    desc="Inline Banner / Soft Toast / Soft Notice / Frost Disc Loading。状态反馈按单一消息通道呈现；Loading 同时覆盖独立 spinner、包裹遮罩与 fullscreen。"
+    desc="Inline Banner / Soft Toast / Soft Notice / Sound Wave Loading。状态反馈按单一消息通道呈现；Loading 同时覆盖独立 spinner、包裹遮罩与 fullscreen。"
     :live="lastAction"
   >
     <section class="lab-section">
@@ -446,10 +446,10 @@ onBeforeUnmount(() => {
 
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">4. Loading · Frost Disc · 慢旋 + 呼吸 / 轻 mask</span>
+        <span class="lab-section-name">4. Loading · 三条竖向音浪 · 错峰起伏 / 轻 mask</span>
         <span class="lab-section-meta">
           TDesign：t-loading（size / text / fullscreen / showOverlay / delay / indicator / attach / inheritColor）·
-          玻璃：Frost Disc 无描边、约 12s 慢旋 + 1.8s 呼吸；reduced-motion 静止 ·
+          玻璃：三条竖向音浪条错峰伸缩、无描边；reduced-motion 静止为三根中等高度 ·
           容器：GlassSurface → GlassDetailPlate → GlassLoading（Ld1–Ld3 各异）·
           fullscreen 仅按钮触发短演示，实例挂 section 末
         </span>
@@ -457,7 +457,7 @@ onBeforeUnmount(() => {
 
       <GlassSurface class="lab-surface-host">
         <div class="lab-plate-grid">
-          <GlassDetailPlate title="Ld1 · Frost Disc · size=small / medium / large" class="lab-plate">
+          <GlassDetailPlate title="Ld1 · 三条竖向音浪 · size=small / medium / large" class="lab-plate">
             <div class="lab-plate-stack">
               <div class="lab-loading-row">
                 <GlassLoading size="small" />
@@ -475,11 +475,11 @@ onBeforeUnmount(() => {
               <GlassLoading loading text="数据加载中…" show-overlay>
                 <div class="lab-loading-block">
                   <div class="lab-loading-block-title">会话清单占位</div>
-                  <div class="lab-loading-block-body">这里是被包裹的内容，加载时上方覆盖轻 mask 与 Frost Disc。</div>
+                  <div class="lab-loading-block-body">这里是被包裹的内容，加载时上方覆盖轻 mask 与三条竖向音浪。</div>
                 </div>
               </GlassLoading>
               <div class="lab-control-note">
-                轻 mask 对齐 table loading mask，非实白盖板；盘面材质仍可辨
+                轻 mask 对齐 table loading mask，非实白盖板；音浪条仍可辨；盘面材质仍可辨
               </div>
             </div>
           </GlassDetailPlate>

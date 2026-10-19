@@ -49,7 +49,7 @@ const hubCards = [
   {
     path: '/feedback',
     title: '反馈与加载',
-    desc: 'Inline Banner · Soft Toast / Notice · Frost Disc Loading / Fullscreen',
+    desc: 'Inline Banner · Soft Toast / Notice · Sound Wave Loading / Fullscreen',
   },
   {
     path: '/data',

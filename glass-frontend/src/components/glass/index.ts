@@ -156,7 +156,7 @@ export { default as GlassFormPane } from './GlassFormPane.vue'
 export { default as GlassDialogSection } from './GlassDialogSection.vue'
 export { default as GlassPopconfirm } from './GlassPopconfirm.vue'
 
-// ── Loading · Frost Disc（盖 t-loading；径向冰蓝盘 / 慢旋 + 明显呼吸 / 轻 mask） ──
+// ── Loading · Sound Wave（盖 t-loading；三条竖向音浪 / 错峰伸缩 / 轻 mask） ──
 // 组件透明底、非托盘；Lab 橱窗宿主可 Surface → DetailPlate 展示真实消费路径。
 export { default as GlassLoading } from './GlassLoading.vue'
 
