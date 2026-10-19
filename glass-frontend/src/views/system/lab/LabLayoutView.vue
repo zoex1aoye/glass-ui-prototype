@@ -9,7 +9,6 @@ import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { ChartIcon, FileIcon, SettingIcon, TaskIcon } from 'tdesign-icons-vue-next'
 
 import {
-  GlassDetailPlate,
   GlassList,
   GlassListItem,
   GlassListItemMeta,
@@ -176,7 +175,7 @@ const gapCards = [
 <template>
   <LabPageShell
     title="实验室·布局"
-    desc="四层栈 L0–L3 · Surface / Panel / Rail / Stage · PageHeader / DetailPlate 宿主示范 · Flush 贴缝。视觉权威已定 --glass-wb-* / --glass-*；禁双托盘。"
+    desc="四层栈 L0–L3 · Surface / Panel / Rail / Stage · PageHeader / standalone Focus Panel 宿主示范 · Flush 贴缝。视觉权威已定 --glass-wb-* / --glass-*；禁双托盘。"
     :live="lastAction"
   >
     <!-- 0. Live Props Demo -->
@@ -296,7 +295,7 @@ const gapCards = [
       <div class="lab-section-label">
         <span class="lab-section-name">1. 单组件橱窗</span>
         <span class="lab-section-meta">
-          Surface / PageHeader / Panel / Detail Plate 各独立一块 ·
+          Surface / PageHeader / standalone Focus Panel 各独立一块 ·
           标注「橱窗孤立态」· 非整装工作台
         </span>
       </div>
@@ -352,26 +351,6 @@ const gapCards = [
           </div>
         </div>
 
-        <div class="lab-showcase-card">
-          <div class="lab-cat-strip lab-cat-strip--stack">
-            <span class="lab-cat-name">Detail Plate</span>
-            <span class="lab-cat-impl">密信息 · GlassDetailPlate</span>
-            <code class="lab-cat-html">.bub-a</code>
-            <span class="lab-cat-rule">
-              Do：Descriptions / 元数据 KV / 只读规格宿主 ·
-              Don’t：当 Stage / Cite / Host Tray / 二次 Surface；不用 FormPane 装只读详情；
-              不用容器外轮廓 hairline 补层次
-            </span>
-          </div>
-          <div class="lab-frame lab-frame--showcase lab-frame--l0">
-            <GlassDetailPlate title="密信息详情">
-              <p class="lab-panel-copy">
-                DetailPlate 是只读密信息宿主。完整 Descriptions / Card / Comment 等数据展示橱窗见
-                <RouterLink to="/data">Data</RouterLink>。
-              </p>
-            </GlassDetailPlate>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -425,7 +404,7 @@ const gapCards = [
         </GlassSurface>
       </div>
       <div class="lab-control-note">
-        验收：托盘=GlassSurface · L1 / Lab frame=20 · Region=16 · Flush 外角=8（PageHeader / Panel / DetailPlate 同档 Region）· Surface
+        验收：托盘=GlassSurface · L1 / Lab frame=20 · Region=16 · Flush 外角=8（PageHeader / Panel 同档 Region）· Surface
         <code>__body</code> 外轮廓=flush(L1-pad)=16px；贴缝无 gutter。能指出玻璃底板在 Surface 四周露边；
         Panel 间隙不是露边；整树只有一个 L1；须能指出
         PageHeader 读成定稿 A 半透扇形 + lift 0 + 轻软影（无白 rim）；Panel 读成 Fan Tip 过渡 + frosted

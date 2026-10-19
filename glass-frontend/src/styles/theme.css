@@ -64,7 +64,7 @@
     0 6px 16px rgba(15, 60, 140, 0.05);
   /* v5 .surface 本体圆角 20px；与 Region 的 16px 分档。 */
   --glass-wb-surface-radius: 20px;
-  /* Region（PageHeader / Panel / DetailPlate）同档 16。 */
+  /* Region（PageHeader / Panel）同档 16。 */
   --glass-wb-stack-radius-region: 16px;
   /* Flush 外角：L1=pad=16 时 nest 公式为 0，固定 8 保 backdrop 裁切；贴缝边仍 0。
      Surface __body / Rail 左 / Stage 右 同源吃本 token。 */
@@ -177,7 +177,7 @@
   --glass-wb-progress-label-gap: 4px;
 
   /* Conversation Bubble · GlassBubble（html `.bub-a` / `.bub-u`）
-     会话气泡只负责消息内容态；DetailPlate 继续持有 `.bub-a` 密信息岛材质。 */
+     会话气泡只负责消息内容态；密信息阅读面由 GlassPanel standalone 承担。 */
   --glass-wb-bubble-max-width-ai: 76%;
   --glass-wb-bubble-max-width-user: 70%;
   --glass-wb-bubble-font-size: 13.5px;
@@ -193,16 +193,6 @@
   --glass-wb-bubble-user-color: var(--glass-wb-white);
   --glass-wb-bubble-user-shadow: 0 12px 28px rgba(0, 82, 204, 0.2);
   --glass-wb-bubble-user-radius: 14px 14px 5px 14px;
-
-  /* Detail Plate · GlassDetailPlate（html .bub-a）
-     密信息只读详情板：冷近白微透内容岛 + 轻柔影；比 Stage 略实、略冷，作为阅读底板。
-     固定一档，无 inset / standalone 变体；不是 Stage / Cite / Host Tray / 二次 Surface。
-     材质只引用本族 token；容器外轮廓不加 hairline 补层次。 */
-  --glass-wb-detail-plate-fill: rgba(244, 250, 255, 0.82);
-  --glass-wb-detail-plate-blur: blur(10px);
-  --glass-wb-detail-plate-shadow: 0 10px 24px rgba(15, 60, 140, 0.07);
-  --glass-wb-detail-plate-radius: var(--glass-wb-stack-radius-region);
-  --glass-wb-detail-plate-pad: 14px 16px;
 
   /* Comment · GlassComment（Quiet 排版 · 盖 t-comment）
      会话流引用槽同级 Quiet：avatar 40 / circle 50%；无硬描边；
@@ -597,7 +587,7 @@
      content-secondary = muted（注解退到第三档）；复用 --glass-text-*，不另起色板。
      bordered 用 Tone Grid + soft hairline：极淡矩阵 wash + 偶数行 content 条纹 +
      label 淡染 + 柔和 1px 网格线；13px 节奏对齐 Form Quiet；host-first，content 吃宿主。
-     容器外轮廓（DetailPlate / Surface）仍不加 hairline。 */
+     容器外轮廓（Panel standalone / Surface）仍不加 hairline。 */
   --glass-wb-descriptions-label-color: var(--glass-text-secondary);
   --glass-wb-descriptions-content-color: var(--glass-text-primary);
   --glass-wb-descriptions-content-secondary: var(--glass-text-muted);
@@ -3576,7 +3566,7 @@ body {
 
 /* ── Conversation Bubble · GlassBubble（html .bub-a / .bub-u）──────────
    会话消息内容态：assistant=左齐冷近白微透；user=右齐满浓蓝 + 白字。
-   与 GlassDetailPlate 分工：气泡不承载 KV 详情，详情板不承担消息对齐。 */
+   与 GlassPanel standalone 分工：气泡不承载 KV 详情，焦点面板不承担消息对齐。 */
 .glass-bubble {
   box-sizing: border-box;
   max-width: var(--glass-wb-bubble-max-width-ai);
@@ -3902,7 +3892,7 @@ body {
    阅读焦点三档：label（secondary）/ content（primary）/ secondary 内容（muted）；
    bordered 用 Tone Grid + soft hairline：矩阵 wash + 偶数行底色差 +
    label 淡染 + 柔和 1px 网格线；13px 节奏对齐 Form Quiet；host-first，content 透明。
-   容器外轮廓（DetailPlate / Surface）仍不加 hairline。 */
+   容器外轮廓（Panel standalone / Surface）仍不加 hairline。 */
 
 .glass-descriptions {
   display: block;
@@ -3932,7 +3922,7 @@ body {
 }
 
 /* bordered：Tone Grid + soft hairline。外框与格线只属于 Descriptions
-   组件网格；DetailPlate / Surface 等容器外轮廓仍不加 hairline。
+   组件网格；Panel standalone / Surface 等容器外轮廓仍不加 hairline。
    层次由底 wash、偶数行 content 条纹（html table zebra）、label 淡染
    与柔和 1px 网格共同承担。 */
 .glass-descriptions .t-descriptions__body--border {

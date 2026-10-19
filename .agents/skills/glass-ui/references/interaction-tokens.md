@@ -106,12 +106,12 @@ inset vs tray：Lab 独立橱窗 / 无 Stage 宿主用 `tray`；工作台 Stage 
 
 ## Descriptions 宿主（`GlassDescriptions`）
 
-密 KV 主路径：`GlassDetailPlate`（`.bub-a` 内容岛语义）→ `GlassDescriptions`。  
-Token：`--glass-wb-detail-plate-fill/blur/shadow/radius/pad`（fill/blur/shadow 对齐 `.bub-a`；**无**外轮廓 hairline）。  
+密 KV 主路径：`GlassPanel variant="standalone"`（Focus Panel L3）→ `GlassDescriptions`。  
+Token：L3 standalone 族（`--glass-layer-l3-standalone-*` / `--glass-layer-l3-hairline`）；不另设密信息容器 token。  
 Don't：`GlassStage`（会话画布）· `GlassCard`（Cite）· Host Tray / 二次 Surface。A 窄岛 / B Stage canvas / C FormPane 侧详均已撤回。  
-**字色三档**：label=`secondary` · content=`primary` · content secondary=`muted`。bordered=Tone Grid + soft hairline（底 wash + 偶数行 `row-stripe` + `label-fill` + `--glass-wb-descriptions-hairline` 柔和 1px 网格）；hairline 只属于 Descriptions 组件网格，DetailPlate / Surface 等容器外轮廓仍不加。
+**字色三档**：label=`secondary` · content=`primary` · content secondary=`muted`。bordered=Tone Grid + soft hairline（底 wash + 偶数行 `row-stripe` + `label-fill` + `--glass-wb-descriptions-hairline` 柔和 1px 网格）；hairline 只属于 Descriptions 组件网格，Panel standalone / Surface 等容器外轮廓仍不加。
 
-Lab `/data` 橱窗宿主（Descriptions / Empty / List / Loading / Skeleton / Statistic 同路径）：`GlassSurface → GlassDetailPlate → GlassXxx`。组件本体仍透明底 host-first；禁再用 Soft Surface + `border-soft` 小卡冒充容器。
+Lab `/data` 橱窗宿主（Descriptions / Empty / List / Loading / Skeleton / Statistic 同路径）：`GlassSurface → GlassPanel variant="standalone" → GlassXxx`。组件本体仍透明底 host-first；禁再用 Soft Surface + `border-soft` 小卡冒充容器。历史密信息详情板（DetailPlate / `.bub-a`）已并入 L3 standalone。
 
 **Loading 动效**：默认三条竖向音浪（`.glass-loading__wave` / `__wave-bar`：三根冷蓝胶囊、条宽 16% / 间隙 14%、`border-radius: 999px`；1.05s 错峰 `height 38%→100%`，禁 `scaleY` 以免圆角压扁成矩形；整组不旋转）。禁 TD 硬圆环 / 锐白核；`prefers-reduced-motion` 下三根等高中等高度静止。
 

@@ -10,7 +10,7 @@
  * 数据面：消费 GlassTable（--glass-wb-table-*）与 GlassDescriptions（--glass-wb-descriptions-*）；
  * Descriptions / Card / Bubble / Progress / Comment / Collapse / Badge / Avatar 与
  * Empty / List / Skeleton / Statistic 统一走
- * GlassSurface → GlassDetailPlate → GlassXxx 的真实宿主路径，组件本体仍保持透明底。
+ * GlassSurface → GlassPanel variant="standalone" → GlassXxx 的真实宿主路径，组件本体仍保持透明底。
  */
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { UserIcon } from 'tdesign-icons-vue-next'
@@ -50,13 +50,13 @@ import {
   GlassCollapse,
   GlassCollapsePanel,
   GlassComment,
-  GlassDetailPlate,
   GlassDescriptions,
   GlassDescriptionsItem,
   GlassEmpty,
   GlassList,
   GlassListItem,
   GlassListItemMeta,
+  GlassPanel,
   GlassProgress,
   GlassSkeleton,
   GlassStatistic,
@@ -1486,7 +1486,7 @@ function replayStatisticAnimation() {
       </div>
       <GlassSurface class="lab-surface-host">
         <div class="lab-plate-grid">
-          <GlassDetailPlate
+          <GlassPanel variant="standalone"
             v-for="(source, index) in avatarSources"
             :key="source.kind"
             :title="`Av${index + 1} · ${source.label} · circle / round × small / medium / large`"
@@ -1523,9 +1523,9 @@ function replayStatisticAnimation() {
                 </div>
               </div>
             </div>
-          </GlassDetailPlate>
+          </GlassPanel>
 
-          <GlassDetailPlate
+          <GlassPanel variant="standalone"
             title="Av4 · Group Living · cascading / max / 默认 collapse +N"
             class="lab-plate lab-avatar-group-plate"
           >
@@ -1562,7 +1562,7 @@ function replayStatisticAnimation() {
                 <GlassAvatar size="medium">王</GlassAvatar>
               </div>
             </div>
-          </GlassDetailPlate>
+          </GlassPanel>
         </div>
       </GlassSurface>
     </section>
@@ -1573,7 +1573,7 @@ function replayStatisticAnimation() {
         <span class="lab-section-name">单组件橱窗 · Card / Bubble / Progress</span>
         <span class="lab-section-meta">
           自 Layout 迁入 Data Display：引用卡、会话气泡与 Quiet Progress 各自独立橱窗；
-          只消费 GlassCard / GlassBubble / GlassProgress，不替代 DetailPlate 密信息宿主
+          只消费 GlassCard / GlassBubble / GlassProgress，不替代 Panel standalone 密信息宿主
         </span>
       </div>
       <div class="lab-data-showcase-grid">
@@ -1605,7 +1605,7 @@ function replayStatisticAnimation() {
             </div>
           </div>
           <p class="lab-control-note">
-            assistant 左齐近白 / user 右齐满浓蓝；不替代 DetailPlate 密信息岛。
+            assistant 左齐近白 / user 右齐满浓蓝；不替代 Panel standalone 密信息面。
           </p>
         </div>
 
@@ -1760,16 +1760,16 @@ function replayStatisticAnimation() {
       </div>
     </section>
 
-    <!-- Descriptions · GlassDetailPlate 密信息详情板 -->
+    <!-- Descriptions · GlassPanel standalone 密信息聚焦面 -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">Descriptions · Quiet Label / Content · GlassDetailPlate · bordered / column / layout</span>
+        <span class="lab-section-name">Descriptions · Quiet Label / Content · GlassPanel · standalone · bordered / column / layout</span>
         <span class="lab-section-meta">
           TDesign：t-descriptions（bordered / colon / column / itemLayout / layout / size / title / span）·
           玻璃：阅读焦点三档 label（secondary）/ content（primary）/ 注解（muted），13px 节奏对齐 Form Quiet ·
-          容器：<code>GlassSurface → GlassDetailPlate → GlassDescriptions</code>（D1–D4 各一块；html <code>.bub-a</code> 冷近白内容岛）·
-          Do：试探 <code>Surface → DetailPlate → Descriptions</code>（L1 Host Tray 上密信息岛）·
-          Do：密信息详情用 DetailPlate · Don't：GlassStage / FormPane / GlassCard 当宿主 ·
+          容器：<code>GlassSurface → GlassPanel variant="standalone" → GlassDescriptions</code>（D1–D4 各一块；Focus Panel L3）·
+          Do：<code>Surface → Panel(standalone) → Descriptions</code>（L1 Host Tray 上密信息聚焦面）·
+          Do：密信息详情用 Panel standalone · Don't：GlassStage / FormPane / GlassCard 当宿主 ·
           Don't：用容器外轮廓 hairline 补层次；bordered=Tone Grid + soft hairline（底色差 + 组件网格细线）·
           Stage 只承担 html <code>.chat</code> 会话画布，不扛密 KV
         </span>
@@ -1778,7 +1778,7 @@ function replayStatisticAnimation() {
       <GlassSurface class="lab-surface-host">
         <div class="lab-plate-grid">
           <!-- D1 · 无边框 · 水平 · column=3 · title / colon -->
-          <GlassDetailPlate title="D1 · 基础概览" class="lab-plate">
+          <GlassPanel variant="standalone" title="D1 · 基础概览" class="lab-plate">
             <div class="lab-descriptions-demo">
               <div class="lab-descriptions-demo-note">
                 无边框 · 水平 · column=3 · title / colon · label secondary + content primary
@@ -1792,10 +1792,10 @@ function replayStatisticAnimation() {
                 <GlassDescriptionsItem label="更新时间">今天 16:46</GlassDescriptionsItem>
               </GlassDescriptions>
             </div>
-          </GlassDetailPlate>
+          </GlassPanel>
 
           <!-- D2 · 边框 · 水平 · column=2 · Tone Grid + soft hairline（底 wash + 偶数行 content 条纹 + label 淡染 + soft 网格） -->
-          <GlassDetailPlate title="D2 · 组织与阶段" class="lab-plate">
+          <GlassPanel variant="standalone" title="D2 · 组织与阶段" class="lab-plate">
             <div class="lab-descriptions-demo">
               <div class="lab-descriptions-demo-note">
                 边框 · 水平 · column=2 · size=small · bordered=Tone Grid + soft hairline（底 wash + 偶数行仅 content 条纹，label 带始终更深，soft 网格）
@@ -1807,10 +1807,10 @@ function replayStatisticAnimation() {
                 <GlassDescriptionsItem label="下次更新">明天 10:00</GlassDescriptionsItem>
               </GlassDescriptions>
             </div>
-          </GlassDetailPlate>
+          </GlassPanel>
 
           <!-- D3 · 垂直 layout · column=3 · 标签在上 -->
-          <GlassDetailPlate title="D3 · 创建信息" class="lab-plate">
+          <GlassPanel variant="standalone" title="D3 · 创建信息" class="lab-plate">
             <div class="lab-descriptions-demo">
               <div class="lab-descriptions-demo-note">
                 垂直 layout · column=3 · label 在上（label / content 节奏对齐 Form Quiet）
@@ -1824,10 +1824,10 @@ function replayStatisticAnimation() {
                 <GlassDescriptionsItem label="标签">演示标签 / 示例标签</GlassDescriptionsItem>
               </GlassDescriptions>
             </div>
-          </GlassDetailPlate>
+          </GlassPanel>
 
           <!-- D4 · content secondary / span / title slot / footer slot -->
-          <GlassDetailPlate title="D4 · 跨列与次级内容" class="lab-plate">
+          <GlassPanel variant="standalone" title="D4 · 跨列与次级内容" class="lab-plate">
             <div class="lab-descriptions-demo">
               <div class="lab-descriptions-demo-note">
                 column=2 · span 跨列 + content secondary（#title 槽）· footer 槽只放只读注记
@@ -1846,7 +1846,7 @@ function replayStatisticAnimation() {
             <template #footer>
               <span>只读详情 · 请求编号 REQ-2026-1018</span>
             </template>
-          </GlassDetailPlate>
+          </GlassPanel>
         </div>
       </GlassSurface>
     </section>
@@ -1859,29 +1859,29 @@ function replayStatisticAnimation() {
           TDesign：t-empty（type / title / description / image / size / action）·
           玻璃：Quiet 空态（透明底、无蓝染满铺、muted 描述）· action 槽用 GlassButton ·
           empty/network-error/maintenance 走 muted 灰图，success/fail 走语义色，非脏蓝满铺 ·
-          容器：<code>GlassSurface → GlassDetailPlate → GlassEmpty</code>（E1–E7 各一块）·
+          容器：<code>GlassSurface → GlassPanel variant="standalone" → GlassEmpty</code>（E1–E7 各一块）·
           E1–E5 为类型矩阵（无 action），业务空态须带下一步（见 E6 / E7）
         </span>
       </div>
 
       <GlassSurface class="lab-surface-host">
         <div class="lab-plate-grid lab-plate-grid--compact">
-          <GlassDetailPlate title="E1 · type=empty" class="lab-plate">
+          <GlassPanel variant="standalone" title="E1 · type=empty" class="lab-plate">
             <GlassEmpty type="empty" title="暂无数据" description="这里还没有内容，换个条件再试试。" />
-          </GlassDetailPlate>
-          <GlassDetailPlate title="E2 · type=success" class="lab-plate">
+          </GlassPanel>
+          <GlassPanel variant="standalone" title="E2 · type=success" class="lab-plate">
             <GlassEmpty type="success" title="已处理完成" description="相关任务已全部收口。" />
-          </GlassDetailPlate>
-          <GlassDetailPlate title="E3 · type=fail" class="lab-plate">
+          </GlassPanel>
+          <GlassPanel variant="standalone" title="E3 · type=fail" class="lab-plate">
             <GlassEmpty type="fail" title="处理失败" description="请稍后重试或联系管理员。" />
-          </GlassDetailPlate>
-          <GlassDetailPlate title="E4 · type=network-error" class="lab-plate">
+          </GlassPanel>
+          <GlassPanel variant="standalone" title="E4 · type=network-error" class="lab-plate">
             <GlassEmpty type="network-error" title="网络连接异常" description="检查网络后重试。" />
-          </GlassDetailPlate>
-          <GlassDetailPlate title="E5 · type=maintenance" class="lab-plate">
+          </GlassPanel>
+          <GlassPanel variant="standalone" title="E5 · type=maintenance" class="lab-plate">
             <GlassEmpty type="maintenance" title="功能建设中" description="该模块即将上线，敬请期待。" />
-          </GlassDetailPlate>
-          <GlassDetailPlate title="E6 · action · size=small" class="lab-plate">
+          </GlassPanel>
+          <GlassPanel variant="standalone" title="E6 · action · size=small" class="lab-plate">
             <GlassEmpty
               type="empty"
               title="暂无条目"
@@ -1892,8 +1892,8 @@ function replayStatisticAnimation() {
                 <GlassButton variant="primary" shape="round">新建条目</GlassButton>
               </template>
             </GlassEmpty>
-          </GlassDetailPlate>
-          <GlassDetailPlate title="E7 · action · size=large" class="lab-plate">
+          </GlassPanel>
+          <GlassPanel variant="standalone" title="E7 · action · size=large" class="lab-plate">
             <GlassEmpty
               type="maintenance"
               title="模块建设中"
@@ -1904,7 +1904,7 @@ function replayStatisticAnimation() {
                 <GlassButton variant="quiet">返回首页</GlassButton>
               </template>
             </GlassEmpty>
-          </GlassDetailPlate>
+          </GlassPanel>
         </div>
       </GlassSurface>
     </section>
@@ -1916,7 +1916,7 @@ function replayStatisticAnimation() {
         <span class="lab-section-meta">
           TDesign：t-list / t-list-item / t-list-item-meta（split / stripe / size / header / footer / asyncLoading / load-more / scroll）·
           玻璃：GlassList 组件非托盘、透明底 Quiet 列表；Lab 用
-          <code>GlassSurface → GlassDetailPlate → GlassList</code> 展示真实宿主（L1–L4b 各一块；禁双托盘）·
+          <code>GlassSurface → GlassPanel variant="standalone" → GlassList</code> 展示真实宿主（L1–L4b 各一块；禁双托盘）·
           行 Hover Whisper 复用 table/session hover token · Meta 头像圆角对齐 Comment（--glass-wb-comment-avatar-radius 近义）
         </span>
       </div>
@@ -1924,7 +1924,7 @@ function replayStatisticAnimation() {
       <GlassSurface class="lab-surface-host">
         <div class="lab-plate-grid">
           <!-- L1 · 基础列表 -->
-          <GlassDetailPlate title="L1 · 基础列表 · size=small" class="lab-plate">
+          <GlassPanel variant="standalone" title="L1 · 基础列表 · size=small" class="lab-plate">
             <div class="lab-plate-stack">
               <GlassList size="small">
                 <GlassListItem v-for="row in listRows" :key="row.id">
@@ -1935,10 +1935,10 @@ function replayStatisticAnimation() {
                 透明底 Quiet 列表 · 悬停近白微洗（--glass-wb-list-item-hover-bg 复用 --glass-wb-table-row-hover）
               </div>
             </div>
-          </GlassDetailPlate>
+          </GlassPanel>
 
           <!-- L2 · Meta+action -->
-          <GlassDetailPlate title="L2 · Meta+action · image / action 槽" class="lab-plate">
+          <GlassPanel variant="standalone" title="L2 · Meta+action · image / action 槽" class="lab-plate">
             <div class="lab-plate-stack">
               <GlassList>
                 <GlassListItem v-for="row in listRows" :key="row.id">
@@ -1956,33 +1956,33 @@ function replayStatisticAnimation() {
                 头像 40 · circle（50%）对齐 Comment · action 槽放 GlassButton（Quiet Ink，无底无边）
               </div>
             </div>
-          </GlassDetailPlate>
+          </GlassPanel>
 
           <!-- L3 · split·stripe -->
-          <GlassDetailPlate title="L3a · split（行间软分割线）" class="lab-plate">
+          <GlassPanel variant="standalone" title="L3a · split（行间软分割线）" class="lab-plate">
             <GlassList split>
               <GlassListItem v-for="row in listRows" :key="row.id">
                 <GlassListItemMeta :title="row.title" :description="row.desc" />
               </GlassListItem>
             </GlassList>
-          </GlassDetailPlate>
-          <GlassDetailPlate title="L3b · stripe（偶数行近白微洗）" class="lab-plate">
+          </GlassPanel>
+          <GlassPanel variant="standalone" title="L3b · stripe（偶数行近白微洗）" class="lab-plate">
             <GlassList stripe>
               <GlassListItem v-for="row in listRows" :key="row.id">
                 <GlassListItemMeta :title="row.title" :description="row.desc" />
               </GlassListItem>
             </GlassList>
-          </GlassDetailPlate>
+          </GlassPanel>
 
           <!-- L4 · asyncLoading -->
-          <GlassDetailPlate title="L4a · asyncLoading = loading" class="lab-plate">
+          <GlassPanel variant="standalone" title="L4a · asyncLoading = loading" class="lab-plate">
             <GlassList async-loading="loading">
               <GlassListItem v-for="row in listRows" :key="row.id">
                 <GlassListItemMeta :title="row.title" :description="row.desc" />
               </GlassListItem>
             </GlassList>
-          </GlassDetailPlate>
-          <GlassDetailPlate title="L4b · asyncLoading = load-more" class="lab-plate">
+          </GlassPanel>
+          <GlassPanel variant="standalone" title="L4b · asyncLoading = load-more" class="lab-plate">
             <div class="lab-plate-stack">
               <GlassList async-loading="load-more" @load-more="onListLoadMore">
                 <GlassListItem v-for="row in listRows" :key="row.id">
@@ -1991,7 +1991,7 @@ function replayStatisticAnimation() {
               </GlassList>
               <div class="lab-control-note">点击底部「加载更多」写入 lastAction</div>
             </div>
-          </GlassDetailPlate>
+          </GlassPanel>
         </div>
       </GlassSurface>
     </section>
@@ -2006,14 +2006,14 @@ function replayStatisticAnimation() {
           <code>.cell-see</code> / <code>.lay.l1</code> / <code>.lay.l2</code>；
           无近白高光带 / 无扫光；flashed 为染层透明度呼吸，reduced-motion 关闭动画·
           loading=false 时默认槽渲染真实内容 ·
-          容器：<code>GlassSurface → GlassDetailPlate → GlassSkeleton</code>（theme / animation 两块；
+          容器：<code>GlassSurface → GlassPanel variant="standalone" → GlassSkeleton</code>（theme / animation 两块；
           plate 内只保留排版 grid，不再套 soft hairline 小卡）
         </span>
       </div>
 
       <GlassSurface class="lab-surface-host">
         <div class="lab-plate-grid">
-          <GlassDetailPlate title="Sk1 · theme 矩阵 · loading 开关切换真实内容" class="lab-plate">
+          <GlassPanel variant="standalone" title="Sk1 · theme 矩阵 · loading 开关切换真实内容" class="lab-plate">
             <div class="lab-plate-stack">
               <div class="lab-table-title-row">
                 <span class="lab-control-note">text / avatar / paragraph / avatar-text</span>
@@ -2072,9 +2072,9 @@ function replayStatisticAnimation() {
                 </div>
               </div>
             </div>
-          </GlassDetailPlate>
+          </GlassPanel>
 
-          <GlassDetailPlate title="Sk2 · animation 矩阵 · gradient / flashed / none" class="lab-plate">
+          <GlassPanel variant="standalone" title="Sk2 · animation 矩阵 · gradient / flashed / none" class="lab-plate">
             <div class="lab-plate-stack">
               <div class="lab-skeleton-anim-row">
                 <div class="lab-skeleton-cell">
@@ -2095,7 +2095,7 @@ function replayStatisticAnimation() {
                 flashed = 染层深浅交替呼吸 · none = 静态微透冷蓝骨块
               </div>
             </div>
-          </GlassDetailPlate>
+          </GlassPanel>
         </div>
       </GlassSurface>
     </section>
@@ -2107,7 +2107,7 @@ function replayStatisticAnimation() {
         <span class="lab-section-meta">
           TDesign：t-statistic（value / title / unit / prefix / suffix / extra / trend / trendPlacement / separator / decimalPlaces / loading / animation / animationStart）·
           玻璃：GlassStatistic 组件非托盘、透明底 Quiet 数字；Lab 用
-          <code>GlassSurface → GlassDetailPlate → GlassStatistic</code> 展示真实宿主（St1–St5 各一块；禁双托盘）·
+          <code>GlassSurface → GlassPanel variant="standalone" → GlassStatistic</code> 展示真实宿主（St1–St5 各一块；禁双托盘）·
           数值 tone 五态走 token；trend 图标色跟语义（increase 酷安绿 / decrease 危险红）；loading 用 TD 内建 skeleton
         </span>
       </div>
@@ -2115,7 +2115,7 @@ function replayStatisticAnimation() {
       <GlassSurface class="lab-surface-host">
         <div class="lab-plate-grid">
           <!-- St1 · Quiet 默认 -->
-          <GlassDetailPlate title="St1 · Quiet 默认 · title + value + unit" class="lab-plate">
+          <GlassPanel variant="standalone" title="St1 · Quiet 默认 · title + value + unit" class="lab-plate">
             <div class="lab-plate-stack">
               <div class="lab-statistic-row">
                 <GlassStatistic title="本月新增条目" :value="128" unit="个" />
@@ -2127,10 +2127,10 @@ function replayStatisticAnimation() {
                 千分位走 separator（TD 默认 ','）+ decimalPlaces 控制小数位
               </div>
             </div>
-          </GlassDetailPlate>
+          </GlassPanel>
 
           <!-- St2 · tone 五态 -->
-          <GlassDetailPlate title="St2 · tone 五态 · default / brand / success / warning / danger" class="lab-plate">
+          <GlassPanel variant="standalone" title="St2 · tone 五态 · default / brand / success / warning / danger" class="lab-plate">
             <div class="lab-plate-stack">
               <div class="lab-statistic-row">
                 <GlassStatistic title="默认" :value="128" unit="个" tone="default" />
@@ -2144,10 +2144,10 @@ function replayStatisticAnimation() {
                 禁对外透传 TD 原始 color 字符串
               </div>
             </div>
-          </GlassDetailPlate>
+          </GlassPanel>
 
           <!-- St3 · trend -->
-          <GlassDetailPlate title="St3 · trend · increase / decrease · 左右 placement" class="lab-plate">
+          <GlassPanel variant="standalone" title="St3 · trend · increase / decrease · 左右 placement" class="lab-plate">
             <div class="lab-plate-stack">
               <div class="lab-statistic-row">
                 <GlassStatistic title="环比增长 · 左" :value="12.8" unit="%" trend="increase" />
@@ -2160,10 +2160,10 @@ function replayStatisticAnimation() {
                 trendPlacement 控制图标在数值左 / 右（TD 默认 left）
               </div>
             </div>
-          </GlassDetailPlate>
+          </GlassPanel>
 
           <!-- St4 · prefix / suffix / extra -->
-          <GlassDetailPlate title="St4 · prefix / suffix / extra · props + 槽透传" class="lab-plate">
+          <GlassPanel variant="standalone" title="St4 · prefix / suffix / extra · props + 槽透传" class="lab-plate">
             <div class="lab-plate-stack">
               <div class="lab-statistic-row">
                 <GlassStatistic title="金额" :value="286" prefix="¥" unit="万" extra="较上月 +12.4% · 已结算 218 万" />
@@ -2181,10 +2181,10 @@ function replayStatisticAnimation() {
                 title / unit / prefix / suffix / extra 五槽透传（props 与 slot 两种路径均可用）
               </div>
             </div>
-          </GlassDetailPlate>
+          </GlassPanel>
 
           <!-- St5 · loading + animation -->
-          <GlassDetailPlate title="St5 · loading + animation · 实例方法 start()" class="lab-plate">
+          <GlassPanel variant="standalone" title="St5 · loading + animation · 实例方法 start()" class="lab-plate">
             <div class="lab-plate-stack">
               <div class="lab-table-title-row">
                 <span class="lab-control-note">TD 内建 skeleton + 数值重播</span>
@@ -2206,7 +2206,7 @@ function replayStatisticAnimation() {
                 动画按钮调用实例 start() 从 valueFrom 重播
               </div>
             </div>
-          </GlassDetailPlate>
+          </GlassPanel>
         </div>
       </GlassSurface>
     </section>
@@ -2215,7 +2215,7 @@ function replayStatisticAnimation() {
 </template>
 
 <style scoped>
-/* 共享宿主：单层 L1 Host Tray 托住多块 DetailPlate；Descriptions 与
+/* 共享宿主：单层 L1 Host Tray 托住多块 Panel standalone；Descriptions 与
    Empty / List / Loading / Skeleton / Statistic 复用同一路径，不套第二层 Surface。 */
 .lab-surface-host {
   width: 100%;

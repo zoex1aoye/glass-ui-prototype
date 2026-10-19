@@ -14,9 +14,9 @@
  *   content 格透明吃宿主（--glass-wb-descriptions-content-fill）；
  *   禁止粉笔白实色格与硬白网格。
  * - Hairline 边界：soft hairline 只属于 Descriptions bordered 组件网格；
- *   DetailPlate / Surface 等容器外轮廓仍不加 hairline。
+ *   GlassPanel standalone / Surface 等容器外轮廓仍不加 hairline。
  * - Host-first：自身不自带实心底卡；外轮廓圆角走 --glass-wb-descriptions-radius。
- * - 推荐宿主：GlassDetailPlate（html `.bub-a` 密信息内容岛；页内 / 浮层内通用）。
+ * - 推荐宿主：GlassPanel variant="standalone"（Focus Panel L3；页内 / 浮层内通用）。
  *   Descriptions 透明吃宿主，不再自造托盘。
  * - Don't：挂进 GlassStage——Stage 是 html `.chat` 会话画布，不扛密 KV；
  *   GlassCard 是会话流 Soft Cite 引用软卡，FormPane 是填表会话窗，均不作只读详情宿主。

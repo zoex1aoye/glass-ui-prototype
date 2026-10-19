@@ -6,8 +6,8 @@
  * - assistant：左齐、冷近白微透、左下尖角、blur + 柔影（html `.bub-a`）
  * - user：右齐、满浓蓝、右下尖角、白字 + 蓝影（html `.bub-u`）
  *
- * 分工：GlassDetailPlate 沿用 `.bub-a` 的“密信息岛”阅读材质，
- * 但它是只读详情底板；本组件只负责会话气泡，不互相替代或改坏材质。
+ * 分工：GlassPanel variant="standalone" 承担只读密信息阅读面；
+ * 本组件只负责会话气泡，不互相替代或改坏材质。
  * 色值 / 圆角 / 影全部走 `--glass-wb-bubble-*`，组件内零魔法色。
  */
 withDefaults(

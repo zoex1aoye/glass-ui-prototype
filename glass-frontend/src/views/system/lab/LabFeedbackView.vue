@@ -8,12 +8,12 @@ import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import {
   GlassAlert,
   GlassButton,
-  GlassDetailPlate,
   GlassLoading,
   GlassMessage,
   GlassMessagePlugin,
   GlassNotification,
   GlassNotificationPlugin,
+  GlassPanel,
   GlassPosterWash,
   GlassSurface,
 } from '@/components/glass'
@@ -450,14 +450,14 @@ onBeforeUnmount(() => {
         <span class="lab-section-meta">
           TDesign：t-loading（size / text / fullscreen / showOverlay / delay / indicator / attach / inheritColor）·
           玻璃：三条竖向音浪条错峰伸缩、无描边；reduced-motion 静止为三根中等高度 ·
-          容器：GlassSurface → GlassDetailPlate → GlassLoading（Ld1–Ld3 各异）·
+          容器：GlassSurface → GlassPanel variant="standalone" → GlassLoading（Ld1–Ld3 各异）·
           fullscreen 仅按钮触发短演示，实例挂 section 末
         </span>
       </div>
 
       <GlassSurface class="lab-surface-host">
         <div class="lab-plate-grid">
-          <GlassDetailPlate title="Ld1 · 三条竖向音浪 · size=small / medium / large" class="lab-plate">
+          <GlassPanel variant="standalone" title="Ld1 · 三条竖向音浪 · size=small / medium / large" class="lab-plate">
             <div class="lab-plate-stack">
               <div class="lab-loading-row">
                 <GlassLoading size="small" />
@@ -465,12 +465,12 @@ onBeforeUnmount(() => {
                 <GlassLoading size="large" />
               </div>
               <div class="lab-control-note">
-                无内容 → 走 t-loading 独立分支；默认磨砂液态盘慢旋 + 明显呼吸，非 TD 硬圆环
+                无内容 → 走 t-loading 独立分支；默认三条竖条错峰起伏，非 TD 硬圆环
               </div>
             </div>
-          </GlassDetailPlate>
+          </GlassPanel>
 
-          <GlassDetailPlate title="Ld2 · 包裹块 · showOverlay 轻 mask + text" class="lab-plate">
+          <GlassPanel variant="standalone" title="Ld2 · 包裹块 · showOverlay 轻 mask + text" class="lab-plate">
             <div class="lab-plate-stack">
               <GlassLoading loading text="数据加载中…" show-overlay>
                 <div class="lab-loading-block">
@@ -479,12 +479,12 @@ onBeforeUnmount(() => {
                 </div>
               </GlassLoading>
               <div class="lab-control-note">
-                轻 mask 对齐 table loading mask，非实白盖板；音浪条仍可辨；盘面材质仍可辨
+                轻 mask 对齐 table loading mask，非实白盖板；音浪条仍可辨
               </div>
             </div>
-          </GlassDetailPlate>
+          </GlassPanel>
 
-          <GlassDetailPlate title="Ld3 · Fullscreen · 按钮触发短演示" class="lab-plate">
+          <GlassPanel variant="standalone" title="Ld3 · Fullscreen · 按钮触发短演示" class="lab-plate">
             <div class="lab-plate-stack">
               <div class="lab-table-title-row">
                 <span class="lab-control-note">约 1.8s 自动关闭，可反复触发</span>
@@ -493,10 +493,10 @@ onBeforeUnmount(() => {
                 </GlassButton>
               </div>
               <div class="lab-control-note">
-                点击后全屏轻 mask 展示（preventScrollThrough）；fullscreen 实例挂 section 末，不进入 DetailPlate
+                点击后全屏轻 mask 展示（preventScrollThrough）；fullscreen 实例挂 section 末，不进入 Panel standalone
               </div>
             </div>
-          </GlassDetailPlate>
+          </GlassPanel>
         </div>
       </GlassSurface>
 

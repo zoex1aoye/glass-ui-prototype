@@ -34,16 +34,10 @@ export { default as GlassPanel } from './GlassPanel.vue'
 export { default as GlassCard } from './GlassCard.vue'
 
 // ── Conversation Content · 会话内容态（html `.bub-u` / `.bub-a` / `.bar`）──
-// GlassBubble = 会话消息气泡（role: user | assistant）；不替代 DetailPlate 的密信息阅读岛。
+// GlassBubble = 会话消息气泡（role: user | assistant）；不替代 GlassPanel variant="standalone" 的密信息阅读面。
 // GlassProgress = Quiet Progress Whisper（盖 t-progress line；label 可自动百分比或 `.bar-cap` 文案）。
 export { default as GlassBubble } from './GlassBubble.vue'
 export { default as GlassProgress } from './GlassProgress.vue'
-
-// ── Detail Plate · 密信息只读详情板（html `.bub-a`）──────────────────────
-// 冷近白微透内容岛 + 轻影；Descriptions / 元数据 KV / 只读规格推荐宿主。
-// 固定一档，无 inset / standalone 双轨；不是 Stage / Soft Cite / Host Tray /
-// 二次 Surface，也不以容器外轮廓 hairline 补层次。
-export { default as GlassDetailPlate } from './GlassDetailPlate.vue'
 
 // ── Comment / Quote · 会话流评论与引用槽（盖 t-comment）──────────────────
 // Quiet 排版；quote 区可嵌 GlassCard；不占 L1–L3 层语义。
@@ -79,7 +73,7 @@ export type {
 //   label=secondary / content=primary / secondary 内容=muted；bordered 为
 //   Tone Grid + soft hairline（底 wash + 偶数行底色差 + label 淡染 + 柔和 1px 网格），
 //   content 透明吃宿主，不自带实心底卡；hairline 只作用于组件网格，不补容器外轮廓）
-// 推荐宿主：GlassDetailPlate（html `.bub-a` 密信息内容岛；页内 / 浮层内通用）；
+// 推荐宿主：GlassPanel variant="standalone"（Focus Panel L3；页内 / 浮层内通用）；
 //   Descriptions 透明吃宿主，不再套第二块托盘。Don't：挂进 GlassStage——Stage 是
 //   html `.chat` 会话画布，不扛密 KV。GlassCard 不适用：它是会话流 Soft Cite 引用
 //   软卡，不是 KV 详情阅读面；FormPane 仅用于填表会话，不作只读详情宿主。
@@ -90,11 +84,11 @@ export { default as GlassDescriptions } from './GlassDescriptions.vue'
 export { DescriptionsItem as GlassDescriptionsItem } from 'tdesign-vue-next'
 
 // ── Empty · 空态（盖 t-empty；Quiet 空态，无蓝染满铺） ─────────────────────
-// 组件透明底、非托盘；Lab 橱窗宿主可 Surface → DetailPlate 展示真实消费路径。
+// 组件透明底、非托盘；Lab 橱窗宿主可 Surface → Panel(standalone) 展示真实消费路径。
 export { default as GlassEmpty } from './GlassEmpty.vue'
 
 // ── List · 通用 Quiet 列表（盖 t-list / t-list-item / t-list-item-meta） ─────
-// GlassList = Compound Wrapper 盖 t-list（组件透明底；Lab 橱窗宿主可 Surface → DetailPlate）
+// GlassList = Compound Wrapper 盖 t-list（组件透明底；Lab 橱窗宿主可 Surface → Panel(standalone)）
 // GlassListItem 盖 t-list-item（li 根，不得包 div）；GlassListItemMeta 盖 t-list-item-meta
 export { default as GlassList } from './GlassList.vue'
 export { default as GlassListItem } from './GlassListItem.vue'
@@ -157,14 +151,14 @@ export { default as GlassDialogSection } from './GlassDialogSection.vue'
 export { default as GlassPopconfirm } from './GlassPopconfirm.vue'
 
 // ── Loading · Sound Wave（盖 t-loading；三条竖向音浪 / 错峰伸缩 / 轻 mask） ──
-// 组件透明底、非托盘；Lab 橱窗宿主可 Surface → DetailPlate 展示真实消费路径。
+// 组件透明底、非托盘；Lab 橱窗宿主可 Surface → Panel(standalone) 展示真实消费路径。
 export { default as GlassLoading } from './GlassLoading.vue'
 
 // ── Skeleton · 骨架屏（盖 t-skeleton；微透 · 叠压染色） ──────────────────
-// 组件透明底、非托盘；Lab 橱窗宿主可 Surface → DetailPlate 展示真实消费路径。
+// 组件透明底、非托盘；Lab 橱窗宿主可 Surface → Panel(standalone) 展示真实消费路径。
 export { default as GlassSkeleton } from './GlassSkeleton.vue'
 
 // ── Statistic · 统计数字（盖 t-statistic；Quiet 数字气质 / tone 五态） ──────
-// 组件非托盘、透明底；Lab 橱窗宿主可 Surface → DetailPlate。tone 走本仓 prop，禁透传 TD color。
+// 组件非托盘、透明底；Lab 橱窗宿主可 Surface → Panel(standalone)。tone 走本仓 prop，禁透传 TD color。
 export { default as GlassStatistic } from './GlassStatistic.vue'
 

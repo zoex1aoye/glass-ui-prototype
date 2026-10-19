@@ -2,7 +2,7 @@
 /**
  * GlassStage — Stage 外壳（Container Catalog · Material Stack z4）
  * - html `.chat` 会话画布：近白微透焦点面，单一材质吃 --glass-wb-stage-*。
- * - Stage 只承担会话画布；密 KV / 表详情不进 Stage，推荐 GlassDetailPlate。
+ * - Stage 只承担会话画布；密 KV / 表详情不进 Stage，推荐 GlassPanel variant="standalone"。
  * 几何红线：抬升影交给整板（Floating Plate），Stage 自身不得成第二张浮卡；
  * 外轮廓圆角 = flush token（右上 / 右下），与 Surface __body 同源；左侧贴缝边保持 0。
  * 不加外轮廓 hairline；Surface 仍兜底裁切，与 Rail gap=0，禁止 gutter。
