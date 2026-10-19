@@ -112,12 +112,14 @@
   --glass-wb-pill-pad-x: 16px;
   --glass-wb-pill-font-size: 13px;
   --glass-wb-pill-font-weight: 600;
-  /* Quiet CTA：近白微透玻璃 + 知乎深蓝字（token 承载色值，组件禁止硬编码） */
-  --glass-wb-pill-quiet-bg: rgba(252, 254, 255, 0.66);
+  /* Quiet CTA：暖纸微透玻璃 + 知乎深蓝字（token 承载色值，组件禁止硬编码） */
+  --glass-wb-pill-quiet-bg: rgba(244, 247, 250, 0.7);
   --glass-wb-pill-quiet-color: #0052cc;
-  --glass-wb-pill-quiet-shadow: 0 8px 18px rgba(0, 80, 180, 0.08);
+  --glass-wb-pill-quiet-shadow:
+    0 6px 16px rgba(0, 0, 0, 0.08),
+    0 1px 3px rgba(0, 0, 0, 0.05);
   --glass-wb-pill-quiet-blur: blur(10px);
-  --glass-wb-pill-quiet-hover-bg: rgba(240, 245, 255, 0.78);
+  --glass-wb-pill-quiet-hover-bg: rgba(236, 242, 248, 0.82);
   /* Tonal icon-only 字色轨对齐 Quiet CTA（Track P）；勿再用 --glass-text-secondary */
   --glass-wb-icon-color: var(--glass-wb-pill-quiet-color);
   /* Primary pill：满浓品牌蓝小物件，阴影略强于 Rail 块级按钮 */
@@ -639,9 +641,13 @@
   /* Shadow Bloom / Settle + Color Shift（Quiet / Primary / FAB 分档）
      Separate Tracks：Tonal（quiet/soft/icon/ghost/outline/dashed）= Quiet Active Wash；
      Filled（primary/send/FAB）= 满浓 Press */
-  --glass-wb-pill-quiet-hover-shadow: 0 10px 22px rgba(0, 80, 180, 0.12);
-  /* Settle：冷蓝收紧影（勿用中性灰）；略提 chroma，避免按压读成脏灰 */
-  --glass-wb-pill-quiet-active-shadow: 0 3px 8px rgba(0, 82, 204, 0.14);
+  --glass-wb-pill-quiet-hover-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.09),
+    0 2px 4px rgba(0, 0, 0, 0.05);
+  /* Settle：中性软浮凸收紧影，沿 rest chip 影族 */
+  --glass-wb-pill-quiet-active-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.07),
+    0 1px 2px rgba(0, 0, 0, 0.05);
   /* Tonal ripple 基准：盖掉 TDesign --ripple-color（#a6a6a6 / gray-10）；品牌冷色 whisper
      quiet ≥ soft ≥ icon（alpha 递减）；Filled 轨勿用此组 */
   --glass-wb-tonal-ripple: rgba(0, 82, 204, 0.16);
