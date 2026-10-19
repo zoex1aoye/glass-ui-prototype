@@ -56,6 +56,23 @@ const demoBlocks: DocsDemoBlock[] = [
       { key: 'glass', label: 'glass', type: 'boolean', defaultValue: true },
     ],
   },
+  {
+    id: 'surface-material',
+    label: 'Surface',
+    description: 'GlassSurface · material',
+    props: [
+      {
+        key: 'material',
+        label: 'material',
+        type: 'select',
+        defaultValue: 'raster',
+        options: [
+          { label: 'raster · A 合成光栅', value: 'raster' },
+          { label: 'frost · 近白微透', value: 'frost' },
+        ],
+      },
+    ],
+  },
 ]
 
 onMounted(() => {
@@ -90,10 +107,15 @@ const pageHeader = computed(() => {
   }
 })
 
+const surfaceMaterial = computed<'raster' | 'frost'>(() => {
+  const v = docsProps.state.values['surface-material'] ?? {}
+  return v.material === 'frost' ? 'frost' : 'raster'
+})
+
 /** Material Stack 图例：对照 L0–L3 + 旧 z 档 */
 const stackLegend = [
   { z: 'L0', name: 'Poster Wash', swatch: 'wash', selector: '--glass-layer-l0 / .poster-air' },
-  { z: 'L1', name: 'Host Tray / Surface', swatch: 'surface', selector: 'GlassSurface · .big' },
+  { z: 'L1', name: 'Host Tray / Surface', swatch: 'surface', selector: 'GlassSurface · raster | frost' },
   { z: 'L2', name: 'Region / PageHeader', swatch: 'header', selector: 'GlassPageHeader · .bph' },
   { z: 'L3', name: 'Focus Panel', swatch: 'stage', selector: 'GlassPanel · .bchat' },
   { z: 'z2', name: 'Frost Rail（Flush）', swatch: 'rail', selector: 'GlassRail · .rail' },
@@ -129,10 +151,31 @@ const gapCards = [
       <div class="lab-section-label">
         <span class="lab-section-name">0. Live Props Demo</span>
         <span class="lab-section-meta">
-          点选下方演示区块后，右栏 Props 面板可改 variant / title / weighted / glass；画布控件即时反映。
+          点选下方演示区块后，右栏 Props 面板可改 variant / title / weighted / glass / material；画布控件即时反映。
         </span>
       </div>
       <div class="lab-controls">
+        <div class="lab-control-row">
+          <span class="lab-control-label">Surface · material</span>
+          <div class="lab-control-row-items">
+            <div
+              class="docs-demo-block"
+              :class="{ 'is-selected': isDemoSelected('surface-material') }"
+              role="button"
+              tabindex="0"
+              @click="selectDemo('surface-material')"
+              @keydown.enter="selectDemo('surface-material')"
+              @keydown.space.prevent="selectDemo('surface-material')"
+            >
+              <GlassSurface class="lab-material-demo" :material="surfaceMaterial">
+                <div class="lab-material-demo__body">
+                  <span>{{ surfaceMaterial }}</span>
+                </div>
+              </GlassSurface>
+            </div>
+          </div>
+        </div>
+
         <div class="lab-control-row">
           <span class="lab-control-label">Focus Panel · variant / title</span>
           <div class="lab-control-row-items">
@@ -192,7 +235,7 @@ const gapCards = [
             <span class="lab-cat-impl">L1 · GlassSurface</span>
             <code class="lab-cat-html">.surface · .big(+.air+.pane)</code>
             <span class="lab-cat-rule">
-              Do：Inset Reveal（四周露材质）+ air bloom · Don’t：t-card 当托盘 / 双托盘
+              Do：默认 raster 光栅，frost 显式切换 · Don’t：t-card 当托盘 / 双托盘 / raster 叠 air
             </span>
           </div>
           <div class="lab-frame lab-frame--showcase">
@@ -280,7 +323,7 @@ const gapCards = [
         <span class="lab-layer-badge" title="简化 page-level L0 · 完整整装底见「实验室·整装背景」"
           >L0 Poster Wash · 简化</span
         >
-        <GlassSurface class="lab-living-surface">
+        <GlassSurface class="lab-living-surface" :material="surfaceMaterial">
           <div class="lab-living-stack">
             <GlassPageHeader
               title="设置与分区"
@@ -310,7 +353,7 @@ const gapCards = [
         </GlassSurface>
       </div>
       <div class="lab-control-note">
-        验收：托盘=GlassSurface · L1 / Lab frame=16 · Region=16 · Flush 外角=8（PageHeader / Panel / DetailPlate 同档 Region）· Surface
+        验收：托盘=GlassSurface · L1 / Lab frame=20 · Region=16 · Flush 外角=8（PageHeader / Panel / DetailPlate 同档 Region）· Surface
         <code>__body</code> 外轮廓=flush(L1-pad)=16px；贴缝无 gutter。能指出玻璃底板在 Surface 四周露边；
         Panel 间隙不是露边；整树只有一个 L1；须能指出
         PageHeader 相对 Tray 的扇形材质差 + lift 影（无描边）；Panel 读成 Fan Tip 过渡 + frosted
@@ -348,8 +391,8 @@ const gapCards = [
         <span class="lab-cat-impl">GlassSurface</span>
         <code class="lab-cat-html">.surface · .big(+.air+.pane) · .t1 .big</code>
         <span class="lab-cat-rule">
-          Do：Inset Reveal（padding 四周露材质）+ surface-air bloom 托住 Rail|Stage · Don't：用 t-card
-          当托盘 / Surface 外再套 Host Tray
+          Do：默认 raster 光栅；frost 才显示 surface-air bloom · Don't：用 t-card 当托盘 /
+          Surface 外再套 Host Tray / raster 叠 air
         </span>
       </div>
       <div class="lab-frame lab-frame--surface">
@@ -533,6 +576,23 @@ const gapCards = [
   min-height: 140px;
 }
 
+.lab-material-demo {
+  width: 260px;
+  min-height: 92px;
+}
+
+.lab-material-demo__body {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  min-height: 60px;
+  background: var(--glass-wb-stage-fill);
+  color: var(--glass-text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
 .lab-solo-body {
   flex: 1;
   display: flex;
@@ -655,6 +715,8 @@ const gapCards = [
 
 .lab-stack-swatch--surface {
   background: var(--glass-layer-l1-fill);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
   -webkit-backdrop-filter: var(--glass-layer-l1-blur);
   backdrop-filter: var(--glass-layer-l1-blur);
 }

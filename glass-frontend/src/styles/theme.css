@@ -39,19 +39,31 @@
   /* AI 工作台 —— z2 Behind Surface（整块浮层）+ z3 Rail|Stage 内部贴缝 */
   --glass-rail-width: 260px;
 
-  /* z2 Behind Surface：微透渐变 + backdrop blur + 多层柔阴影 + 大圆角，禁止 border 描边。
+  /* z2 Behind Surface：默认 A 合成光栅 / 可选近白微透 + 多层柔阴影 + 大圆角，禁止 border 描边。
      「被看见」= 相对页底外边距（app-content）+ 整框 inset（surface-pad）四周露玻璃。
      Rail/Stage 之间 gap 必须为 0，禁止用中间缝露底板。 */
   --glass-wb-surface-pad: 16px;
-  /* t1 .big 宿主托盘：近白磨砂玻璃，蓝从背后雾状 bloom 透出（非涂面、无描边） */
-  --glass-wb-surface-fill: rgba(250, 253, 255, 0.55);
-  --glass-wb-surface-blur: blur(20px);
+  /* Surface 双材质：默认 raster 直接铺 A 合成光栅；frost 为近白微透供 PosterWash 透底。 */
+  --glass-wb-surface-raster: url('@/assets/glass/surface-a-composite-raster.png');
+  --glass-wb-surface-fill-frost: linear-gradient(
+    165deg,
+    rgba(253, 254, 255, 0.62) 0%,
+    rgba(248, 252, 255, 0.5) 55%,
+    rgba(240, 247, 254, 0.42) 100%
+  );
+  /* 兼容 Poster 材质技法等既有调用；GlassSurface 默认走 raster。 */
+  --glass-wb-surface-fill: var(--glass-wb-surface-fill-frost);
+  --glass-wb-surface-blur-raster: none;
+  --glass-wb-surface-blur-frost: blur(36px) saturate(1.2);
+  --glass-wb-surface-blur: var(--glass-wb-surface-blur-frost);
+  /* 淡白 rim：只做边界提亮，不写成 1px 硬描边。 */
+  --glass-wb-surface-rim: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
   /* Ambient（大范围极低 alpha） + Key（稍紧、略下偏移） */
   --glass-wb-surface-shadow:
-    0 36px 96px rgba(15, 50, 120, 0.1),
-    0 12px 32px rgba(15, 50, 120, 0.045);
-  /* Lab frame--surface 与 GlassSurface 统一 16；勿再抬到 32。 */
-  --glass-wb-surface-radius: 16px;
+    0 30px 64px rgba(15, 60, 140, 0.13),
+    0 6px 16px rgba(15, 60, 140, 0.05);
+  /* v5 .surface 本体圆角 20px；与 Region 的 16px 分档。 */
+  --glass-wb-surface-radius: 20px;
   /* Region（PageHeader / Panel / DetailPlate）同档 16。 */
   --glass-wb-stack-radius-region: 16px;
   /* Flush 外角：L1=pad=16 时 nest 公式为 0，固定 8 保 backdrop 裁切；贴缝边仍 0。
@@ -220,12 +232,13 @@
   --glass-wb-avatar-image-shadow: 0 4px 12px color-mix(in srgb, var(--glass-chroma-zhihu) 10%, transparent);
   --glass-wb-avatar-group-overlap: 10px;
 
-  /* Glass Compound Wrapper 共用材质 */
+  /* Glass Compound Wrapper 共用材质
+     Surface air：低 alpha 冷蓝呼吸，末层必须透明；禁止用实色 #eaf3fb 盖死透底。 */
   --glass-wb-surface-air:
-    radial-gradient(50% 55% at 20% 30%, rgba(79, 195, 255, 0.45), transparent 60%),
-    radial-gradient(45% 50% at 80% 70%, rgba(0, 102, 255, 0.28), transparent 60%),
-    #eaf3fb;
-  --glass-wb-surface-air-blur: blur(28px) saturate(1.2);
+    radial-gradient(52% 44% at 14% 78%, rgba(80, 170, 255, 0.16), transparent 68%),
+    radial-gradient(46% 40% at 86% 22%, rgba(96, 185, 255, 0.12), transparent 70%),
+    transparent;
+  --glass-wb-surface-air-blur: blur(30px) saturate(1.1);
   /* Comment stub 专用紫系 Fan Tip：浅紫 → 芯紫 → 深靛，无白核；
      与 GlassAvatar 冷蓝 --glass-wb-avatar-fill 解耦。 */
   --glass-wb-avatar-gradient: linear-gradient(
@@ -1192,9 +1205,14 @@
   --glass-poster-page-air-d-blur: blur(40px);
   --glass-poster-page-air-d-opacity: 0.4;
 
-  /* L1 Host Tray / Surface —— 对齐现网 --glass-wb-surface-*，禁 pad=0 */
-  --glass-layer-l1-fill: var(--glass-wb-surface-fill);
-  --glass-layer-l1-blur: var(--glass-wb-surface-blur);
+  /* L1 Host Tray / Surface —— 默认 raster；frost 由组件 modifier 切换，禁 pad=0 */
+  --glass-layer-l1-fill: var(--glass-wb-surface-raster);
+  --glass-layer-l1-blur: var(--glass-wb-surface-blur-raster);
+  --glass-layer-l1-fill-raster: var(--glass-wb-surface-raster);
+  --glass-layer-l1-fill-frost: var(--glass-wb-surface-fill-frost);
+  --glass-layer-l1-blur-raster: var(--glass-wb-surface-blur-raster);
+  --glass-layer-l1-blur-frost: var(--glass-wb-surface-blur-frost);
+  --glass-layer-l1-rim: var(--glass-wb-surface-rim);
   --glass-layer-l1-shadow: var(--glass-wb-surface-shadow);
   --glass-layer-l1-radius: var(--glass-wb-surface-radius);
   --glass-layer-l1-pad: var(--glass-wb-surface-pad);
