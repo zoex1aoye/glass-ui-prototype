@@ -294,24 +294,28 @@ const gapCards = [
             <div class="lab-living-panels">
               <GlassPanel title="Panel A · 表单区">
                 <p class="lab-panel-copy">
-                  L3 inset · 吃宿主 blur · 无二次 lift。露边只来自 L1 四周 pad，不是 Panel 间隙。
+                  L3 inset · Fan Tip 过渡 + frosted 微透 + 悬浮影；仍无外轮廓 hairline。露边只来自 L1 四周 pad，不是 Panel 间隙。
                 </p>
               </GlassPanel>
               <GlassPanel title="Panel B · 列表区">
                 <p class="lab-panel-copy">
-                  同层并列 gap&gt;0 · 非 Rail|Stage Flush。禁止再套 Surface。
+                  同层并列 gap&gt;0 · 非 Rail|Stage Flush；Fan Tip 与 frosted 同源。禁止再套 Surface。
                 </p>
               </GlassPanel>
               <GlassPanel title="Panel C · 说明">
-                <p class="lab-panel-copy">第三块焦点面 · 证明多容器可纵排 / 栅格，仍单托盘。</p>
+                <p class="lab-panel-copy">Fan Tip 过渡 + frosted 微透 + 悬浮影（lift 1px）· 多容器可纵排 / 栅格，仍单托盘。</p>
               </GlassPanel>
             </div>
           </div>
         </GlassSurface>
       </div>
       <div class="lab-control-note">
-        验收：能指出玻璃底板在 Surface 四周露边；Panel 间隙不是露边；整树只有一个 L1；须能指出
-        PageHeader 相对 Tray 的扇形材质差 + lift 影（无描边）。L0 为简化 page-level 小样；完整整装底见「实验室·整装背景」。
+        验收：托盘=GlassSurface · L1 / Lab frame=16 · Region=16 · Flush 外角=8（PageHeader / Panel / DetailPlate 同档 Region）· Surface
+        <code>__body</code> 外轮廓=flush(L1-pad)=16px；贴缝无 gutter。能指出玻璃底板在 Surface 四周露边；
+        Panel 间隙不是露边；整树只有一个 L1；须能指出
+        PageHeader 相对 Tray 的扇形材质差 + lift 影（无描边）；Panel 读成 Fan Tip 过渡 + frosted
+        微透 + 悬浮影（lift 1px），影不超过 L2 PageHeader 且无外轮廓 hairline。L0 为简化 page-level
+        小样；完整整装底见「实验室·整装背景」。
       </div>
     </section>
 
@@ -359,8 +363,9 @@ const gapCards = [
         </GlassSurface>
       </div>
       <div class="lab-control-note">
+        托盘=GlassSurface · 阶梯 L1 / Lab frame=16 · Region=16 · Flush 外角=8。
         Floating Plate：抬升影在 Surface <code>__body</code> 整板 · Stage 自身不再叠重影 · 露边是四周
-        inset pad，不是 Rail–Stage 中缝
+        inset pad，不是 Rail–Stage 中缝。
       </div>
     </section>
 
@@ -389,8 +394,11 @@ const gapCards = [
               <div class="lab-stage-title">Near-White Stage · Flush L3</div>
             </template>
             <div class="lab-flush-note">
-              Flush Stitch：Rail | Stage 贴缝 gap=0，靠磨砂冰蓝 vs 近白的明度差分界。 露边只来自 Host
-              Tray 四周 Inset Reveal；禁止在中缝加 gutter 伪造露边。
+              几何：托盘=GlassSurface · L1 / Lab frame=16 · Region=16 · Flush 外角=8（贴缝边 0）。
+              Surface <code>__body</code> 外轮廓=flush(L1-pad)=16px。
+              Flush Stitch：Rail | Stage 贴缝 gap=0、无 gutter，靠磨砂冰蓝 vs 近白的明度差分界。
+              Rail 左角 / Stage 右角吃 flush-radius；backdrop 不得漏方角。露边只来自 Host Tray
+              四周 Inset Reveal；禁止在中缝加 gutter 伪造露边。
             </div>
           </GlassStage>
         </GlassSurface>

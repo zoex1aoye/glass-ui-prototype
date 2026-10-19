@@ -49,6 +49,11 @@ export { default as GlassDetailPlate } from './GlassDetailPlate.vue'
 // Quiet 排版；quote 区可嵌 GlassCard；不占 L1–L3 层语义。
 export { default as GlassComment } from './GlassComment.vue'
 
+// ── Avatar / AvatarGroup · 头像与头像组（盖 t-avatar / t-avatar-group）────
+// 小物件：medium 40 对齐 Comment；round 12 / circle 50%；Group 折叠面与单体同源。
+export { default as GlassAvatar } from './GlassAvatar.vue'
+export { default as GlassAvatarGroup } from './GlassAvatarGroup.vue'
+
 // ── L3 Flush 变体 · Rail | Stage（工作台双栏 gap=0，非第五层） ─────────────
 // html: `.rail` · `.chat` / `.bchat`
 export { default as GlassRail } from './GlassRail.vue'

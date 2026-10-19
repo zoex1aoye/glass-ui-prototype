@@ -73,6 +73,8 @@
 
 .lab-frame--surface {
   min-height: 260px;
+  border-radius: var(--glass-wb-surface-radius);
+  overflow: hidden;
 }
 
 .lab-frame--stage {
@@ -115,12 +117,16 @@
   background: var(--glass-wb-rail-wash);
   -webkit-backdrop-filter: var(--glass-wb-rail-blur);
   backdrop-filter: var(--glass-wb-rail-blur);
+  border-radius: var(--glass-wb-stack-flush-radius) 0 0 var(--glass-wb-stack-flush-radius);
+  overflow: hidden;
 }
 
 .lab-stub--stage {
   background: var(--glass-wb-stage-fill);
   -webkit-backdrop-filter: var(--glass-wb-stage-blur);
   backdrop-filter: var(--glass-wb-stage-blur);
+  border-radius: 0 var(--glass-wb-stack-flush-radius) var(--glass-wb-stack-flush-radius) 0;
+  overflow: hidden;
 }
 
 .lab-stub-tag {

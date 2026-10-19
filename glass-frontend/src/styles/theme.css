@@ -49,7 +49,13 @@
   --glass-wb-surface-shadow:
     0 36px 96px rgba(15, 50, 120, 0.1),
     0 12px 32px rgba(15, 50, 120, 0.045);
-  --glass-wb-surface-radius: 24px;
+  /* Lab frame--surface 与 GlassSurface 统一 16；勿再抬到 32。 */
+  --glass-wb-surface-radius: 16px;
+  /* Region（PageHeader / Panel / DetailPlate）同档 16。 */
+  --glass-wb-stack-radius-region: 16px;
+  /* Flush 外角：L1=pad=16 时 nest 公式为 0，固定 8 保 backdrop 裁切；贴缝边仍 0。
+     Surface __body / Rail 左 / Stage 右 同源吃本 token。 */
+  --glass-wb-stack-flush-radius: 8px;
 
   /* z3a Session Rail：z2 磨砂冰蓝冷侧栏（html .rail / .widgets）
      主层实色 frost-blue，比 Surface 露边更冷更实；可选顶部冷青轻团叠压。
@@ -166,15 +172,15 @@
   --glass-wb-detail-plate-fill: rgba(244, 250, 255, 0.82);
   --glass-wb-detail-plate-blur: blur(10px);
   --glass-wb-detail-plate-shadow: 0 10px 24px rgba(15, 60, 140, 0.07);
-  --glass-wb-detail-plate-radius: 14px;
+  --glass-wb-detail-plate-radius: var(--glass-wb-stack-radius-region);
   --glass-wb-detail-plate-pad: 14px 16px;
 
   /* Comment · GlassComment（Quiet 排版 · 盖 t-comment）
-     会话流引用槽同级 Quiet：avatar 40 / 圆角 12；无硬描边；
+     会话流引用槽同级 Quiet：avatar 40 / circle 50%；无硬描边；
      quote 区嵌 GlassCard 时靠卡自带 hairline，不重复左描边。
      reply 微透近白底，左缩进对齐头像。视觉规则见 `.glass-comment`。 */
   --glass-wb-comment-avatar-size: 40px;
-  --glass-wb-comment-avatar-radius: 12px;
+  --glass-wb-comment-avatar-radius: 50%;
   --glass-wb-comment-avatar-gap: 12px;
   --glass-wb-comment-gap: 10px;
   --glass-wb-comment-name-color: var(--glass-text-primary);
@@ -186,17 +192,57 @@
   --glass-wb-comment-reply-pad: 12px 14px;
   --glass-wb-comment-reply-offset: calc(var(--glass-wb-comment-avatar-size) + var(--glass-wb-comment-avatar-gap));
 
+  /* Avatar · GlassAvatar / GlassAvatarGroup（盖 t-avatar / t-avatar-group）
+     medium 默认 40 对齐 Comment；small 32 / large 56 自洽。
+     round 12 与 Comment circle 解耦，circle 50%；字 / icon 面冷蓝微透，无白核；
+     图片与折叠 `+N` 面共用轻 inset rim，不用 1px 硬描边。 */
+  --glass-wb-avatar-size-small: 32px;
+  --glass-wb-avatar-size-medium: var(--glass-wb-comment-avatar-size);
+  --glass-wb-avatar-size-large: 56px;
+  --glass-wb-avatar-radius-round: 12px;
+  --glass-wb-avatar-radius-circle: 50%;
+  --glass-wb-avatar-font-size-small: 12px;
+  --glass-wb-avatar-font-size-medium: 15px;
+  --glass-wb-avatar-font-size-large: 22px;
+  --glass-wb-avatar-icon-size-small: 15px;
+  --glass-wb-avatar-icon-size-medium: 18px;
+  --glass-wb-avatar-icon-size-large: 26px;
+  --glass-wb-avatar-font-weight: 600;
+  --glass-wb-avatar-fill: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--glass-chroma-cyan) 14%, transparent) 0%,
+    color-mix(in srgb, var(--glass-chroma-alipay) 17%, transparent) 100%
+  );
+  --glass-wb-avatar-text: var(--glass-wb-pill-quiet-color);
+  --glass-wb-avatar-backdrop: blur(8px) saturate(1.08);
+  --glass-wb-avatar-rim: inset 0 0 0 1px color-mix(in srgb, var(--glass-chroma-alipay) 16%, transparent);
+  --glass-wb-avatar-image-shadow: 0 4px 12px color-mix(in srgb, var(--glass-chroma-zhihu) 10%, transparent);
+  --glass-wb-avatar-group-overlap: 10px;
+
   /* Glass Compound Wrapper 共用材质 */
   --glass-wb-surface-air:
     radial-gradient(50% 55% at 20% 30%, rgba(79, 195, 255, 0.45), transparent 60%),
     radial-gradient(45% 50% at 80% 70%, rgba(0, 102, 255, 0.28), transparent 60%),
     #eaf3fb;
   --glass-wb-surface-air-blur: blur(28px) saturate(1.2);
-  --glass-wb-avatar-gradient: linear-gradient(145deg, #8b7cf8 0%, #6b6ef0 100%);
-  --glass-wb-avatar-shadow: 0 6px 14px rgba(107, 124, 250, 0.28);
+  /* Comment stub 专用紫系 Fan Tip：浅紫 → 芯紫 → 深靛，无白核；
+     与 GlassAvatar 冷蓝 --glass-wb-avatar-fill 解耦。 */
+  --glass-wb-avatar-gradient: linear-gradient(
+    145deg,
+    #c7b8ff 0%,
+    var(--glass-chroma-ai) 52%,
+    #44339e 100%
+  );
+  --glass-wb-avatar-gradient-alt: linear-gradient(
+    145deg,
+    #d3c5ff 0%,
+    #8168f1 50%,
+    #3a2f8a 100%
+  );
+  --glass-wb-avatar-shadow: 0 5px 12px rgba(88, 70, 180, 0.2);
   --glass-wb-avatar-glow:
-    0 0 0 14px rgba(139, 124, 248, 0.1),
-    0 14px 32px rgba(107, 124, 250, 0.28);
+    0 0 0 14px rgba(139, 124, 248, 0.06),
+    0 12px 28px rgba(88, 70, 180, 0.18);
   --glass-wb-search-bg: rgba(255, 255, 255, 0.72);
   --glass-wb-search-blur: blur(10px);
   --glass-wb-session-hover-bg: rgba(255, 255, 255, 0.55);
@@ -741,7 +787,7 @@
   /* Quiet List · GlassList / GlassListItem / GlassListItemMeta（盖 t-list）
      通用 Quiet 列表：透明底、无托盘满铺（非 Host Tray / Surface，禁双托盘）。
      Item 行高 Quiet；Hover Whisper 复用 table/session hover token（勿另造第二套脏蓝）。
-     Meta 头像圆角对齐 Comment（--glass-wb-comment-avatar-radius 近义）。
+     Meta 头像圆角对齐 Comment（--glass-wb-comment-avatar-radius，circle 50%）。
      视觉规则见 `.glass-list` / `.glass-list-item` / `.glass-list-item-meta`。 */
   --glass-wb-list-fill: transparent; /* Quiet 列表，无托盘满铺 */
   --glass-wb-list-padding: 0;
@@ -762,7 +808,7 @@
   --glass-wb-list-title-color: var(--glass-text-primary);
   --glass-wb-list-description-color: var(--glass-text-secondary);
   --glass-wb-list-meta-avatar-size: 40px;
-  --glass-wb-list-meta-avatar-radius: var(--glass-wb-comment-avatar-radius); /* 12px 近义 */
+  --glass-wb-list-meta-avatar-radius: var(--glass-wb-comment-avatar-radius); /* circle 50% 对齐 Comment */
   --glass-wb-list-meta-gap: 12px;
 
   /* Frost Disc Loading · GlassLoading（盖 t-loading）
@@ -846,33 +892,33 @@
   --glass-wb-alert-padding-x: 16px;
   --glass-wb-alert-blur: blur(16px) saturate(1.15); /* ← .bph */
   --glass-wb-alert-shadow: 0 10px 28px rgba(0, 80, 180, 0.07); /* ← .bph；四态统一低噪蓝影 */
-  /* Fan Tip：首停略降 alpha 让 Light Frost 透叠；中段 wash 略抬，tip ≤0.12 */
+  /* Fan Tip：首停略降 alpha 让 Light Frost 透叠；中段 wash 略提 chroma，tip 提至 0.16 */
   --glass-wb-alert-success-fill: linear-gradient(
     115deg,
     rgba(255, 255, 255, 0.55) 0%,
-    rgba(231, 248, 239, 0.55) 42%,
-    rgba(24, 180, 88, 0.12) 100%
+    rgba(220, 246, 230, 0.56) 42%,
+    rgba(24, 180, 88, 0.16) 100%
   );
   --glass-wb-alert-success-icon: var(--glass-wb-online-text);
   --glass-wb-alert-info-fill: linear-gradient(
     115deg,
     rgba(255, 255, 255, 0.55) 0%,
-    rgba(226, 242, 255, 0.5) 42%,
-    rgba(47, 107, 246, 0.12) 100%
+    rgba(214, 235, 255, 0.53) 42%,
+    rgba(47, 107, 246, 0.16) 100%
   );
   --glass-wb-alert-info-icon: var(--glass-wb-btn-blue);
   --glass-wb-alert-warning-fill: linear-gradient(
     115deg,
     rgba(255, 255, 255, 0.55) 0%,
-    rgba(255, 246, 230, 0.55) 42%,
-    rgba(158, 100, 0, 0.12) 100%
+    rgba(255, 239, 211, 0.56) 42%,
+    rgba(158, 100, 0, 0.16) 100%
   );
   --glass-wb-alert-warning-icon: #9e6400;
   --glass-wb-alert-error-fill: linear-gradient(
     115deg,
     rgba(255, 255, 255, 0.55) 0%,
-    rgba(255, 240, 240, 0.55) 42%,
-    rgba(225, 37, 27, 0.12) 100%
+    rgba(255, 229, 229, 0.56) 42%,
+    rgba(225, 37, 27, 0.16) 100%
   );
   --glass-wb-alert-error-icon: #e1251b;
 
@@ -1155,22 +1201,22 @@
   --glass-layer-l1-air-blur: var(--glass-wb-surface-air-blur);
 
   /* L2 Region / PageHeader —— 扇形软过渡 + 磨砂微透 + lift 影（html .t1 .bph / --shadow-lift）
-     对齐 html .t1 .bph + 海报场降亮：左微透 + 冰蓝中段（chroma 更早进场），蓝染尾 ≤12%；
+     对齐 html .t1 .bph + 海报场降亮：左微透 + 冰蓝中段后移减重，蓝染尾 ≤10%；
      边界靠材质差 + 影，禁描边 / inset rim / 满浓糊边。
-     P1 返工：左端 .54→.46、冰蓝 stop 45%→32%，避免海报底上左 1/3 仍读成白条。 */
+     Track I：冰蓝 stop 32%→42%、alpha .4→.28，尖端 .12→.10，保持单扇形语言。 */
   --glass-layer-l2-fill: linear-gradient(
     115deg,
     rgba(255, 255, 255, 0.46) 0%,
-    rgba(226, 242, 255, 0.4) 32%,
-    rgba(22, 119, 255, 0.12) 100%
+    rgba(226, 242, 255, 0.28) 42%,
+    rgba(22, 119, 255, 0.1) 100%
   );
-  /* Actions「重物压感」：左端再降、中段冰蓝、右端更实 + 影偏右下 */
+  /* Actions「重物压感」：中段与 default 同步减重，右端保留更实蓝染 + 影偏右下 */
   --glass-layer-l2-fill-weighted: linear-gradient(
     118deg,
     rgba(255, 255, 255, 0.4) 0%,
-    rgba(226, 242, 255, 0.42) 30%,
-    rgba(22, 119, 255, 0.14) 72%,
-    rgba(0, 102, 255, 0.1) 100%
+    rgba(226, 242, 255, 0.27) 40%,
+    rgba(22, 119, 255, 0.12) 72%,
+    rgba(0, 102, 255, 0.085) 100%
   );
   --glass-layer-l2-fill-solid: rgba(252, 254, 255, 0.92);
   --glass-layer-l2-blur: blur(18px) saturate(1.2);
@@ -1183,27 +1229,36 @@
   --glass-layer-l2-rim: none;
   /* 极轻抬升；prefers-reduced-motion 时组件侧关掉位移 */
   --glass-layer-l2-lift: 1px;
-  --glass-layer-l2-radius: 14px;
+  --glass-layer-l2-radius: var(--glass-wb-stack-radius-region);
   --glass-layer-l2-height: 56px;
 
-  /* L3 Focus Panel —— 冷蓝焦点；inset 无 lift / 无外轮廓 hairline，standalone 轻影
-     inset = Nested Chrome 扁板：在 L1 雾蓝露边之上用更冷、略深的蓝洗提升阅读边界；
-     分层靠明度 / 冷暖差与小 gap，禁止粉笔白实底、二次 blur、lift 影或 hairline。 */
+  /* L3 Focus Panel —— Fan Tip 冷蓝焦点 / frosted 微透 / 双层悬浮影；无外轮廓 hairline
+     inset = Nested Chrome 单托盘：左更开 → 冰蓝中段 → 蓝染尖，靠材质差 + 影提升阅读边界；
+     轻 frosted 让宿主 L1 透叠可感，悬浮影弱于或贴近 L2 PageHeader；
+     禁止粉笔白实底、双托盘或 hairline。 */
   --glass-layer-l3-fill: rgba(252, 254, 255, 0.56);
   --glass-layer-l3-blur: blur(18px);
   --glass-layer-l3-shadow: none;
-  --glass-layer-l3-radius: 14px;
+  --glass-layer-l3-radius: var(--glass-wb-stack-radius-region);
   --glass-layer-l3-inset-fill: linear-gradient(
-    155deg,
-    rgba(212, 234, 254, 0.82) 0%,
-    rgba(188, 219, 250, 0.68) 100%
+    145deg,
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(220, 238, 255, 0.48) 46%,
+    rgba(22, 119, 255, 0.1) 100%
   );
-  --glass-layer-l3-inset-blur: none;
-  --glass-layer-l3-inset-shadow: none;
+  --glass-layer-l3-inset-blur: blur(14px) saturate(1.14);
+  /* 双层柔影抬悬浮；首层仍弱于 L2 PageHeader（40 blur / .14） */
+  --glass-layer-l3-inset-shadow:
+    0 14px 36px rgba(15, 60, 140, 0.1),
+    0 4px 12px rgba(15, 60, 140, 0.05);
+  --glass-layer-l3-inset-lift: 1px;
   --glass-layer-l3-inset-hairline: none; /* 容器禁外轮廓 hairline；分层靠字色 / 明度冷暖 */
   --glass-layer-l3-standalone-fill: rgba(252, 254, 255, 0.62);
   --glass-layer-l3-standalone-blur: blur(18px);
-  --glass-layer-l3-standalone-shadow: 0 12px 30px rgba(15, 60, 140, 0.07);
+  /* 橱窗同步略抬；standalone 略强于 inset，且两者仍弱于 L2 PageHeader */
+  --glass-layer-l3-standalone-shadow:
+    0 16px 40px rgba(15, 60, 140, 0.105),
+    0 4px 12px rgba(15, 60, 140, 0.055);
   --glass-layer-l3-hairline: inset 0 0 0 1px rgba(120, 160, 210, 0.12);
 }
 
@@ -3569,7 +3624,7 @@ body {
 }
 
 /* ── Comment · GlassComment（Quiet 排版 · 盖 t-comment）────────────────
-   会话流评论 / 引用槽：avatar 40 圆角 12 · 无硬描边 · quote 嵌 GlassCard
+   会话流评论 / 引用槽：avatar 40 circle 50% · 无硬描边 · quote 嵌 GlassCard
    自带 hairline（不重复左描边）· reply 微透近白底左缩进对齐头像。 */
 .glass-comment.t-comment {
   font-size: 13px;
@@ -3674,6 +3729,124 @@ body {
 .glass-badge--count.t-badge .t-badge--round {
   background-color: var(--glass-wb-badge-bg);
   color: var(--glass-wb-badge-text);
+}
+
+/* ── Avatar · GlassAvatar / GlassAvatarGroup（全局主题层）──────────────
+   组件只挂 .glass-avatar / .glass-avatar-group + 形状钩子，本段是唯一视觉出处。
+   小物件禁止白核：字符 / icon 面为冷蓝微透渐变；图片与折叠面共用轻 rim。
+   Group 折叠 `+N` 由 TD 内部生成 t-avatar__collapse，因此同样纳入组选择器。 */
+
+.glass-avatar.t-avatar,
+.glass-avatar-group.t-avatar-group .t-avatar {
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  width: var(--glass-wb-avatar-size-medium);
+  height: var(--glass-wb-avatar-size-medium);
+  border: 0;
+  border-radius: var(--glass-wb-avatar-radius-circle);
+  background: var(--glass-wb-avatar-fill);
+  color: var(--glass-wb-avatar-text);
+  font-size: var(--glass-wb-avatar-font-size-medium);
+  font-weight: var(--glass-wb-avatar-font-weight);
+  line-height: var(--glass-wb-avatar-size-medium);
+  box-shadow: var(--glass-wb-avatar-image-shadow);
+  backdrop-filter: var(--glass-wb-avatar-backdrop);
+  -webkit-backdrop-filter: var(--glass-wb-avatar-backdrop);
+  vertical-align: middle;
+}
+
+.glass-avatar.t-avatar.t-size-s,
+.glass-avatar-group.t-avatar-group .t-avatar.t-size-s {
+  width: var(--glass-wb-avatar-size-small);
+  height: var(--glass-wb-avatar-size-small);
+  font-size: var(--glass-wb-avatar-font-size-small);
+  line-height: var(--glass-wb-avatar-size-small);
+}
+
+.glass-avatar.t-avatar.t-size-l,
+.glass-avatar-group.t-avatar-group .t-avatar.t-size-l {
+  width: var(--glass-wb-avatar-size-large);
+  height: var(--glass-wb-avatar-size-large);
+  font-size: var(--glass-wb-avatar-font-size-large);
+  line-height: var(--glass-wb-avatar-size-large);
+}
+
+.glass-avatar.t-avatar.t-avatar--circle,
+.glass-avatar-group.t-avatar-group .t-avatar.t-avatar--circle {
+  border-radius: var(--glass-wb-avatar-radius-circle);
+}
+
+.glass-avatar.t-avatar.t-avatar--round,
+.glass-avatar-group.t-avatar-group .t-avatar.t-avatar--round {
+  border-radius: var(--glass-wb-avatar-radius-round);
+}
+
+.glass-avatar.t-avatar.t-avatar__icon,
+.glass-avatar-group.t-avatar-group .t-avatar.t-avatar__icon {
+  font-size: var(--glass-wb-avatar-icon-size-medium);
+}
+
+.glass-avatar.t-avatar.t-size-s.t-avatar__icon,
+.glass-avatar-group.t-avatar-group .t-avatar.t-size-s.t-avatar__icon {
+  font-size: var(--glass-wb-avatar-icon-size-small);
+}
+
+.glass-avatar.t-avatar.t-size-l.t-avatar__icon,
+.glass-avatar-group.t-avatar-group .t-avatar.t-size-l.t-avatar__icon {
+  font-size: var(--glass-wb-avatar-icon-size-large);
+}
+
+/* 图片吃满头像：圆角继承形状，loading / error 面继续沿用冷蓝微透。 */
+.glass-avatar.t-avatar > .t-image__wrapper,
+.glass-avatar-group.t-avatar-group .t-avatar > .t-image__wrapper {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  overflow: hidden;
+  background: var(--glass-wb-avatar-fill);
+}
+
+.glass-avatar.t-avatar .t-image__wrapper .t-image,
+.glass-avatar-group.t-avatar-group .t-image__wrapper .t-image {
+  border-radius: inherit;
+}
+
+.glass-avatar.t-avatar .t-image__loading,
+.glass-avatar.t-avatar .t-image__error,
+.glass-avatar-group.t-avatar-group .t-image__loading,
+.glass-avatar-group.t-avatar-group .t-image__error {
+  color: var(--glass-wb-avatar-text);
+}
+
+/* 轻 inset rim 叠在图片 / 字面之上；不把 1px 实线当玻璃轮廓。 */
+.glass-avatar.t-avatar::after,
+.glass-avatar-group.t-avatar-group .t-avatar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  box-shadow: var(--glass-wb-avatar-rim);
+  pointer-events: none;
+}
+
+.glass-avatar-group.t-avatar-group {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+
+.glass-avatar-group.t-avatar-group .t-avatar__collapse {
+  background: var(--glass-wb-avatar-fill);
+  color: var(--glass-wb-avatar-text);
+}
+
+.glass-avatar-group.t-avatar-group.t-avatar--offset-right .t-avatar:not(:last-child) {
+  margin-right: calc(0px - var(--glass-wb-avatar-group-overlap));
+}
+
+.glass-avatar-group.t-avatar-group.t-avatar--offset-left .t-avatar:not(:first-child) {
+  margin-left: calc(0px - var(--glass-wb-avatar-group-overlap));
 }
 
 /* ── Glass Descriptions · GlassDescriptions（全局主题层）────────────────

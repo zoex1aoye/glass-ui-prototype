@@ -58,7 +58,7 @@ withDefaults(
   background: var(--glass-layer-l1-air);
 }
 
-/* Flush Stitch + Floating Plate：一体柔影，中间 gap 必须为 0 */
+/* Flush Stitch + Floating Plate：一体柔影，外轮廓吃 flush token，中间 gap 必须为 0 */
 .glass-surface__body {
   position: relative;
   z-index: 1;
@@ -66,7 +66,7 @@ withDefaults(
   min-height: 0;
   display: flex;
   gap: 0;
-  border-radius: calc(var(--glass-layer-l1-radius) - var(--glass-layer-l1-pad));
+  border-radius: var(--glass-wb-stack-flush-radius);
   overflow: hidden;
   box-shadow: var(--glass-wb-body-shadow);
 }

@@ -8,11 +8,12 @@
  * expandedRowKeys·expandIcon·expand-change / tree·expandedTreeNodes·tree-expand-change /
  * dragSort·drag-sort（本地数组 reorder）。
  * 数据面：消费 GlassTable（--glass-wb-table-*）与 GlassDescriptions（--glass-wb-descriptions-*）；
- * Descriptions / Card / Bubble / Progress / Comment / Collapse / Badge 与
+ * Descriptions / Card / Bubble / Progress / Comment / Collapse / Badge / Avatar 与
  * Empty / List / Skeleton / Statistic 统一走
  * GlassSurface → GlassDetailPlate → GlassXxx 的真实宿主路径，组件本体仍保持透明底。
  */
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { UserIcon } from 'tdesign-icons-vue-next'
 import { Input } from 'tdesign-vue-next'
 
 import type {
@@ -40,6 +41,8 @@ import type {
 } from 'tdesign-vue-next'
 
 import {
+  GlassAvatar,
+  GlassAvatarGroup,
   GlassBadge,
   GlassButton,
   GlassBubble,
@@ -102,6 +105,44 @@ const demoBlocks: DocsDemoBlock[] = [
           { label: 'success', value: 'success' },
           { label: 'warning', value: 'warning' },
           { label: 'danger', value: 'danger' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'avatar-props',
+    label: 'Avatar',
+    description: 'GlassAvatar · shape / size / content',
+    props: [
+      {
+        key: 'shape',
+        label: 'shape',
+        type: 'select',
+        defaultValue: 'circle',
+        options: [
+          { label: 'circle', value: 'circle' },
+          { label: 'round', value: 'round' },
+        ],
+      },
+      {
+        key: 'size',
+        label: 'size',
+        type: 'select',
+        defaultValue: 'medium',
+        options: [
+          { label: 'small', value: 'small' },
+          { label: 'medium', value: 'medium' },
+          { label: 'large', value: 'large' },
+        ],
+      },
+      {
+        key: 'content',
+        label: 'content',
+        type: 'select',
+        defaultValue: 'character',
+        options: [
+          { label: 'image（图片）', value: 'image' },
+          { label: '字符', value: 'character' },
         ],
       },
     ],
@@ -176,6 +217,15 @@ const statisticDemo = computed(() => {
   }
 })
 
+const avatarDemo = computed(() => {
+  const v = docsProps.state.values['avatar-props'] ?? {}
+  return {
+    shape: (v.shape as 'circle' | 'round') ?? 'circle',
+    size: (v.size as 'small' | 'medium' | 'large') ?? 'medium',
+    content: (v.content as 'image' | 'character') ?? 'character',
+  }
+})
+
 const tableDemo = computed(() => {
   const v = docsProps.state.values['table-variant'] ?? {}
   return {
@@ -191,6 +241,31 @@ const countBadge = computed(() => {
     dot: Boolean(v.dot ?? false),
   }
 })
+
+type AvatarSourceKind = 'image' | 'character' | 'icon'
+
+type AvatarSource = {
+  kind: AvatarSourceKind
+  label: string
+  note: string
+}
+
+/** TDesign 官方示例头像资源；加载失败时仍回落到组件的冷蓝 error 面。 */
+const avatarImage = 'https://tdesign.gtimg.com/site/avatar.jpg'
+const avatarShapes = ['circle', 'round'] as const
+const avatarSizes = ['small', 'medium', 'large'] as const
+const avatarSources: AvatarSource[] = [
+  { kind: 'image', label: 'image', note: '图片面 · alt 演示头像' },
+  { kind: 'character', label: '字符', note: '默认槽 · 单个中文字符' },
+  { kind: 'icon', label: 'icon', note: '#icon · tdesign-icons UserIcon' },
+]
+const avatarGroupMembers = ['王', '陈', '刘', '赵', '孙', '周'] as const
+
+function avatarAriaLabel(kind: AvatarSourceKind): string {
+  if (kind === 'image') return '演示图片头像'
+  if (kind === 'icon') return '用户头像'
+  return '王'
+}
 
 const progressSamples = [0, 68, 100] as const
 
@@ -828,7 +903,7 @@ function replayStatisticAnimation() {
 <template>
   <LabPageShell
     title="实验室·数据展示"
-    desc="Data Display Living Showcase：Quiet Grid · Descriptions / Card / Bubble / Progress / Comment / Collapse / Badge · Empty / List / Skeleton / Statistic。Sample Matrix S1–S12 对照 TDesign Table 能力。"
+    desc="Data Display Living Showcase：Quiet Grid · Descriptions / Card / Bubble / Progress / Comment / Collapse / Badge / Avatar · Empty / List / Skeleton / Statistic。Sample Matrix S1–S12 对照 TDesign Table 能力。"
     :live="lastAction"
   >
     <!-- 0. Live Props Demo -->
@@ -836,7 +911,7 @@ function replayStatisticAnimation() {
       <div class="lab-section-label">
         <span class="lab-section-name">0. Live Props Demo</span>
         <span class="lab-section-meta">
-          点选下方演示区块后，右栏 Props 面板可改 tone / variant / shape / size / dot；画布控件即时反映。
+          点选下方演示区块后，右栏 Props 面板可改 tone / variant / shape / size / dot / content；画布控件即时反映。
         </span>
       </div>
       <div class="lab-controls">
@@ -858,6 +933,33 @@ function replayStatisticAnimation() {
                 unit="个"
                 :tone="statisticDemo.tone"
               />
+            </div>
+          </div>
+        </div>
+
+        <div class="lab-control-row">
+          <span class="lab-control-label">Avatar · shape / size / content</span>
+          <div class="lab-control-row-items">
+            <div
+              class="docs-demo-block"
+              :class="{ 'is-selected': isDemoSelected('avatar-props') }"
+              role="button"
+              tabindex="0"
+              @click="selectDemo('avatar-props')"
+              @keydown.enter="selectDemo('avatar-props')"
+              @keydown.space.prevent="selectDemo('avatar-props')"
+            >
+              <GlassAvatar
+                :shape="avatarDemo.shape"
+                :size="avatarDemo.size"
+                :image="avatarDemo.content === 'image' ? avatarImage : undefined"
+                alt="演示头像"
+              >
+                <template v-if="avatarDemo.content === 'character'">王</template>
+              </GlassAvatar>
+              <span class="lab-avatar-live-copy">
+                {{ avatarDemo.content === 'image' ? '图片内容' : '字符内容 · 王' }}
+              </span>
             </div>
           </div>
         </div>
@@ -1358,6 +1460,98 @@ function replayStatisticAnimation() {
       </div>
     </section>
 
+    <!-- Avatar · GlassAvatar / Group -->
+    <section class="lab-section">
+      <div class="lab-section-label">
+        <span class="lab-section-name">Avatar · GlassAvatar / Group</span>
+        <span class="lab-section-meta">
+          Compound Wrapper 盖 t-avatar；Data 数据展示归类对齐 TDesign ·
+          字面 / icon / 图片与折叠 +N 统一走 --glass-wb-avatar-fill 冷蓝语言
+        </span>
+      </div>
+      <GlassSurface class="lab-surface-host">
+        <div class="lab-plate-grid">
+          <GlassDetailPlate
+            v-for="(source, index) in avatarSources"
+            :key="source.kind"
+            :title="`Av${index + 1} · ${source.label} · circle / round × small / medium / large`"
+            class="lab-plate"
+          >
+            <div class="lab-avatar-matrix">
+              <p class="lab-avatar-source-note">{{ source.note }}</p>
+              <div
+                v-for="shape in avatarShapes"
+                :key="`${source.kind}-${shape}`"
+                class="lab-avatar-matrix-row"
+              >
+                <span class="lab-avatar-matrix-shape">{{ shape }}</span>
+                <div class="lab-avatar-matrix-cells">
+                  <div
+                    v-for="size in avatarSizes"
+                    :key="`${source.kind}-${shape}-${size}`"
+                    class="lab-avatar-matrix-cell"
+                  >
+                    <GlassAvatar
+                      :shape="shape"
+                      :size="size"
+                      :image="source.kind === 'image' ? avatarImage : undefined"
+                      :alt="source.kind === 'image' ? '演示头像' : undefined"
+                      :aria-label="avatarAriaLabel(source.kind)"
+                    >
+                      <template v-if="source.kind === 'icon'" #icon>
+                        <UserIcon />
+                      </template>
+                      <template v-if="source.kind === 'character'">王</template>
+                    </GlassAvatar>
+                    <span class="lab-avatar-matrix-size">{{ size }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </GlassDetailPlate>
+
+          <GlassDetailPlate
+            title="Av4 · Group Living · cascading / max / 默认 collapse +N"
+            class="lab-plate lab-avatar-group-plate"
+          >
+            <div class="lab-plate-stack">
+              <div class="lab-avatar-group-row">
+                <div class="lab-avatar-group-item">
+                  <span class="lab-avatar-group-caption">cascading=right-up · max=3</span>
+                  <GlassAvatarGroup cascading="right-up" :max="3" size="medium">
+                    <GlassAvatar
+                      v-for="member in avatarGroupMembers"
+                      :key="`right-${member}`"
+                      shape="circle"
+                    >
+                      {{ member }}
+                    </GlassAvatar>
+                  </GlassAvatarGroup>
+                </div>
+                <div class="lab-avatar-group-item">
+                  <span class="lab-avatar-group-caption">cascading=left-up · max=4</span>
+                  <GlassAvatarGroup cascading="left-up" :max="4" size="medium">
+                    <GlassAvatar
+                      v-for="member in avatarGroupMembers"
+                      :key="`left-${member}`"
+                      shape="circle"
+                    >
+                      {{ member }}
+                    </GlassAvatar>
+                  </GlassAvatarGroup>
+                </div>
+              </div>
+              <div class="lab-avatar-raw-row">
+                <span class="lab-avatar-group-caption">裸 t-avatar 对照（不进导出面）</span>
+                <t-avatar size="medium">王</t-avatar>
+                <GlassAvatar size="medium">王</GlassAvatar>
+              </div>
+            </div>
+          </GlassDetailPlate>
+        </div>
+      </GlassSurface>
+    </section>
+
     <!-- 单组件橱窗 · Card / Bubble / Progress -->
     <section class="lab-section">
       <div class="lab-section-label">
@@ -1519,7 +1713,7 @@ function replayStatisticAnimation() {
         </GlassComment>
       </div>
       <div class="lab-control-note">
-        验收：头像 40 / 圆角 12；作者名 primary、时间 muted；正文 secondary；引用槽用 GlassCard；
+        验收：头像 40 / circle（50%）/ 紫 Fan Tip（无白核）；作者名 primary、时间 muted；正文 secondary；引用槽用 GlassCard；
         actions 走 Quiet text 钮；reply 微透近白底、左缩进对齐头像。
       </div>
     </section>
@@ -1743,7 +1937,7 @@ function replayStatisticAnimation() {
                 </GlassListItem>
               </GlassList>
               <div class="lab-control-note">
-                头像 40 · 圆角 12 对齐 Comment · action 槽放 GlassButton（Quiet Ink，无底无边）
+                头像 40 · circle（50%）对齐 Comment · action 槽放 GlassButton（Quiet Ink，无底无边）
               </div>
             </div>
           </GlassDetailPlate>
@@ -2128,6 +2322,96 @@ function replayStatisticAnimation() {
     var(--glass-layer-l0-wash);
 }
 
+.lab-avatar-live-copy {
+  font-size: 12px;
+  color: var(--glass-text-secondary);
+  white-space: nowrap;
+}
+
+.lab-avatar-matrix {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lab-avatar-source-note {
+  margin: 0;
+  font-size: 12px;
+  color: var(--glass-text-muted);
+  line-height: 1.5;
+}
+
+.lab-avatar-matrix-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 78px;
+  padding: 8px 0;
+  border-top: 1px solid var(--glass-border-soft);
+}
+
+.lab-avatar-matrix-shape {
+  flex: 0 0 48px;
+  font-size: 11px;
+  color: var(--glass-text-muted);
+}
+
+.lab-avatar-matrix-cells {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px 18px;
+}
+
+.lab-avatar-matrix-cell {
+  display: flex;
+  min-width: 58px;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.lab-avatar-matrix-size {
+  font-size: 11px;
+  color: var(--glass-text-muted);
+}
+
+.lab-avatar-group-plate {
+  grid-column: 1 / -1;
+}
+
+.lab-avatar-group-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 32px;
+}
+
+.lab-avatar-group-item {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lab-avatar-group-caption {
+  font-size: 11px;
+  color: var(--glass-text-muted);
+}
+
+.lab-avatar-raw-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--glass-border-soft);
+}
+
+.lab-avatar-raw-row .lab-avatar-group-caption {
+  margin-right: 4px;
+}
+
 .lab-bubble-host {
   display: flex;
   flex-direction: column;
@@ -2170,6 +2454,7 @@ function replayStatisticAnimation() {
     var(--glass-layer-l0-wash);
 }
 
+/* Comment stub：circle + 紫系三停 Fan Tip；alternate 只切换同族紫 token。 */
 .lab-comment-avatar {
   display: inline-flex;
   align-items: center;
@@ -2185,7 +2470,7 @@ function replayStatisticAnimation() {
 }
 
 .lab-comment-avatar--alt {
-  background: var(--glass-cta-gradient);
+  background: var(--glass-wb-avatar-gradient-alt);
 }
 
 .lab-comment-copy {
@@ -2207,12 +2492,16 @@ function replayStatisticAnimation() {
     grid-template-columns: minmax(0, 1fr);
   }
 
+  .lab-avatar-group-plate {
+    grid-column: auto;
+  }
+
   .lab-data-showcase-grid {
     grid-template-columns: 1fr;
   }
 }
 
-/* List Meta image 槽：头像占位，渐变玻璃字标（贴 40 · 圆角 12 头像容器） */
+/* List Meta image 槽：头像占位，渐变玻璃字标（贴 40 · circle 50% 头像容器） */
 .lab-list-avatar {
   width: 100%;
   height: 100%;
@@ -2303,6 +2592,10 @@ function replayStatisticAnimation() {
 }
 
 @media (max-width: 720px) {
+  .lab-avatar-group-row {
+    grid-template-columns: 1fr;
+  }
+
   .lab-skeleton-anim-row {
     grid-template-columns: 1fr;
   }
