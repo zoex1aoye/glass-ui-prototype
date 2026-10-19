@@ -10,6 +10,9 @@ import { ChartIcon, FileIcon, SettingIcon, TaskIcon } from 'tdesign-icons-vue-ne
 
 import {
   GlassDetailPlate,
+  GlassList,
+  GlassListItem,
+  GlassListItemMeta,
   GlassPageHeader,
   GlassPanel,
   GlassPosterWash,
@@ -73,6 +76,23 @@ const demoBlocks: DocsDemoBlock[] = [
       },
     ],
   },
+  {
+    id: 'rail-tone',
+    label: 'Rail',
+    description: 'GlassRail · tone',
+    props: [
+      {
+        key: 'tone',
+        label: 'tone',
+        type: 'select',
+        defaultValue: 'ice',
+        options: [
+          { label: 'ice · 冰蓝（默认）', value: 'ice' },
+          { label: 'lilac · 淡紫 wash', value: 'lilac' },
+        ],
+      },
+    ],
+  },
 ]
 
 onMounted(() => {
@@ -111,6 +131,19 @@ const surfaceMaterial = computed<'raster' | 'frost'>(() => {
   const v = docsProps.state.values['surface-material'] ?? {}
   return v.material === 'frost' ? 'frost' : 'raster'
 })
+
+const railTone = computed<'ice' | 'lilac'>(() => {
+  const v = docsProps.state.values['rail-tone'] ?? {}
+  return v.tone === 'lilac' ? 'lilac' : 'ice'
+})
+
+/** Rail 内嵌 Quiet List 对照：1 行 active，验证「字深色 / 选中近白」 */
+const railListRows = [
+  { id: 'inbox', title: '收件箱', desc: '2 条待确认', active: false },
+  { id: 'today', title: '今日工作台', desc: '3 项进行中', active: true },
+  { id: 'reports', title: '周报归档', desc: '最近 8 月第 3 周', active: false },
+  { id: 'settings', title: '规则设置', desc: '助手与通知', active: false },
+] as const
 
 /** Material Stack 图例：对照 L0–L3 + 旧 z 档 */
 const stackLegend = [
@@ -171,6 +204,45 @@ const gapCards = [
                 <div class="lab-material-demo__body">
                   <span>{{ surfaceMaterial }}</span>
                 </div>
+              </GlassSurface>
+            </div>
+          </div>
+        </div>
+
+        <div class="lab-control-row">
+          <span class="lab-control-label">Rail · tone</span>
+          <div class="lab-control-row-items">
+            <div
+              class="docs-demo-block"
+              :class="{ 'is-selected': isDemoSelected('rail-tone') }"
+              role="button"
+              tabindex="0"
+              @click="selectDemo('rail-tone')"
+              @keydown.enter="selectDemo('rail-tone')"
+              @keydown.space.prevent="selectDemo('rail-tone')"
+            >
+              <GlassSurface class="lab-rail-tone-swatch" material="frost">
+                <GlassRail :tone="railTone" class="lab-rail-tone-swatch__rail">
+                  <div class="lab-rail-tone-swatch__head">
+                    <span class="lab-rail-tone-swatch__title">会话</span>
+                    <span class="lab-rail-tone-swatch__tone">{{ railTone }}</span>
+                  </div>
+                  <GlassList size="small" class="lab-rail-tone-swatch__list">
+                    <GlassListItem
+                      v-for="row in railListRows.slice(0, 3)"
+                      :key="`swatch-${row.id}`"
+                      :class="{ 'is-active': row.active }"
+                    >
+                      <GlassListItemMeta :title="row.title" :description="row.desc" />
+                    </GlassListItem>
+                  </GlassList>
+                </GlassRail>
+                <GlassStage class="lab-rail-tone-swatch__stage">
+                  <template #header>
+                    <div class="lab-rail-tone-swatch__stage-title">主舞台</div>
+                  </template>
+                  <p class="lab-rail-tone-swatch__stage-copy">Flush · gap=0</p>
+                </GlassStage>
               </GlassSurface>
             </div>
           </div>
@@ -446,6 +518,66 @@ const gapCards = [
           </GlassStage>
         </GlassSurface>
       </div>
+
+      <div class="lab-section-label">
+        <span class="lab-section-name">5b. Rail tone · Lilac + Quiet List</span>
+        <span class="lab-section-meta">
+          Live Props：Rail · tone（ice 默认 / lilac）· 轨内嵌 GlassList 4 行，1 行 is-active
+        </span>
+      </div>
+      <div class="lab-cat-strip">
+        <span class="lab-cat-name">Lilac Rail | Quiet List</span>
+        <span class="lab-cat-impl">GlassRail · tone=lilac + GlassList</span>
+        <code class="lab-cat-html">--glass-wb-rail-wash-lilac · .glass-list-item.is-active</code>
+        <span class="lab-cat-rule">
+          Do：紫只做 wash；字深色；active 近白微透（Quiet 圆角，无 tip）·
+          Don't：满浓紫板 / 选中反白 / 左侧紫 tip
+        </span>
+      </div>
+      <div
+        class="docs-demo-block lab-rail-tone-demo"
+        :class="{ 'is-selected': isDemoSelected('rail-tone') }"
+        role="button"
+        tabindex="0"
+        @click="selectDemo('rail-tone')"
+        @keydown.enter="selectDemo('rail-tone')"
+        @keydown.space.prevent="selectDemo('rail-tone')"
+      >
+        <GlassSurface class="lab-surface lab-rail-tone-surface">
+          <GlassRail :tone="railTone" class="lab-rail lab-rail--tone">
+            <div class="lab-rail-tone-head">
+              <span class="lab-rail-tone-name">Quiet Rail</span>
+              <span class="lab-rail-tone-pill">{{ railTone }}</span>
+            </div>
+            <GlassList size="small" class="lab-rail-quiet-list">
+              <GlassListItem
+                v-for="row in railListRows"
+                :key="row.id"
+                :class="{ 'is-active': row.active }"
+                :aria-current="row.active ? 'page' : undefined"
+              >
+                <GlassListItemMeta :title="row.title" :description="row.desc" />
+              </GlassListItem>
+            </GlassList>
+          </GlassRail>
+          <GlassStage>
+            <template #header>
+              <div class="lab-stage-title">Near-White Stage · {{ railTone }}</div>
+            </template>
+            <div class="lab-flush-note">
+              紫只做 wash；字深色；选中近白。Ice 默认仍走原
+              <code>--glass-wb-rail-wash</code> / <code>--glass-wb-rail-blur</code>；
+              lilac 只换低 alpha 紫 wash 与轨内列表 hover，active 用近白微透（无 tip），
+              不铺满浓紫板、不反白。
+            </div>
+          </GlassStage>
+        </GlassSurface>
+      </div>
+      <div class="lab-control-note">
+        验收：紫只做 wash；字深色；选中近白。ice 默认未回归；lilac 轨内 4 行 Quiet List
+        可读，1 行 active 近白微透（Quiet 圆角，无 tip）；悬停为淡紫洗。
+        点选本演示块后，右栏 Rail · tone 可切 ice / lilac。
+      </div>
     </section>
 
     <!-- 6. 对照 mock（非导出面） -->
@@ -591,6 +723,128 @@ const gapCards = [
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.02em;
+}
+
+/* Rail tone · Live Props mini：约 1:3 轨:舞台，字号再缩一档 */
+.lab-rail-tone-swatch {
+  width: 320px;
+  height: 148px;
+  min-height: 148px;
+}
+
+.lab-rail-tone-swatch__rail {
+  width: 88px; /* ≈ 260/940 工作区比例 */
+  flex: none;
+  padding: 8px 6px;
+  gap: 4px;
+  min-height: 0;
+}
+
+.lab-rail-tone-swatch__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2px;
+  padding: 0 2px 2px;
+  flex: none;
+}
+
+.lab-rail-tone-swatch__title {
+  font-size: 9px;
+  font-weight: 650;
+  color: var(--glass-text-primary);
+}
+
+.lab-rail-tone-swatch__tone {
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--glass-text-muted);
+}
+
+.lab-rail-tone-swatch__list {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.lab-rail-tone-swatch__list :deep(.glass-list-item-meta .t-list-item__meta-description) {
+  display: none;
+}
+
+.lab-rail-tone-swatch__list :deep(.glass-list-item-meta .t-list-item__meta-title) {
+  font-size: 9px;
+  line-height: 1.25;
+}
+
+.lab-rail-tone-swatch__list :deep(.glass-list-item.t-list-item) {
+  padding: 4px 6px;
+}
+
+.lab-rail-tone-swatch__stage {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+}
+
+.lab-rail-tone-swatch__stage-title {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--glass-text-primary);
+}
+
+.lab-rail-tone-swatch__stage-copy {
+  margin: 0;
+  font-size: 9px;
+  color: var(--glass-text-secondary);
+}
+
+/* Rail tone · lilac + Quiet List 对照 */
+.lab-rail-tone-demo {
+  width: 100%;
+  border-radius: var(--glass-wb-surface-radius);
+}
+
+.lab-rail-tone-surface {
+  flex: 1;
+  min-height: 280px;
+}
+
+.lab-rail--tone {
+  width: 238px;
+  padding: 14px 12px;
+  gap: 8px;
+}
+
+.lab-rail-tone-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 4px 4px;
+}
+
+.lab-rail-tone-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--glass-text-primary);
+}
+
+.lab-rail-tone-pill {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--glass-wb-pill-quiet-bg);
+  box-shadow: var(--glass-wb-pill-quiet-shadow);
+  color: var(--glass-text-secondary);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.lab-rail-quiet-list {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
 }
 
 .lab-solo-body {

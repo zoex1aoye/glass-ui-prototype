@@ -77,6 +77,20 @@
     radial-gradient(70% 36% at 28% 12%, rgba(79, 195, 255, 0.24), transparent 55%),
     rgba(198, 222, 250, 0.56);
   --glass-wb-rail-blur: blur(20px) saturate(1.18);
+  /* Rail lilac tone：AI 紫只做低 alpha wash，不铺满浓紫板；明度贴近冰蓝轨。
+     列表态在 lilac 轨内 remap：hover 淡紫洗、active 近白微透（无左侧紫 tip）；
+     字色沿用 primary / secondary，不反白。 */
+  --glass-wb-rail-wash-lilac:
+    radial-gradient(
+      70% 36% at 28% 12%,
+      color-mix(in srgb, var(--glass-chroma-ai) 18%, transparent),
+      transparent 55%
+    ),
+    color-mix(in srgb, var(--glass-chroma-ai) 14%, rgba(248, 246, 252, 0.72));
+  --glass-wb-rail-blur-lilac: blur(20px) saturate(1.12);
+  --glass-wb-rail-list-item-hover-bg: color-mix(in srgb, var(--glass-chroma-ai) 8%, rgba(255, 255, 255, 0.72));
+  /* Quiet List active：近白微透（走默认 list 圆角；无 tip） */
+  --glass-wb-rail-list-item-active-bg: rgba(252, 254, 255, 0.72);
 
   /* z3b Stage：z4 近白微透焦点面（html .chat）
      比 Surface 露边更亮更暖；抬升影交给整板，Stage 自身不得成第二张浮卡 */
@@ -4046,6 +4060,17 @@ body {
 
 .glass-list.t-list .t-list__inner .glass-list-item.t-list-item:hover {
   background: var(--glass-wb-list-item-hover-bg);
+}
+
+/* Rail 列表 active：近白微透；沿用 Quiet List 圆角与 padding，无 tip / 无贴边横条。 */
+.glass-rail .glass-list.t-list .t-list__inner .glass-list-item.t-list-item.is-active,
+.glass-rail .glass-list.t-list .t-list__inner .glass-list-item.t-list-item[data-active='true'] {
+  background: var(--glass-wb-rail-list-item-active-bg);
+}
+
+.glass-rail .glass-list.t-list .t-list__inner .glass-list-item.t-list-item.is-active:hover,
+.glass-rail .glass-list.t-list .t-list__inner .glass-list-item.t-list-item[data-active='true']:hover {
+  background: var(--glass-wb-rail-list-item-active-bg);
 }
 
 /* split：软分隔线（去 TD 灰），只画非末行 */
