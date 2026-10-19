@@ -81,7 +81,7 @@ function onBlur(_value: string, context: { e: FocusEvent }) {
     >
       <!-- MCP 推荐：搜索图标走 prefixIcon 插槽，不另起外层 icon wrap -->
       <template #prefixIcon>
-        <SearchIcon size="14" class="glass-search-capsule__icon" />
+        <SearchIcon size="14" class="glass-search-capsule__icon" aria-hidden="true" />
       </template>
     </t-input>
   </div>

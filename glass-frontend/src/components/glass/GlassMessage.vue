@@ -9,9 +9,13 @@
  *
  * 材质由 theme.css 全局 `.t-message` / `.t-is-*`（Track A）负责；本文件只做
  * 语义壳 + 结构薄兜底，不写魔法色。锚 class：`glass-message` + `--{theme}`。
+ * 根节点首帧携带 live region：非错误级 status/polite，错误级 alert/assertive。
  * 依赖 token：--glass-wb-message-{radius,blur,shadow,padding-y,padding-x,*-fill,*-icon}。
  */
+import { computed, onMounted } from 'vue'
 import type { MessageProps } from 'tdesign-vue-next'
+
+import { ensureFeedbackA11y, getFeedbackLiveRegionAttrs } from './feedbackA11y'
 
 type GlassMessageTheme = MessageProps['theme']
 
@@ -24,7 +28,7 @@ type MessageCloseBtnContext = {
   e: MouseEvent
 }
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     theme?: GlassMessageTheme
     content?: MessageProps['content']
@@ -41,6 +45,8 @@ withDefaults(
     duration: undefined,
   },
 )
+
+const liveRegionAttrs = computed(() => getFeedbackLiveRegionAttrs(props.theme))
 
 const emit = defineEmits<{
   close: [context: MessageCloseContext]
@@ -61,10 +67,15 @@ function handleCloseBtnClick(context: MessageCloseBtnContext) {
 function handleDurationEnd() {
   emit('duration-end')
 }
+
+onMounted(() => {
+  ensureFeedbackA11y()
+})
 </script>
 
 <template>
   <t-message
+    v-bind="liveRegionAttrs"
     class="glass-message"
     :class="`glass-message--${theme}`"
     :theme="theme"

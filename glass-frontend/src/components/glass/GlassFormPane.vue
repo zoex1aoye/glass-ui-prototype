@@ -24,9 +24,16 @@
  * 面板 / 遮罩由 t-dialog teleport 至 body，故材质写在非 scoped 样式，
  * 以 .glass-form-pane 为锚，避免污染全局。
  */
-import { computed, useSlots } from 'vue'
+import { computed, nextTick, onBeforeUnmount, useId, useSlots, watch } from 'vue'
 
 import type { TdDialogProps } from 'tdesign-vue-next'
+
+import {
+  bindOverlayA11y,
+  captureOverlayTrigger,
+  restoreOverlayTrigger,
+  type OverlayA11yBinding,
+} from './overlayA11y'
 
 type DialogWidth = TdDialogProps['width']
 
@@ -63,6 +70,9 @@ const emit = defineEmits<{
 
 const slots = useSlots()
 
+const overlayId = useId().replace(/[^a-zA-Z0-9_-]/g, '')
+const a11yClassName = `glass-overlay-${overlayId}`
+
 /** 有无 header：slot 优先，其次 title/subtitle */
 const hasHeader = computed(() => Boolean(slots.header || props.title || props.subtitle))
 
@@ -70,8 +80,80 @@ const hasHeader = computed(() => Boolean(slots.header || props.title || props.su
 const hasFooterSlot = computed(() => Boolean(slots.footer))
 
 const resolvedClass = computed(() =>
-  ['glass-form-pane', props.dialogClassName].filter(Boolean).join(' '),
+  ['glass-form-pane', a11yClassName, props.dialogClassName].filter(Boolean).join(' '),
 )
+
+let overlayTrigger: HTMLElement | null = null
+let overlayBinding: OverlayA11yBinding | null = null
+let overlayOpen = false
+let overlaySyncToken = 0
+
+async function syncOverlayA11y(visible: boolean) {
+  const token = ++overlaySyncToken
+
+  if (visible) {
+    await nextTick()
+    if (token !== overlaySyncToken || !props.visible) return
+
+    const panel = document.querySelector<HTMLElement>(`.${a11yClassName}`)
+    if (!panel) return
+
+    overlayBinding?.destroy()
+    overlayBinding = bindOverlayA11y({
+      panel,
+      idSeed: a11yClassName,
+      titleSelectors: [
+        '.glass-form-pane__title',
+        '.t-dialog__header-content h5',
+        '.t-dialog__header h5',
+        '.t-dialog__header-content',
+      ],
+      descriptionSelectors: ['.glass-form-pane__subtitle'],
+      initialFocusSelectors: [
+        '[data-glass-overlay-autofocus]',
+        '.t-dialog__body input:not([disabled]):not([type="hidden"]), .t-dialog__body textarea:not([disabled]), .t-dialog__body select:not([disabled]), .t-dialog__body [contenteditable="true"]',
+        '.t-dialog__body a[href], .t-dialog__body button:not([disabled])',
+        '.t-dialog__footer button:not([disabled])',
+        '.t-dialog__close',
+      ],
+    })
+    overlayBinding.focusInitial()
+    return
+  }
+
+  overlayBinding?.destroy()
+  overlayBinding = null
+
+  await nextTick()
+  if (token !== overlaySyncToken) return
+  restoreOverlayTrigger(overlayTrigger)
+  overlayTrigger = null
+}
+
+watch(
+  () => props.visible,
+  (visible) => {
+    if (visible) {
+      if (!overlayOpen) overlayTrigger = captureOverlayTrigger()
+      overlayOpen = true
+    } else {
+      overlayOpen = false
+    }
+    void syncOverlayA11y(visible)
+  },
+  { immediate: true, flush: 'sync' },
+)
+
+function onDialogOpened() {
+  if (props.visible) overlayBinding?.ensureFocusInside()
+}
+
+onBeforeUnmount(() => {
+  overlayBinding?.destroy()
+  overlayBinding = null
+  restoreOverlayTrigger(overlayTrigger)
+  overlayTrigger = null
+})
 
 function onUpdateVisible(visible: boolean) {
   emit('update:visible', visible)
@@ -93,6 +175,7 @@ function onUpdateVisible(visible: boolean) {
     @update:visible="onUpdateVisible"
     @close="emit('close', $event)"
     @overlay-click="emit('overlayClick', $event)"
+    @opened="onDialogOpened"
   >
     <template v-if="$slots.header" #header><slot name="header" /></template>
     <template v-else-if="title || subtitle" #header>
@@ -139,6 +222,16 @@ function onUpdateVisible(visible: boolean) {
 
 .glass-form-pane .t-dialog__footer {
   padding-top: var(--glass-wb-dialog-footer-padding-top);
+}
+
+.glass-form-pane .t-dialog__close[data-glass-overlay-close] {
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.glass-form-pane .t-dialog__close[data-glass-overlay-close]:focus-visible {
+  outline: none;
+  box-shadow: var(--glass-wb-control-focus-ring);
 }
 
 /* 可选 subtitle：弱于 title，走 muted；header 槽自定义时不参与 */

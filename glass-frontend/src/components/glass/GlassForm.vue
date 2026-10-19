@@ -7,12 +7,14 @@
  * - Quiet Field Chrome：裸 t-input / t-select / t-textarea 同 Input Quiet Chrome 裁定 C——
  *   rest hairline · hover Fade · focus ring only · Kill Inner Rect；禁止亮实线脏箍
  * - Validation Whisper：error / warning / success 文案 tip 轻提示（12px 柔色），不砸布局
+ * - Form a11y：可见 label 自动关联控件；错误写 aria-describedby / aria-invalid；
+ *   提交失败落焦首个无效字段（scrollToFirstError 默认 smooth）
  * - Label Rhythm：top 标签在上留 6–8px 下距；left/right 与控件垂直居中、取消下 padding
  * - Choice Quiet：Checkbox / Radio / Switch 字色 secondary、选中统一 Action Blue、禁用降透
  *
  * 内嵌 GlassInput 时自带外壳，Field Chrome 不对内芯二次描边（禁双环）。
  */
-import { ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, useId } from 'vue'
 
 import type {
   FormInstanceFunctions,
@@ -22,6 +24,8 @@ import type {
   SubmitContext,
   ValidateResultContext,
 } from 'tdesign-vue-next'
+
+import { bindFormA11y, type FormA11yBinding } from './formA11y'
 
 type FormData = NonNullable<FormProps['data']>
 
@@ -41,6 +45,8 @@ const props = withDefaults(
     /** 整表只读（TDesign Form API 透传） */
     readonly?: boolean
     resetType?: FormProps['resetType']
+    /** 多错时滚动到首个错误；默认 smooth，reduced-motion 由 focus helper 处理 */
+    scrollToFirstError?: FormProps['scrollToFirstError']
   }>(),
   {
     data: undefined,
@@ -54,6 +60,7 @@ const props = withDefaults(
     disabled: false,
     readonly: undefined,
     resetType: undefined,
+    scrollToFirstError: 'smooth',
   },
 )
 
@@ -64,6 +71,35 @@ const emit = defineEmits<{
 }>()
 
 const formRef = ref<FormInstanceFunctions>()
+const rootRef = ref<HTMLElement | null>(null)
+const a11yId = useId().replace(/[^a-zA-Z0-9_-]/g, '')
+
+let formA11y: FormA11yBinding | null = null
+
+const resolvedScrollToFirstError = computed<FormProps['scrollToFirstError']>(() => {
+  if (props.scrollToFirstError !== 'smooth') return props.scrollToFirstError
+  if (
+    typeof window !== 'undefined' &&
+    window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+  ) {
+    return 'auto'
+  }
+  return 'smooth'
+})
+
+onMounted(async () => {
+  await nextTick()
+  if (rootRef.value) {
+    formA11y = bindFormA11y(rootRef.value, {
+      idPrefix: `glass-form-${a11yId}`,
+    })
+  }
+})
+
+onBeforeUnmount(() => {
+  formA11y?.destroy()
+  formA11y = null
+})
 
 function validate(...args: Parameters<FormInstanceFunctions['validate']>) {
   return formRef.value?.validate(...args)
@@ -90,6 +126,21 @@ function setValidateMessage(message: FormValidateMessage<FormData>) {
   formRef.value?.setValidateMessage(message)
 }
 
+/** 供调用方在校验失败后主动落焦首个无效字段 */
+async function focusFirstError() {
+  await nextTick()
+  formA11y?.sync()
+  return formA11y?.focusFirstError() ?? false
+}
+
+/** TDesign 的 @submit 在异步校验完成后触发；失败时补首错聚焦 */
+async function onSubmit(context: SubmitContext<FormData>) {
+  if (context.validateResult !== true) {
+    await focusFirstError()
+  }
+  emit('submit', context)
+}
+
 defineExpose({
   validate,
   validateOnly,
@@ -97,11 +148,12 @@ defineExpose({
   reset,
   clearValidate,
   setValidateMessage,
+  focusFirstError,
 })
 </script>
 
 <template>
-  <div class="glass-form">
+  <div ref="rootRef" class="glass-form">
     <t-form
       ref="formRef"
       class="glass-form__form"
@@ -116,8 +168,9 @@ defineExpose({
       :disabled="disabled"
       :readonly="readonly"
       :reset-type="resetType"
+      :scroll-to-first-error="resolvedScrollToFirstError"
       layout="vertical"
-      @submit="emit('submit', $event)"
+      @submit="onSubmit"
       @reset="emit('reset', $event)"
       @validate="emit('validate', $event)"
     >

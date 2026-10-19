@@ -21,9 +21,11 @@
  * size、disabled、addable、dragSort、scrollPosition、action；slot：default、action。
  * 事件：change / add / remove / drag-sort（与 TD 同名）。
  */
-import { computed, useAttrs } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, useAttrs } from 'vue'
 
 import type { TabValue, TabsDragSortContext, TdTabsProps } from 'tdesign-vue-next'
+
+import { bindTabsA11y, type NavA11yBinding } from './navA11y'
 
 defineOptions({ inheritAttrs: false })
 
@@ -70,6 +72,18 @@ const emit = defineEmits<{
 }>()
 
 const attrs = useAttrs()
+const rootRef = ref<HTMLElement | null>(null)
+let navA11y: NavA11yBinding | null = null
+
+onMounted(async () => {
+  await nextTick()
+  if (rootRef.value) navA11y = bindTabsA11y(rootRef.value)
+})
+
+onBeforeUnmount(() => {
+  navA11y?.destroy()
+  navA11y = null
+})
 
 /** line / soft / capsule 共用 TD normal；card 才走 TD card theme（视觉仍由 theme.css 接管） */
 const tdTheme = computed<TdTabsProps['theme']>(() =>
@@ -141,6 +155,7 @@ function onDragSort(context: TabsDragSortContext) {
 
 <template>
   <div
+    ref="rootRef"
     class="glass-tabs"
     :class="[variantClass, shellClass]"
     :style="shellStyle"

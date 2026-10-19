@@ -291,6 +291,7 @@ function onCalendarMonthChange(
                 :clearable="fieldInput.clearable"
                 :disabled="fieldInput.disabled"
                 placeholder="Field 38 / radius 12"
+                aria-label="字段示例"
                 class="lab-input"
               />
             </div>
@@ -396,10 +397,10 @@ function onCalendarMonthChange(
         <div class="lab-control-row">
           <span class="lab-control-label">State · default / hover / focus / disabled</span>
           <div class="lab-control-row-items">
-            <GlassInput v-model="fieldText" placeholder="default" class="lab-input" />
-            <GlassInput v-model="fieldText" placeholder="hover 我" class="lab-input" />
-            <GlassInput v-model="fieldText" placeholder="focus 我（Tab）" class="lab-input" />
-            <GlassInput v-model="fieldText" placeholder="disabled" disabled class="lab-input" />
+            <GlassInput v-model="fieldText" placeholder="default" aria-label="默认输入" class="lab-input" />
+            <GlassInput v-model="fieldText" placeholder="hover 我" aria-label="悬停示例输入" class="lab-input" />
+            <GlassInput v-model="fieldText" placeholder="focus 我（Tab）" aria-label="聚焦示例输入" class="lab-input" />
+            <GlassInput v-model="fieldText" placeholder="disabled" aria-label="禁用示例输入" disabled class="lab-input" />
           </div>
           <span class="lab-control-note">
             Input Quiet Chrome：rest = inset hairline · hover = hairline Fade（停止
@@ -410,8 +411,8 @@ function onCalendarMonthChange(
         <div class="lab-control-row">
           <span class="lab-control-label">search 变体（仍 Field 圆角，非 Pill）</span>
           <div class="lab-control-row-items">
-            <GlassInput v-model="fieldText" search placeholder="搜索" class="lab-input" />
-            <GlassInput v-model="fieldText" search clearable placeholder="搜索 clearable" class="lab-input" />
+            <GlassInput v-model="fieldText" search placeholder="搜索" aria-label="搜索" class="lab-input" />
+            <GlassInput v-model="fieldText" search clearable placeholder="搜索 clearable" aria-label="搜索（可清空）" class="lab-input" />
           </div>
         </div>
       </div>
@@ -431,7 +432,12 @@ function onCalendarMonthChange(
           <span class="lab-control-label">裸 t-input vs GlassInput（同 placeholder 看 focus）</span>
           <div class="lab-control-row-items">
             <t-input v-model="bareText" placeholder="裸 t-input（矩形 focus）" class="lab-input" />
-            <GlassInput v-model="bareText" placeholder="Glass（柔环 + 无内芯框）" class="lab-input" />
+            <GlassInput
+              v-model="bareText"
+              placeholder="Glass（柔环 + 无内芯框）"
+              aria-label="Glass 输入对照"
+              class="lab-input"
+            />
             <t-input
               v-model="bareText"
               placeholder="裸 t-input borderless"

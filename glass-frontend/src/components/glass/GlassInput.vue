@@ -5,7 +5,7 @@
  * MCP：搜索图标优先走 t-input `prefixIcon` 插槽，避免外层再叠一层 icon wrap。
  * 外壳材质保留（磨砂底 / blur），由本 wrapper 承担，与 t-input 的 borderless 内芯分离。
  */
-import { computed } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { SearchIcon } from 'tdesign-icons-vue-next'
 
 const props = withDefaults(
@@ -17,6 +17,12 @@ const props = withDefaults(
     clearable?: boolean
     /** 显式传入才绑 t-input；undefined 时留给 Form 级 disabled 透传 */
     disabled?: boolean
+    /** 原生 input 的 id；用于外部 label 的 for 关联 */
+    id?: string
+    /** 独立使用时显式提供可访问名；不再回退到 placeholder */
+    ariaLabel?: string
+    /** 引用页面上另一段可见文案作为可访问名 */
+    ariaLabelledby?: string
   }>(),
   {
     modelValue: '',
@@ -24,6 +30,9 @@ const props = withDefaults(
     search: false,
     clearable: undefined,
     disabled: undefined,
+    id: undefined,
+    ariaLabel: undefined,
+    ariaLabelledby: undefined,
   },
 )
 
@@ -37,6 +46,31 @@ const innerValue = computed({
   set: (v: string) => emit('update:modelValue', v),
 })
 
+const rootRef = ref<HTMLElement | null>(null)
+
+/**
+ * TDesign 1.20.10 没有把 aria-label / aria-labelledby / id 透传到内芯 input；
+ * 直接写在 t-input 上只会落到外层 div。这里只同步调用方显式提供的可访问名，
+ * 不生成 placeholder 名称，也不覆盖 GlassForm 自动写入的关联。
+ */
+function syncNativeInputA11y() {
+  const input = rootRef.value?.querySelector<HTMLInputElement>('input')
+  if (!input) return
+
+  if (props.id) input.id = props.id
+  if (props.ariaLabel) input.setAttribute('aria-label', props.ariaLabel)
+  if (props.ariaLabelledby) input.setAttribute('aria-labelledby', props.ariaLabelledby)
+}
+
+onMounted(syncNativeInputA11y)
+
+watch(
+  () => [props.id, props.ariaLabel, props.ariaLabelledby],
+  () => {
+    void nextTick(syncNativeInputA11y)
+  },
+)
+
 /** 可选 props 仅显式传入时绑 t-input，避免 default false 挡住 Form 级 disabled */
 const inputOptionalBind = computed(() => {
   const bind: Record<string, boolean> = {}
@@ -48,6 +82,7 @@ const inputOptionalBind = computed(() => {
 
 <template>
   <div
+    ref="rootRef"
     class="glass-input"
     :class="{ 'glass-input--search': search, 'is-disabled': disabled }"
   >
@@ -57,13 +92,12 @@ const inputOptionalBind = computed(() => {
       class="glass-input__control"
       :type="search ? 'search' : 'text'"
       :placeholder="placeholder"
-      :aria-label="placeholder"
       borderless
       @enter="emit('enter', innerValue)"
     >
       <!-- MCP 推荐：搜索图标走 prefixIcon 插槽，不另起外层 icon wrap -->
       <template v-if="search" #prefixIcon>
-        <SearchIcon size="14" class="glass-input__icon" />
+        <SearchIcon size="14" class="glass-input__icon" aria-hidden="true" />
       </template>
     </t-input>
   </div>

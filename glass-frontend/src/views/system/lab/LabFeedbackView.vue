@@ -253,6 +253,10 @@ onBeforeUnmount(() => {
           Status Soft Plate · Fan Tip · Light Frost · Whisper Lift · Glass Host Demo（无左侧色带）
         </span>
       </div>
+      <p class="lab-control-note">
+        键盘验收（I3）：Tab 聚焦 Alert 的关闭 / 展开控件，或常驻 Message / Notice 的关闭控件，
+        Enter / Space 触发；关闭控件可聚焦，但 Toast 不会自动抢焦点。
+      </p>
       <GlassPosterWash class="lab-alert-host" fit="cover">
         <div class="lab-alert-stack">
           <div class="lab-alert-group">

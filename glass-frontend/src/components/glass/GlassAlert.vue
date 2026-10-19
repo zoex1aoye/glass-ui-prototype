@@ -6,6 +6,10 @@
  * · Whisper Lift（单层柔影）。语义靠 icon + Fan Tip，无左侧色带。边界 = 材质差 + 影。
  * 色值只走 theme token；禁止 Surface 级 blur36 / Ambient+Key 双影 / air / petals。
  */
+import { onMounted } from 'vue'
+
+import { ensureFeedbackA11y } from './feedbackA11y'
+
 type GlassAlertTheme = 'success' | 'info' | 'warning' | 'error'
 
 withDefaults(
@@ -30,6 +34,10 @@ const emit = defineEmits<{
   close: [context: { e: MouseEvent }]
   closed: [context: { e: TransitionEvent }]
 }>()
+
+onMounted(() => {
+  ensureFeedbackA11y()
+})
 </script>
 
 <template>
@@ -150,6 +158,11 @@ const emit = defineEmits<{
   background: var(--glass-wb-text-cta-active-bg);
   color: var(--glass-wb-text-cta-active-color);
   transform: scale(var(--glass-wb-control-active-scale));
+}
+
+.glass-alert :deep(.t-alert__collapse:focus-visible) {
+  outline: none;
+  box-shadow: var(--glass-wb-control-focus-ring);
 }
 
 /* Dismissible Quiet：Hover Whisper / Active Press / Focus Ring */

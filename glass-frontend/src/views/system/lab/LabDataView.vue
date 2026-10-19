@@ -6,7 +6,7 @@
  * sort-change·filter-change·change / fixed·maxHeight / editableCellState·row-edit /
  * columnController·displayColumns·column-change·display-columns-change /
  * expandedRowKeys·expandIcon·expand-change / tree·expandedTreeNodes·tree-expand-change /
- * dragSort·drag-sort（本地数组 reorder）。
+ * dragSort·drag-sort / rowMove·row-move（本地数组 reorder）。
  * 数据面：消费 GlassTable（--glass-wb-table-*）与 GlassDescriptions（--glass-wb-descriptions-*）；
  * Descriptions / Card / Bubble / Progress / Comment / Collapse / Badge / Avatar 与
  * Empty / List / Skeleton / Statistic 统一走
@@ -64,6 +64,7 @@ import {
   GlassSurface,
   GlassTable,
 } from '@/components/glass'
+import type { GlassTableRowMoveContext } from '@/components/glass'
 
 import { useDocsProps } from '@/layouts/useDocsProps'
 import type { DocsDemoBlock } from '@/layouts/useDocsProps'
@@ -839,16 +840,27 @@ const treeColumns: PrimaryTableCol[] = [
   { colKey: 'updatedAt', title: '更新时间', width: 120 },
 ]
 
-/* ---------- S12 · 拖拽排序 · dragSort / drag-sort ----------
- * 整行拖拽由 t-table 的 Sortable 接管；Lab 只消费 DragSortContext.newData
- * 回写本地数组，不维护第二套排序状态。 */
+/* ---------- S12 · 排序替代路径 · dragSort / row-move ----------
+ * 整行拖拽由 t-table 的 Sortable 接管；rowMove 追加行首上移 / 下移按钮，
+ * 键盘可完成同一重排。两条路径都只消费 newData 回写本地数组，
+ * 不维护第二套排序状态。 */
 const dragRows = ref<SessionRow[]>(
   sessionRows.slice(0, 6).map((row) => ({ ...row })),
 )
 
+function getDragRowLabel(row: TableRowData) {
+  return String(row.title ?? '')
+}
+
 function onDragSort(context: DragSortContext<TableRowData>) {
   dragRows.value = context.newData as SessionRow[]
   lastAction.value = `drag-sort → 「${String(context.current.title ?? '')}」移至第 ${context.targetIndex + 1} 行`
+}
+
+function onRowMove(context: GlassTableRowMoveContext<TableRowData>) {
+  dragRows.value = context.newData as SessionRow[]
+  const action = context.direction === 'up' ? '上移' : '下移'
+  lastAction.value = `row-move → 「${String(context.row.title ?? '')}」${action}至第 ${context.targetIndex + 1} 行`
 }
 
 function onTreeExpandedNodesChange(
@@ -1380,28 +1392,31 @@ function replayStatisticAnimation() {
       </div>
     </section>
 
-    <!-- S12 · 拖拽排序 · dragSort / drag-sort -->
+    <!-- S12 · 拖拽排序 · dragSort / drag-sort + rowMove / row-move -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">S12 · 拖拽排序 · dragSort / drag-sort</span>
+        <span class="lab-section-name">S12 · 拖拽排序 · dragSort / row-move</span>
         <span class="lab-section-meta">
           TDesign：dragSort="row" / drag-sort（DragSortContext.newData）·
           玻璃：整行拖拽沿用 Quiet Grid，chosen 轻提、ghost 轻留白，禁重阴影 ·
-          松开后由 Lab 回写本地数组
+          行首 ↑ / ↓ 按钮提供键盘等价路径，两条路径共用同一份本地数组
         </span>
       </div>
       <div class="lab-table-panel">
-        <div class="lab-table-title">拖拽排序（拖动任意行调整顺序）</div>
+        <div class="lab-table-title">拖拽排序（拖动任意行，或使用行首上移 / 下移按钮）</div>
         <GlassTable
           :data="dragRows"
           :columns="baseColumns"
           row-key="id"
           drag-sort="row"
+          row-move
+          :move-row-label="getDragRowLabel"
           @drag-sort="onDragSort"
+          @row-move="onRowMove"
         />
         <div class="lab-control-note">
           当前顺序 → {{ dragRows.map((row) => row.title).join(' → ') }} ·
-          drag-sort 的 newData 已回写本地数组
+          drag-sort / row-move 的 newData 已回写本地数组
         </div>
       </div>
     </section>
@@ -1844,7 +1859,8 @@ function replayStatisticAnimation() {
           TDesign：t-empty（type / title / description / image / size / action）·
           玻璃：Quiet 空态（透明底、无蓝染满铺、muted 描述）· action 槽用 GlassButton ·
           empty/network-error/maintenance 走 muted 灰图，success/fail 走语义色，非脏蓝满铺 ·
-          容器：<code>GlassSurface → GlassDetailPlate → GlassEmpty</code>（E1–E7 各一块）
+          容器：<code>GlassSurface → GlassDetailPlate → GlassEmpty</code>（E1–E7 各一块）·
+          E1–E5 为类型矩阵（无 action），业务空态须带下一步（见 E6 / E7）
         </span>
       </div>
 

@@ -247,8 +247,8 @@ function onStepsChange(variant: string, current: string | number) {
       <div class="lab-section-label">
         <span class="lab-section-name">2. Interaction</span>
         <span class="lab-section-meta">
-          Hover Whisper（未选中冷洗）· Tab / 键盘 Focus Ring · disabled 面板不可切换 ·
-          reduced-motion 下无缩放
+          Hover Whisper（未选中冷洗）· Tabs：Tab 进入 tablist，←/→ 移动焦点（left 放置用 ↑/↓），
+          Home/End 跳首尾，Enter/Space 激活 · disabled 面板不可切换 · reduced-motion 下无缩放
         </span>
       </div>
       <div class="lab-controls">
@@ -260,7 +260,8 @@ function onStepsChange(variant: string, current: string | number) {
             <GlassTabPanel value="settings" label="设置">设置面板内容</GlassTabPanel>
           </GlassTabs>
           <span class="lab-control-note">
-            悬停「明细」无抬升；Tab 聚焦可见 ring；当前值：{{ disabledValue }}
+            悬停「明细」无抬升；Tab 聚焦可见 ring；当前值：{{ disabledValue }}；
+            方向键移动焦点，Enter / Space 激活选中
           </span>
         </div>
       </div>
@@ -308,7 +309,8 @@ function onStepsChange(variant: string, current: string | number) {
         <span class="lab-section-name">5. GlassSteps Variants</span>
         <span class="lab-section-meta">
           default（默认）· dot；底层 t-steps · 视觉仅 class 钩子 + theme.css ·
-          可点步（非 readonly）· current / modelValue 透传
+          可点步（非 readonly）Tab 可达，Enter / Space 切换；当前步 aria-current="step" ·
+          current / modelValue 透传
         </span>
       </div>
       <div class="lab-controls">
@@ -364,7 +366,7 @@ function onStepsChange(variant: string, current: string | number) {
             <GlassStepItem title="校验失败" content="需修复" status="error" />
             <GlassStepItem title="待开始" content="未启动" />
           </GlassSteps>
-          <span class="lab-control-note">当前步：{{ stepsStatus }}</span>
+          <span class="lab-control-note">当前步：{{ stepsStatus }} · aria-current="step"</span>
         </div>
 
         <div class="lab-control-row">

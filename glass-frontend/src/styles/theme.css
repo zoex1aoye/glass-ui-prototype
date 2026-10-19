@@ -18,7 +18,8 @@
   /* 文字 */
   --glass-text-primary: #1a2332;
   --glass-text-secondary: #4a5568;
-  --glass-text-muted: #94a3b8;
+  --glass-text-muted: #58697d; /* 正文第三档：白底 / 页底 / Lab frame ≥4.5:1 */
+  --glass-text-disabled: #94a3b8; /* 仅 disabled 语义；不承担正文对比度 */
   --glass-text-submenu: #5a6a7e;
 
   /* 边框 / 分割 */
@@ -82,7 +83,7 @@
   --glass-wb-tag-bg: #7b6cf0;
   --glass-wb-tag-shadow: 0 3px 8px rgba(123, 108, 240, 0.28);
   --glass-wb-online-bg: #e7f8ef;
-  --glass-wb-online-text: #18b458; /* 酷安绿品牌锚（favicon 采样），与 success 同源 */
+  --glass-wb-online-text: #0e783b; /* 酷安绿文字 / 图标深档；#18B458 仅保留在装饰性透明尾染 */
   /* Badge（GlassBadge）：count = 满浓双蓝小物件；status 复用 --glass-wb-online-* 酷安绿 */
   --glass-wb-badge-bg: var(--glass-wb-btn-blue);
   --glass-wb-badge-text: var(--glass-wb-white);
@@ -110,7 +111,7 @@
   /* Primary pill：满浓品牌蓝小物件，阴影略强于 Rail 块级按钮 */
   --glass-wb-pill-pri-shadow: 0 10px 24px rgba(0, 82, 204, 0.24);
   --glass-wb-toolbar-gap: 10px;
-  /* send 不可用：浅冷底保留「未就绪」语义；icon/spinner 走品牌蓝（勿中性脏灰 #94a3b8） */
+  /* send 不可用：浅冷底保留「未就绪」语义；icon/spinner 走品牌蓝（勿降成 disabled 中性灰） */
   --glass-wb-send-bg: #e8edf5;
   --glass-wb-send-text: var(--glass-wb-btn-blue);
   --glass-wb-main-max: 640px;
@@ -289,7 +290,7 @@
   --glass-wb-tabs-item-radius: 8px;
   --glass-wb-tabs-item-hover-bg: var(--glass-wb-text-cta-hover-bg);
   --glass-wb-tabs-item-active-bg: transparent;
-  --glass-wb-tabs-item-disabled-color: var(--glass-text-muted);
+  --glass-wb-tabs-item-disabled-color: var(--glass-text-disabled);
   --glass-wb-tabs-item-transition:
     background-color 0.15s ease,
     color 0.15s ease,
@@ -362,7 +363,7 @@
   --glass-wb-radio-segment-item-active-bg: var(--glass-wb-btn-blue);
   --glass-wb-radio-segment-item-active-color: var(--glass-wb-white);
   --glass-wb-radio-segment-item-active-shadow: 0 3px 8px rgba(47, 107, 246, 0.28);
-  --glass-wb-radio-segment-item-disabled-color: var(--glass-text-muted);
+  --glass-wb-radio-segment-item-disabled-color: var(--glass-text-disabled);
   --glass-wb-radio-segment-item-outline-bg: rgba(47, 107, 246, 0.1); /* 克制冷 wash，非满铺实心 */
   --glass-wb-radio-segment-item-outline-border-color: var(--glass-wb-btn-blue);
   --glass-wb-radio-segment-item-outline-color: var(--glass-wb-btn-blue);
@@ -442,7 +443,7 @@
   --glass-wb-collapse-icon-hover-bg: var(--glass-wb-text-cta-hover-bg);
   --glass-wb-collapse-icon-size: 22px;
   --glass-wb-collapse-icon-radius: 6px;
-  --glass-wb-collapse-disabled-color: var(--glass-text-muted);
+  --glass-wb-collapse-disabled-color: var(--glass-text-disabled);
   --glass-wb-collapse-transition:
     background-color 0.15s ease,
     color 0.15s ease,
@@ -485,7 +486,7 @@
   --glass-wb-picker-cell-active-hairline: none; /* 实心格不再叠 tonal hairline */
   --glass-wb-picker-range-band-bg: rgba(47, 107, 246, 0.12); /* Range 中间带：克制冷 wash，禁止满铺实心蓝 */
   --glass-wb-picker-cell-today-ring: inset 0 0 0 1px rgba(47, 107, 246, 0.22);
-  --glass-wb-picker-cell-disabled-color: var(--glass-text-muted);
+  --glass-wb-picker-cell-disabled-color: var(--glass-text-disabled);
   --glass-wb-picker-time-item-height: 28px;
   --glass-wb-picker-time-item-gap: 2px;
   --glass-wb-picker-time-row-height: 32px;
@@ -556,11 +557,11 @@
   --glass-wb-field-radius: 12px;
   /* Capsule Field / Pill Search 几何；Focus Ring Follows Radius 贴此圆角 */
   --glass-wb-capsule-radius: 999px;
-  --glass-wb-field-focus-ring: 0 0 0 2px rgba(47, 107, 246, 0.22);
-  --glass-wb-form-error: #d94a4a;
+  --glass-wb-field-focus-ring: 0 0 0 2px rgba(29, 78, 216, 0.68); /* 合成后对白 / 页底 ≥3:1 */
+  --glass-wb-form-error: #bd3628;
   --glass-wb-form-warning: #9e6400; /* 与 warning 按钮同源（中石油宝石花辅色 Contrast-Safe 钮色 v2） */
   --glass-wb-form-success: var(--glass-wb-online-text); /* 显式语义锚：与 online-text / 酷安绿 success 同源，勿另起色板 */
-  --glass-wb-form-required-mark: var(--glass-wb-form-error); /* required 星号柔化：收敛 TDesign 默认粉红至 Validation Whisper error 同族（#d94a4a） */
+  --glass-wb-form-required-mark: var(--glass-wb-form-error); /* required 星号柔化：收敛 TDesign 默认粉红至 Validation Whisper error 同族（#bd3628） */
 
   /* Glass Descriptions · GlassDescriptions（盖 t-descriptions）
      阅读焦点三档：label = secondary（键可扫读）/ content = primary（值仍是焦点）/
@@ -612,7 +613,7 @@
   --glass-wb-control-active-scale: 0.98;
   --glass-wb-fab-active-scale: 0.96;
   --glass-wb-control-active-shadow-tight: 0 4px 12px rgba(0, 82, 204, 0.18);
-  --glass-wb-control-focus-ring: 0 0 0 2px rgba(47, 107, 246, 0.28);
+  --glass-wb-control-focus-ring: 0 0 0 2px rgba(29, 78, 216, 0.72); /* 合成后对白 / 页底 ≥3:1 */
   --glass-wb-control-ease-lift: cubic-bezier(0.2, 0.8, 0.2, 1);
   --glass-wb-control-transition:
     filter 0.15s ease,
@@ -734,7 +735,7 @@
   --glass-wb-dropdown-item-hover-color: var(--glass-wb-pill-quiet-color);
   --glass-wb-dropdown-item-active-bg: rgba(0, 82, 204, 0.12);
   --glass-wb-dropdown-item-active-color: var(--glass-wb-pill-quiet-active-color);
-  --glass-wb-dropdown-item-disabled-color: var(--glass-text-muted);
+  --glass-wb-dropdown-item-disabled-color: var(--glass-text-disabled);
   --glass-wb-dropdown-ripple: rgba(0, 82, 204, 0.12);
 
   /* Destructive Confirm —— 与 btn-danger 同源同档（JD Red 略深档） */
@@ -974,7 +975,7 @@
      danger = 京东红同源分档（冻结）：品牌锚 #E1251B（Alert）／btn·confirm 略深 #D91F18 保 hover 余量。
        hover ≈ filter brightness(1.04) → #E22019（4.71:1）；active ≈ #C31C16。禁止洗白/粉核。
      warning = 中石油宝石花辅色（CNPC Baoshihua Accent Yellow · Pantone 137C 浅橘黄）：品牌锚 #FFA300（Lab 锚色块可见，禁 Filled）／btn #9E6400 Contrast-Safe（白字 4.91，hover 4.61；v2 抬亮更黄）。
-     success = 酷安绿（favicon 采样）：品牌锚 #18B458（Alert/online 识别）／btn #117E3E（白字 5.15，hover 4.83）。 */
+     success = 酷安绿（favicon 采样）：品牌锚 #18B458 仅作装饰尾染／文字·图标 #0E783B（浅底最低 4.55）／btn #117E3E（白字 5.15，hover 4.83）。 */
   /* —— danger（JD Red 同源分档；品牌锚 #E1251B） —— */
   --glass-wb-btn-danger: #d91f18;
   --glass-wb-btn-danger-text: var(--glass-wb-white);
@@ -987,7 +988,7 @@
   --glass-wb-btn-warning-shadow: 0 6px 14px rgba(158, 100, 0, 0.28);
   --glass-wb-btn-warning-hover-shadow: 0 10px 22px rgba(158, 100, 0, 0.32);
   --glass-wb-btn-warning-active-shadow: 0 4px 12px rgba(158, 100, 0, 0.2);
-  /* —— success（酷安绿·favicon 采样；锚 #18B458 / 钮 #117E3E；Alert / online 同源） —— */
+  /* —— success（酷安绿·favicon 采样；装饰锚 #18B458 / 文字·图标 #0E783B / 钮 #117E3E） —— */
   --glass-wb-btn-success: #117e3e;
   --glass-wb-btn-success-text: var(--glass-wb-white);
   --glass-wb-btn-success-shadow: 0 6px 14px rgba(17, 126, 62, 0.28);
@@ -1000,7 +1001,7 @@
      error / warning 边仅作柔和 hairline 色（inset 1px），禁止 focus 亮实线。 */
   --glass-wb-field-hover-border: #c5d4ef;
   --glass-wb-field-focus-border: rgba(47, 107, 246, 0.45);
-  --glass-wb-field-error-border: rgba(217, 74, 74, 0.45);
+  --glass-wb-field-error-border: color-mix(in srgb, var(--glass-wb-form-error) 45%, transparent);
   --glass-wb-field-warning-border: rgba(158, 100, 0, 0.4);
 
   /* Input Quiet Chrome — Field / Capsule（裁定 C：rest inset hairline · hover Fade · focus ring only）
@@ -1406,7 +1407,7 @@ body {
   background: transparent;
 }
 
-.t-message.t-is-closable .t-message__close .t-icon-close:focus-visible {
+.t-message.t-is-closable .t-message__close:focus-visible {
   outline: none;
   box-shadow: var(--glass-wb-control-focus-ring);
 }
@@ -2086,7 +2087,7 @@ body {
   background: transparent;
 }
 
-.t-notification .t-message__close .t-icon-close:focus-visible {
+.t-notification .t-message__close:focus-visible {
   outline: none;
   box-shadow: var(--glass-wb-control-focus-ring);
 }

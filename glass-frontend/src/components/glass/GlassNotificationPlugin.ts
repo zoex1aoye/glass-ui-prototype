@@ -3,6 +3,7 @@
  *
  * - 每次调用合并 className 含 `glass-notification glass-notification--{theme}`
  *   （保留调用方额外 class）
+ * - 同步写入 live region（非错误级 status/polite，错误级 alert/assertive）
  * - API 对齐 NotificationPlugin：info / success / warning / error / close / closeAll；
  *   另加 config（TDesign Notification 无内置 config，此处做本地默认合并，theme 由各方法固定）
  * - 可调用入口：GlassNotificationPlugin(theme, options, context?)
@@ -21,7 +22,14 @@ import type {
   TNode,
 } from 'tdesign-vue-next'
 
+import {
+  ensureFeedbackA11y,
+  getFeedbackLiveRegionAttrs,
+  type FeedbackLiveRegionAttrs,
+} from './feedbackA11y'
+
 const GLASS_CLASS = 'glass-notification'
+type GlassNotificationInfoOptions = NotificationInfoOptions & FeedbackLiveRegionAttrs
 
 /** 全局默认配置（TDesign Notification 未内置 config；本地默认合并） */
 const defaultConfig: NotificationInfoOptions = {}
@@ -48,7 +56,7 @@ function mergeGlassClass(theme: NotificationThemeList, className?: string): stri
 function buildOptions(
   params: GlassNotificationParams,
   theme: NotificationThemeList,
-): NotificationInfoOptions {
+): GlassNotificationInfoOptions {
   let base: NotificationInfoOptions
 
   if (typeof params === 'string') {
@@ -67,22 +75,27 @@ function buildOptions(
   return {
     ...merged,
     className: mergeGlassClass(theme, merged.className),
+    ...getFeedbackLiveRegionAttrs(theme),
   }
 }
 
 function info(params: GlassNotificationParams, context?: AppContext) {
+  ensureFeedbackA11y()
   return NotificationPlugin.info(buildOptions(params, 'info'), context)
 }
 
 function success(params: GlassNotificationParams, context?: AppContext) {
+  ensureFeedbackA11y()
   return NotificationPlugin.success(buildOptions(params, 'success'), context)
 }
 
 function warning(params: GlassNotificationParams, context?: AppContext) {
+  ensureFeedbackA11y()
   return NotificationPlugin.warning(buildOptions(params, 'warning'), context)
 }
 
 function error(params: GlassNotificationParams, context?: AppContext) {
+  ensureFeedbackA11y()
   return NotificationPlugin.error(buildOptions(params, 'error'), context)
 }
 
@@ -117,7 +130,10 @@ const plugin = ((
   theme: NotificationThemeList,
   options: GlassNotificationParams,
   context?: AppContext,
-) => NotificationPlugin(theme, buildOptions(options, theme), context)) as GlassNotificationPluginType
+) => {
+  ensureFeedbackA11y()
+  return NotificationPlugin(theme, buildOptions(options, theme), context)
+}) as GlassNotificationPluginType
 
 plugin.info = info
 plugin.success = success

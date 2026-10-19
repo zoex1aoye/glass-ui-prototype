@@ -10,9 +10,13 @@
  *
  * 材质由 theme.css 全局 `.t-notification` / `.t-icon.t-is-*`（Track A）负责；本文件只做
  * 语义壳 + 结构薄兜底，不写魔法色。锚 class：`glass-notification` + `--{theme}`。
+ * 根节点首帧携带 live region：非错误级 status/polite，错误级 alert/assertive。
  * 依赖 token：--glass-wb-notification-{radius,blur,shadow,padding-y,padding-x,width,*-fill,*-icon}。
  */
+import { computed, onMounted } from 'vue'
 import type { NotificationProps, NotificationThemeList } from 'tdesign-vue-next'
+
+import { ensureFeedbackA11y, getFeedbackLiveRegionAttrs } from './feedbackA11y'
 
 type GlassNotificationTheme = NotificationThemeList
 
@@ -20,7 +24,7 @@ type NotificationCloseBtnContext = {
   e: MouseEvent
 }
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     theme?: GlassNotificationTheme
     title?: NotificationProps['title']
@@ -42,6 +46,8 @@ withDefaults(
   },
 )
 
+const liveRegionAttrs = computed(() => getFeedbackLiveRegionAttrs(props.theme))
+
 const emit = defineEmits<{
   close: []
   'close-btn-click': [context: NotificationCloseBtnContext]
@@ -61,10 +67,15 @@ function handleCloseBtnClick(context: NotificationCloseBtnContext) {
 function handleDurationEnd() {
   emit('duration-end')
 }
+
+onMounted(() => {
+  ensureFeedbackA11y()
+})
 </script>
 
 <template>
   <t-notification
+    v-bind="liveRegionAttrs"
     class="glass-notification"
     :class="`glass-notification--${theme}`"
     :theme="theme"

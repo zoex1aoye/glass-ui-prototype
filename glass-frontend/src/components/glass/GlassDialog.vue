@@ -46,11 +46,17 @@
  * 色值一律走 --glass-wb-*，禁止魔法色。面板 / 遮罩由 t-dialog teleport 至 body，
  * 故材质写在非 scoped 样式并以 .glass-dialog 为锚，避免污染全局。
  */
-import { computed, h, useSlots } from 'vue'
+import { computed, h, nextTick, onBeforeUnmount, useId, useSlots, watch } from 'vue'
 
 import type { TdDialogProps } from 'tdesign-vue-next'
 
 import GlassButton from './GlassButton.vue'
+import {
+  bindOverlayA11y,
+  captureOverlayTrigger,
+  restoreOverlayTrigger,
+  type OverlayA11yBinding,
+} from './overlayA11y'
 
 type DialogTheme = TdDialogProps['theme']
 type DialogPlacement = TdDialogProps['placement']
@@ -117,6 +123,9 @@ const emit = defineEmits<{
 
 const slots = useSlots()
 
+const overlayId = useId().replace(/[^a-zA-Z0-9_-]/g, '')
+const a11yClassName = `glass-overlay-${overlayId}`
+
 /** header 槽未自定义且 subtitle 有值时，用内置 header 渲染 title + subtitle */
 const hasSubtitleHeader = computed(() => Boolean(props.subtitle && !slots.header))
 
@@ -130,8 +139,81 @@ const SubtitleHeader = () => {
 }
 
 const resolvedClass = computed(() =>
-  ['glass-dialog', props.dialogClassName].filter(Boolean).join(' '),
+  ['glass-dialog', a11yClassName, props.dialogClassName].filter(Boolean).join(' '),
 )
+
+let overlayTrigger: HTMLElement | null = null
+let overlayBinding: OverlayA11yBinding | null = null
+let overlayOpen = false
+let overlaySyncToken = 0
+
+async function syncOverlayA11y(visible: boolean) {
+  const token = ++overlaySyncToken
+
+  if (visible) {
+    await nextTick()
+    if (token !== overlaySyncToken || !props.visible) return
+
+    const panel = document.querySelector<HTMLElement>(`.${a11yClassName}`)
+    if (!panel) return
+
+    overlayBinding?.destroy()
+    overlayBinding = bindOverlayA11y({
+      panel,
+      idSeed: a11yClassName,
+      titleSelectors: [
+        '.glass-dialog__title',
+        '.t-dialog__header-content h5',
+        '.t-dialog__header h5',
+        '.t-dialog__header-content',
+      ],
+      descriptionSelectors: ['.glass-dialog__subtitle'],
+      initialFocusSelectors: [
+        '[data-glass-overlay-autofocus]',
+        '.t-dialog__body input:not([disabled]):not([type="hidden"]), .t-dialog__body textarea:not([disabled]), .t-dialog__body select:not([disabled]), .t-dialog__body [contenteditable="true"]',
+        '[data-glass-overlay-initial-focus]',
+        '.t-dialog__cancel',
+        '.t-dialog__body a[href], .t-dialog__body button:not([disabled])',
+        '.t-dialog__close',
+      ],
+    })
+    overlayBinding.focusInitial()
+    return
+  }
+
+  overlayBinding?.destroy()
+  overlayBinding = null
+
+  await nextTick()
+  if (token !== overlaySyncToken) return
+  restoreOverlayTrigger(overlayTrigger)
+  overlayTrigger = null
+}
+
+watch(
+  () => props.visible,
+  (visible) => {
+    if (visible) {
+      if (!overlayOpen) overlayTrigger = captureOverlayTrigger()
+      overlayOpen = true
+    } else {
+      overlayOpen = false
+    }
+    void syncOverlayA11y(visible)
+  },
+  { immediate: true, flush: 'sync' },
+)
+
+function onDialogOpened() {
+  if (props.visible) overlayBinding?.ensureFocusInside()
+}
+
+onBeforeUnmount(() => {
+  overlayBinding?.destroy()
+  overlayBinding = null
+  restoreOverlayTrigger(overlayTrigger)
+  overlayTrigger = null
+})
 
 /**
  * 默认脚钮自制：无用户 footer 槽 / footer TNode / confirmBtn / cancelBtn 时启用。
@@ -183,6 +265,7 @@ function onGlassCancel(e: MouseEvent) {
     @cancel="emit('cancel', $event)"
     @close="emit('close', $event)"
     @overlay-click="emit('overlayClick', $event)"
+    @opened="onDialogOpened"
   >
     <template v-if="$slots.header" #header><slot name="header" /></template>
     <template v-else-if="hasSubtitleHeader" #header><SubtitleHeader /></template>
@@ -191,7 +274,14 @@ function onGlassCancel(e: MouseEvent) {
     <!-- 默认脚钮：真 GlassButton（quiet 取消 + primary/danger 确认） -->
     <template v-if="useGlassFooter" #footer>
       <div class="glass-overlay-footer glass-dialog__footer-actions">
-        <GlassButton variant="quiet" :disabled="confirmLoading" @click="onGlassCancel">取消</GlassButton>
+        <GlassButton
+          variant="quiet"
+          :disabled="confirmLoading"
+          data-glass-overlay-initial-focus
+          @click="onGlassCancel"
+        >
+          取消
+        </GlassButton>
         <GlassButton
           :variant="confirmVariant"
           shape="round"
@@ -273,6 +363,15 @@ function onGlassCancel(e: MouseEvent) {
 .glass-dialog .t-dialog__close {
   color: var(--glass-text-muted);
   border-radius: 8px;
+}
+
+.glass-dialog .t-dialog__close[data-glass-overlay-close] {
+  cursor: pointer;
+}
+
+.glass-dialog .t-dialog__close[data-glass-overlay-close]:focus-visible {
+  outline: none;
+  box-shadow: var(--glass-wb-control-focus-ring);
 }
 
 .glass-dialog .t-dialog__close:hover {

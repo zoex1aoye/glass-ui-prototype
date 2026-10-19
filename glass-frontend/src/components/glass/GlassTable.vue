@@ -44,11 +44,21 @@
  * 拖拽排序：dragSort / dragSortOptions 原样透传；树形模式额外透传 beforeDragSort；
  * drag-sort 回传 TD 官方 DragSortContext（行 / 列均可用），abnormal-drag-sort
  * 回传树形拖拽失败原因。排序数据由调用方消费 newData 后回写。
+ * 行移动替代路径：rowMove 开启后自动追加行首「上移 / 下移」操作列（键盘可完成）；
+ * row-move 回传 GlassTableRowMoveContext.newData，调用方回写即可，与 dragSort 并存。
+ * 行移动仅覆盖扁平表；tree 模式不生成操作列，避免把父子结构压平。
+ * 内部保留 slot：glassRowMove；调用方同名 slot 不会透传给 t-table。
  * 展开行与树形图标由 Glass 统一收成 Quiet Grid 触发区，调用方仍可用 prop / slot 覆盖。
  */
 import { computed, ref, useAttrs, useSlots } from 'vue'
 import { EnhancedTable, PrimaryTable } from 'tdesign-vue-next'
-import { ChevronRightIcon } from 'tdesign-icons-vue-next'
+import { ArrowDownIcon, ArrowUpIcon, ChevronRightIcon } from 'tdesign-icons-vue-next'
+
+import { moveTableRow } from './tableRowMove'
+import type {
+  GlassTableRowMoveContext,
+  GlassTableRowMoveDirection,
+} from './tableRowMove'
 
 import type {
   CheckboxGroupValue,
@@ -145,6 +155,16 @@ const props = withDefaults(
     dragSortOptions?: TdPrimaryTableProps<GlassTableRow>['dragSortOptions']
     /** 树形拖拽前置校验；返回 false 时 TD 放弃本次排序 */
     beforeDragSort?: TdEnhancedTableProps<GlassTableRow>['beforeDragSort']
+    /** 扁平表行移动：自动追加行首上移 / 下移按钮，键盘可完成重排 */
+    rowMove?: boolean
+    /** 行移动操作列标题 */
+    moveColumnTitle?: string
+    /** 行移动操作列宽度 */
+    moveColumnWidth?: number
+    /** 单行是否禁止移动（权限 / 锁定态）；首行上移、末行下移仍自动禁用 */
+    rowMoveDisabled?: (row: GlassTableRow, rowIndex: number) => boolean
+    /** 给按钮与读屏播报补充行语义，缺省为「第 N 行」 */
+    moveRowLabel?: (row: GlassTableRow, rowIndex: number) => string
   }>(),
   {
     size: 'small',
@@ -184,6 +204,11 @@ const props = withDefaults(
     dragSort: undefined,
     dragSortOptions: undefined,
     beforeDragSort: undefined,
+    rowMove: false,
+    moveColumnTitle: '排序',
+    moveColumnWidth: 84,
+    rowMoveDisabled: undefined,
+    moveRowLabel: undefined,
   },
 )
 
@@ -211,6 +236,7 @@ const emit = defineEmits<{
   'tree-expand-change': [context: TableTreeExpandChangeContext<GlassTableRow>]
   'drag-sort': [context: DragSortContext<GlassTableRow>]
   'abnormal-drag-sort': [context: TableAbnormalDragSortContext<GlassTableRow>]
+  'row-move': [context: GlassTableRowMoveContext<GlassTableRow>]
   change: [data: TableChangeData, context: TableChangeContext<GlassTableRow>]
 }>()
 
@@ -223,6 +249,22 @@ const slots = useSlots()
  */
 const hasTree = computed(() => Boolean(props.tree && Object.keys(props.tree).length))
 const tableComponent = computed(() => (hasTree.value ? EnhancedTable : PrimaryTable))
+const showRowMove = computed(() => props.rowMove && !hasTree.value)
+const tableColumns = computed<PrimaryTableCol<GlassTableRow>[]>(() => {
+  if (!showRowMove.value) return props.columns
+
+  const moveColumn: PrimaryTableCol<GlassTableRow> = {
+    colKey: '__glass_row_move__',
+    title: props.moveColumnTitle,
+    width: props.moveColumnWidth,
+    align: 'center',
+    className: 'glass-table__row-move-cell',
+    cell: 'glassRowMove',
+  }
+  return [moveColumn, ...props.columns]
+})
+
+const moveAnnouncement = ref('')
 
 const expandIconSlotName = computed(() =>
   slots.expandIcon ? 'expandIcon' : slots['expand-icon'] ? 'expand-icon' : 'expandIcon',
@@ -258,6 +300,7 @@ const forwardedSlotNames = computed(() =>
         'expand-icon',
         'treeExpandAndFoldIcon',
         'tree-expand-and-fold-icon',
+        'glassRowMove',
       ].includes(name),
   ),
 )
@@ -429,6 +472,42 @@ function onAbnormalDragSort(context: TableAbnormalDragSortContext<GlassTableRow>
   emit('abnormal-drag-sort', context)
 }
 
+function getMoveRowLabel(row: GlassTableRow, rowIndex: number): string {
+  return props.moveRowLabel?.(row, rowIndex) ?? `第 ${rowIndex + 1} 行`
+}
+
+function canMoveRow(
+  row: GlassTableRow,
+  rowIndex: number,
+  direction: GlassTableRowMoveDirection,
+): boolean {
+  if (!showRowMove.value || props.loading) return false
+  if (props.rowMoveDisabled?.(row, rowIndex)) return false
+  return direction === 'up' ? rowIndex > 0 : rowIndex < props.data.length - 1
+}
+
+function onMoveRow(
+  row: GlassTableRow,
+  rowIndex: number,
+  direction: GlassTableRowMoveDirection,
+) {
+  if (!canMoveRow(row, rowIndex, direction)) return
+
+  const targetIndex = direction === 'up' ? rowIndex - 1 : rowIndex + 1
+  const newData = moveTableRow(props.data, rowIndex, targetIndex)
+  const action = direction === 'up' ? '上移' : '下移'
+  const label = getMoveRowLabel(row, rowIndex)
+
+  moveAnnouncement.value = `「${label}」已${action}至第 ${targetIndex + 1} 行`
+  emit('row-move', {
+    row,
+    rowIndex,
+    targetIndex,
+    direction,
+    newData,
+  })
+}
+
 function onTableChange(data: TableChangeData, context: TableChangeContext<GlassTableRow>) {
   emit('change', data, context)
 }
@@ -445,7 +524,7 @@ function onTableChange(data: TableChangeData, context: TableChangeContext<GlassT
       :is="tableComponent"
       class="glass-table__core"
       :data="data"
-      :columns="columns"
+      :columns="tableColumns"
       :row-key="rowKey"
       :size="size"
       :bordered="bordered"
@@ -489,6 +568,36 @@ function onTableChange(data: TableChangeData, context: TableChangeContext<GlassT
       <template v-for="name in forwardedSlotNames" #[name]="slotData">
         <slot :name="name" v-bind="slotData ?? {}" />
       </template>
+      <template v-if="showRowMove" #glassRowMove="{ row, rowIndex }">
+        <div
+          class="glass-table__row-move"
+          role="group"
+          :aria-label="`「${getMoveRowLabel(row, rowIndex)}」排序`"
+        >
+          <button
+            type="button"
+            class="glass-table__row-move-btn"
+            :aria-label="`上移「${getMoveRowLabel(row, rowIndex)}」`"
+            :disabled="!canMoveRow(row, rowIndex, 'up')"
+            @pointerdown.stop
+            @dragstart.stop.prevent
+            @click.stop="onMoveRow(row, rowIndex, 'up')"
+          >
+            <ArrowUpIcon aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            class="glass-table__row-move-btn"
+            :aria-label="`下移「${getMoveRowLabel(row, rowIndex)}」`"
+            :disabled="!canMoveRow(row, rowIndex, 'down')"
+            @pointerdown.stop
+            @dragstart.stop.prevent
+            @click.stop="onMoveRow(row, rowIndex, 'down')"
+          >
+            <ArrowDownIcon aria-hidden="true" />
+          </button>
+        </div>
+      </template>
       <template v-if="hasExpandIconSlot" #expandIcon="slotData">
         <slot :name="expandIconSlotName" v-bind="slotData ?? {}" />
       </template>
@@ -517,6 +626,14 @@ function onTableChange(data: TableChangeData, context: TableChangeContext<GlassT
         </button>
       </template>
     </component>
+    <span
+      class="glass-table__sr-only"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+    >
+      {{ moveAnnouncement }}
+    </span>
   </div>
 </template>
 
@@ -848,6 +965,74 @@ function onTableChange(data: TableChangeData, context: TableChangeContext<GlassT
   transform: rotate(90deg);
 }
 
+/* 行移动替代路径：24px Quiet 热区，两枚按钮并排；行高与展开 / 树形触发区一致。
+   拖拽仍由 TD Sortable / dragSort 承担，这里只补键盘与单指针路径。 */
+.glass-table__core :deep(td.glass-table__row-move-cell) {
+  padding: 7px 8px;
+}
+
+.glass-table__row-move {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.glass-table__row-move-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--glass-wb-text-cta-radius);
+  background: transparent;
+  color: var(--glass-text-muted);
+  cursor: pointer;
+  transform-origin: center;
+  transition: var(--glass-wb-control-transition);
+}
+
+.glass-table__row-move-btn .t-icon {
+  font-size: 14px;
+}
+
+.glass-table__row-move-btn:not(:disabled):hover {
+  background: var(--glass-wb-icon-hover-bg);
+  color: var(--glass-wb-btn-blue);
+}
+
+.glass-table__row-move-btn:not(:disabled):active {
+  transform: scale(var(--glass-wb-control-active-scale));
+  background: var(--glass-wb-text-cta-active-bg);
+  color: var(--glass-wb-text-cta-active-color);
+}
+
+.glass-table__row-move-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--glass-wb-control-focus-ring);
+}
+
+.glass-table__row-move-btn:disabled {
+  color: var(--glass-text-disabled);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.glass-table__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .glass-table__expand-trigger:hover,
 .glass-table__tree-trigger:hover {
   background: var(--glass-wb-icon-hover-bg);
@@ -1160,38 +1345,43 @@ function onTableChange(data: TableChangeData, context: TableChangeContext<GlassT
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .glass-table {
+  /* scoped 编译不会给 @media 内选择器追加 [data-v]，类名重复一次以压过基础态。 */
+  .glass-table.glass-table {
     --table-expand-transition:
       background-color 0.15s ease,
       color 0.15s ease,
       box-shadow 0.15s ease;
   }
 
-  .glass-table__expand-trigger,
-  .glass-table__tree-trigger,
-  .glass-table__expand-trigger .t-icon,
-  .glass-table__tree-trigger .t-icon {
+  .glass-table__expand-trigger.glass-table__expand-trigger,
+  .glass-table__tree-trigger.glass-table__tree-trigger,
+  .glass-table__expand-trigger.glass-table__expand-trigger .t-icon,
+  .glass-table__tree-trigger.glass-table__tree-trigger .t-icon,
+  .glass-table__row-move-btn.glass-table__row-move-btn {
     transition:
       background-color 0.15s ease,
       color 0.15s ease,
       box-shadow 0.15s ease;
   }
 
-  .glass-table__expand-trigger:active,
-  .glass-table__tree-trigger:active {
+  .glass-table__expand-trigger.glass-table__expand-trigger:active,
+  .glass-table__tree-trigger.glass-table__tree-trigger:active,
+  .glass-table__row-move-btn.glass-table__row-move-btn:not(:disabled):active {
     transform: none;
   }
 
-  .glass-table .t-table__column-controller-trigger .t-button,
-  .glass-table-column-controller .t-dialog__footer .t-button {
+  .glass-table.glass-table .t-table__column-controller-trigger .t-button,
+  .glass-table-column-controller.glass-table-column-controller .t-dialog__footer .t-button {
     transition:
       background-color 0.15s ease,
       color 0.15s ease,
       box-shadow 0.15s ease;
   }
 
-  .glass-table .t-table__column-controller-trigger .t-button:active,
-  .glass-table-column-controller .t-dialog__footer .t-button:active {
+  .glass-table.glass-table .t-table__column-controller-trigger .t-button:active,
+  .glass-table-column-controller.glass-table-column-controller
+    .t-dialog__footer
+    .t-button:active {
     transform: none;
   }
 }

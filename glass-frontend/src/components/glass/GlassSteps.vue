@@ -18,9 +18,11 @@
  * readonly、separator、sequence；slot：default → GlassStepItem 子节点。
  * 事件：change（经 t-steps onChange 回调透传）、update:modelValue（仅 modelValue 态）。
  */
-import { computed, useAttrs } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, useAttrs } from 'vue'
 
 import type { TdStepsProps } from 'tdesign-vue-next'
+
+import { bindStepsA11y, type NavA11yBinding } from './navA11y'
 
 defineOptions({ inheritAttrs: false })
 
@@ -62,6 +64,18 @@ const emit = defineEmits<{
 }>()
 
 const attrs = useAttrs()
+const rootRef = ref<HTMLElement | null>(null)
+let navA11y: NavA11yBinding | null = null
+
+onMounted(async () => {
+  await nextTick()
+  if (rootRef.value) navA11y = bindStepsA11y(rootRef.value)
+})
+
+onBeforeUnmount(() => {
+  navA11y?.destroy()
+  navA11y = null
+})
 
 /** class / style 落在外壳；其余 attrs 透传 t-steps（change 已 declare 故不在 attrs，显式转发） */
 const shellClass = computed(() => attrs.class)
@@ -125,6 +139,7 @@ function onChange(
 
 <template>
   <div
+    ref="rootRef"
     class="glass-steps"
     :class="[variantClass, shellClass]"
     :style="shellStyle"

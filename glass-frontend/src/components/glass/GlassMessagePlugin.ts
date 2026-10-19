@@ -2,6 +2,7 @@
  * GlassMessagePlugin — 命令式 Soft Toast 门面（包装 tdesign MessagePlugin）
  *
  * - 每次调用合并 className 含 `glass-message`（保留调用方额外 class）
+ * - 同步写入 live region（非错误级 status/polite，错误级 alert/assertive）
  * - API 对齐 MessagePlugin：info / success / warning / error / loading / question /
  *   close / closeAll；另加 config（TDesign Message 无内置 config，此处做本地默认合并，
  *   theme 由各方法固定）
@@ -21,7 +22,14 @@ import type {
   TNode,
 } from 'tdesign-vue-next'
 
+import {
+  ensureFeedbackA11y,
+  getFeedbackLiveRegionAttrs,
+  type FeedbackLiveRegionAttrs,
+} from './feedbackA11y'
+
 const GLASS_CLASS = 'glass-message'
+type GlassMessageInfoOptions = MessageInfoOptions & FeedbackLiveRegionAttrs
 
 /** 全局默认配置（TDesign Message 未内置 config；本地默认合并） */
 const defaultConfig: MessageInfoOptions = {}
@@ -39,7 +47,11 @@ function mergeGlassClass(className?: string): string {
 }
 
 /** 归一化入参（string / TNode / VNode / options），合并默认配置 + duration + className */
-function buildOptions(params: GlassMessageParams, duration?: number): MessageInfoOptions {
+function buildOptions(
+  params: GlassMessageParams,
+  theme: MessageThemeList,
+  duration?: number,
+): GlassMessageInfoOptions {
   let base: MessageInfoOptions
 
   if (typeof params === 'string') {
@@ -62,31 +74,38 @@ function buildOptions(params: GlassMessageParams, duration?: number): MessageInf
   return {
     ...merged,
     className: mergeGlassClass(merged.className),
+    ...getFeedbackLiveRegionAttrs(theme),
   }
 }
 
 function info(params: GlassMessageParams, duration?: number, context?: AppContext) {
-  return MessagePlugin.info(buildOptions(params, duration), undefined, context)
+  ensureFeedbackA11y()
+  return MessagePlugin.info(buildOptions(params, 'info', duration), undefined, context)
 }
 
 function success(params: GlassMessageParams, duration?: number, context?: AppContext) {
-  return MessagePlugin.success(buildOptions(params, duration), undefined, context)
+  ensureFeedbackA11y()
+  return MessagePlugin.success(buildOptions(params, 'success', duration), undefined, context)
 }
 
 function warning(params: GlassMessageParams, duration?: number, context?: AppContext) {
-  return MessagePlugin.warning(buildOptions(params, duration), undefined, context)
+  ensureFeedbackA11y()
+  return MessagePlugin.warning(buildOptions(params, 'warning', duration), undefined, context)
 }
 
 function error(params: GlassMessageParams, duration?: number, context?: AppContext) {
-  return MessagePlugin.error(buildOptions(params, duration), undefined, context)
+  ensureFeedbackA11y()
+  return MessagePlugin.error(buildOptions(params, 'error', duration), undefined, context)
 }
 
 function loading(params: GlassMessageParams, duration?: number, context?: AppContext) {
-  return MessagePlugin.loading(buildOptions(params, duration), undefined, context)
+  ensureFeedbackA11y()
+  return MessagePlugin.loading(buildOptions(params, 'loading', duration), undefined, context)
 }
 
 function question(params: GlassMessageParams, duration?: number, context?: AppContext) {
-  return MessagePlugin.question(buildOptions(params, duration), undefined, context)
+  ensureFeedbackA11y()
+  return MessagePlugin.question(buildOptions(params, 'question', duration), undefined, context)
 }
 
 function close(instance: Promise<MessageInstance>) {
@@ -124,7 +143,15 @@ const plugin = ((
   message: string | TNode | MessageOptions,
   duration?: number,
   context?: AppContext,
-) => MessagePlugin(theme, buildOptions(message as GlassMessageParams, duration), undefined, context)) as GlassMessagePluginType
+) => {
+  ensureFeedbackA11y()
+  return MessagePlugin(
+    theme,
+    buildOptions(message as GlassMessageParams, theme, duration),
+    undefined,
+    context,
+  )
+}) as GlassMessagePluginType
 
 plugin.info = info
 plugin.success = success

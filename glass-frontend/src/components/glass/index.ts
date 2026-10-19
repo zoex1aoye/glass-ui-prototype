@@ -68,6 +68,11 @@ export { default as GlassComposer } from './GlassComposer.vue'
 // variant="tray"（默认）→ t1 Host Tray：Lab 独立橱窗 / 无 Stage 宿主
 // variant="inset"      → Stage Nested Chrome：吃 Stage blur、无 lift 影
 export { default as GlassTable } from './GlassTable.vue'
+export { moveTableRow } from './tableRowMove'
+export type {
+  GlassTableRowMoveContext,
+  GlassTableRowMoveDirection,
+} from './tableRowMove'
 
 // ── Descriptions · 描述列表（盖 t-descriptions） ───────────────────────────
 // GlassDescriptions = Compound Wrapper 盖 t-descriptions（host-first；阅读焦点三档

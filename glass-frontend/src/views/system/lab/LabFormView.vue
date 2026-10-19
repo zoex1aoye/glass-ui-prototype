@@ -234,8 +234,8 @@ const whisperData = ref({ account: '', quota: '' })
 const whisperRef = ref<InstanceType<typeof GlassForm>>()
 
 function onWhisperValidateError() {
-  whisperRef.value?.validate()
-  lastAction.value = 'whisper → trigger error (required)'
+  whisperRef.value?.submit()
+  lastAction.value = 'whisper → submit invalid (focus first error)'
 }
 
 function onWhisperInject() {
@@ -386,6 +386,11 @@ const widthSyncOptions = [
           </div>
         </GlassForm>
       </div>
+      <p class="lab-control-note">
+        不填写直接「提交」即可验证多错首错落焦：焦点会落到首个无效字段，错误文案通过
+        <code>aria-describedby</code> / <code>aria-invalid</code> 关联，并以 live region 播报。
+        可见 label 已自动生成 <code>for</code> / <code>id</code> 关联；placeholder 不再充当可访问名。
+      </p>
     </section>
 
     <!-- B · Label Align · left -->
@@ -549,7 +554,8 @@ const widthSyncOptions = [
       <div class="lab-section-label">
         <span class="lab-section-name">E · Validation Whisper</span>
         <span class="lab-section-meta">
-          error（required）· setValidateMessage 注入 warning + success · 12px 柔色 tip · statusIcon=false
+          error（required）· setValidateMessage 注入 warning + success · 12px 柔色 tip · statusIcon=false ·
+          submit 失败落焦首个无效字段
         </span>
       </div>
       <div class="lab-form-panel">

@@ -377,6 +377,14 @@ function onResetClose({ trigger }: DialogCloseContext) {
             inset hairline 伪造层次。
           </p>
         </div>
+        <div class="lab-control-row">
+          <span class="lab-control-label">键盘与读屏验收（I1）</span>
+          <p class="lab-control-note">
+            打开任一 Dialog / FormPane 后：焦点落到首个字段或「取消」；Tab / Shift+Tab 只在面板内循环；
+            Esc 或右上角「关闭」（Enter / Space）可退出；关闭后焦点回到触发按钮。
+            FormPane 表单多项校验失败时，提交后焦点落到首个无效字段并关联错误描述。
+          </p>
+        </div>
       </div>
     </section>
 
@@ -430,6 +438,7 @@ function onResetClose({ trigger }: DialogCloseContext) {
       <GlassDialog
         v-model:visible="dialogVisible"
         header="信息确认"
+        subtitle="演示条目 · 当前筛选"
         theme="default"
         @confirm="onDialogConfirm"
         @cancel="onDialogCancel"
@@ -529,6 +538,7 @@ function onResetClose({ trigger }: DialogCloseContext) {
       <GlassFormPane
         v-model:visible="createVisible"
         title="新建演示条目"
+        subtitle="填写后创建一条演示条目"
         @close="onCreateClose"
       >
         <GlassForm
