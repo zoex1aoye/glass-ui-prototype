@@ -1,14 +1,15 @@
 <script setup lang="ts">
 /**
- * GlassMessage — Compound Wrapper 盖 t-message（Soft Toast / 顶部浮层轻提示）
+ * GlassMessage — Compound Wrapper 盖 t-message（Semantic Solid Toast / 顶部浮层提示）
  *
  * 边界（见 .agents/tmp-glass-message-plan.md）：
  * - GlassAlert = 页内 Inline Banner（常驻 / 可关）
- * - GlassMessage = 浮层轻提示（自动消失；命令式主消费路径走 GlassMessagePlugin）
+ * - GlassMessage = Toast 浮层提示（自动消失；命令式主消费路径走 GlassMessagePlugin）
  * - GlassDialog = Confirm Sheet；Notification 本轮不做
  *
- * 材质由 theme.css 全局 `.t-message` / `.t-is-*`（Track A）负责；本文件只做
- * 语义壳 + 结构薄兜底，不写魔法色。锚 class：`glass-message` + `--{theme}`。
+ * 材质由 theme.css 全局 `.t-message` / `.t-is-*`（Track A）负责：语义实色、blur none、
+ * 浮层 Whisper Lift。本文件只做语义壳 + 结构薄兜底，不写魔法色。
+ * 锚 class：`glass-message` + `--{theme}`。
  * 根节点首帧携带 live region：非错误级 status/polite，错误级 alert/assertive。
  * 依赖 token：--glass-wb-message-{radius,blur,shadow,padding-y,padding-x,*-fill,*-icon}。
  */

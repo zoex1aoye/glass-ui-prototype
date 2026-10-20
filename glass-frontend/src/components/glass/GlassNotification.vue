@@ -1,15 +1,16 @@
 <script setup lang="ts">
 /**
- * GlassNotification — Compound Wrapper 盖 t-notification（Soft Notice / 角区浮层通知卡）
+ * GlassNotification — Compound Wrapper 盖 t-notification（Semantic Solid Soft Notice / 角区浮层通知卡）
  *
  * 边界（见 .agents/tmp-glass-notification-plan.md）：
  * - GlassAlert = 页内 Inline Banner（常驻 / 可关）
- * - GlassMessage = 顶中 Soft Toast（短句，命令式主消费路径走 GlassMessagePlugin）
+ * - GlassMessage = 顶中 Toast（短句，命令式主消费路径走 GlassMessagePlugin）
  * - GlassNotification = 角区 Soft Notice（title + content + 可选 footer，命令式走 GlassNotificationPlugin）
  * - GlassDialog = Confirm Sheet
  *
- * 材质由 theme.css 全局 `.t-notification` / `.t-icon.t-is-*`（Track A）负责；本文件只做
- * 语义壳 + 结构薄兜底，不写魔法色。锚 class：`glass-notification` + `--{theme}`。
+ * 材质由 theme.css 全局 `.t-notification` / `.t-icon.t-is-*`（Track A）负责：语义实色、
+ * blur none、浮层 Whisper Lift。本文件只做语义壳 + 结构薄兜底，不写魔法色。
+ * 锚 class：`glass-notification` + `--{theme}`。
  * 根节点首帧携带 live region：非错误级 status/polite，错误级 alert/assertive。
  * 依赖 token：--glass-wb-notification-{radius,blur,shadow,padding-y,padding-x,width,*-fill,*-icon}。
  */

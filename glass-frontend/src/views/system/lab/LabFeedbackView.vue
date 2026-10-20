@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * 实验室·反馈与加载 — Inline Banner / Soft Toast / Soft Notice / Sound Wave Loading。
+ * 实验室·反馈与加载 — Inline InfoBar / Toast / Soft Notice / Sound Wave Loading。
  * Overlay（Dialog / FormPane / Popconfirm）与 GlassBadge 已按控件职能迁出。
  */
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
@@ -254,7 +254,7 @@ onBeforeUnmount(() => {
       <div class="lab-section-label">
         <span class="lab-section-name">{{ tt('feedback.section.banner') }}</span>
         <span class="lab-section-meta">
-          Status Soft Plate · Fan Tip · Light Frost · Whisper Lift · Glass Host Demo（无左侧色带）
+          Semantic Solid · InfoBar · blur none · 轻 Rest · Glass Host Demo（无左侧色带）
         </span>
       </div>
       <p class="lab-control-note">
@@ -325,7 +325,7 @@ onBeforeUnmount(() => {
       <div class="lab-section-label">
         <span class="lab-section-name">{{ tt('feedback.section.toast') }}</span>
         <span class="lab-section-meta">
-          GlassMessage + GlassMessagePlugin · Status Soft Plate · Plugin Portal · 底层 t-message
+          GlassMessage + GlassMessagePlugin · Semantic Solid · Toast · Plugin Portal · 底层 t-message
         </span>
       </div>
 
@@ -373,7 +373,7 @@ onBeforeUnmount(() => {
       <div class="lab-section-label">
         <span class="lab-section-name">{{ tt('feedback.section.notice') }}</span>
         <span class="lab-section-meta">
-          GlassNotification + GlassNotificationPlugin · Notice Soft Plate · Plugin Portal · 底层 t-notification
+          GlassNotification + GlassNotificationPlugin · Semantic Solid · Soft Notice · Plugin Portal · 底层 t-notification
         </span>
       </div>
 

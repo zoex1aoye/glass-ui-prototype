@@ -473,12 +473,14 @@ html.dark {
     transparent 70%
   );
 
-  /* Feedback · Status Semantic Solid
-     Light / Dark 均为语义实色：Dark 深井、Light 浅洗，无 Fan Tip 半透渐变。
-     实色板 + 轻 blur（一点点 frosted edge）+ 外阴影。
-     Message / Notification 的 blur / fill / icon 继续走 Alert 别名链。 */
-  --glass-wb-alert-blur: blur(8px) saturate(1.08);
-  --glass-wb-alert-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+  /* Feedback · Semantic Solid · InfoBar / Toast
+     Light / Dark 均为不透明语义实色，blur none。
+     Inline Alert 用 contour + 极轻 rest；浮层 Message / Notification 保留单层 Whisper Lift。 */
+  --glass-wb-alert-blur: none;
+  --glass-wb-alert-shadow:
+    var(--glass-wb-contour),
+    0 2px 8px rgba(0, 0, 0, 0.18);
+  --glass-wb-message-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
   --glass-wb-alert-success-fill: #1b3f36;
   --glass-wb-alert-info-fill: #1b3252;
   --glass-wb-alert-warning-fill: #433724;
@@ -489,7 +491,7 @@ html.dark {
   --glass-wb-alert-error-icon: #ff7f76;
 }
 
-/* Feedback 全局：统一吃 alert blur token（轻 frosted edge；fill 仍为实色）。 */
+/* Feedback 全局：统一吃 Alert blur token；当前定为 none，fill 保持语义实色。 */
 body .t-alert,
 body .glass-alert,
 body .t-message,
@@ -1497,15 +1499,17 @@ body .t-notification {
   --glass-wb-statistic-extra-font-size: 12px;
   --glass-wb-statistic-value-font-weight: 600;
 
-  /* Inline Banner / Status Alert · Semantic Solid
-     Light 浅洗实色 / Dark 深井实色；无 Fan Tip 半透渐变；轻 blur(8) + Whisper Lift 外阴影。
-     中尺度状态条：边界 = 色面差 + 轻 frosted + Whisper Lift；无左侧 Tone Rail；语义靠 icon。
+  /* Inline Banner / WinUI InfoBar · Semantic Solid
+     Light 浅洗实色 / Dark 深井实色；blur none。
+     中尺度状态条：边界 = 色面差 + contour + 极轻 rest；无左侧 Tone Rail；语义靠 icon。
      Tone Spectrum 色相冻结：*-icon 品牌锚不变。 */
   --glass-wb-alert-radius: var(--glass-wb-field-radius);
   --glass-wb-alert-padding-y: 12px;
   --glass-wb-alert-padding-x: 16px;
-  --glass-wb-alert-blur: blur(8px) saturate(1.08); /* 一点点；原 Soft Plate 为 16 */
-  --glass-wb-alert-shadow: 0 10px 28px rgba(0, 80, 180, 0.07); /* ← .bph；四态统一低噪蓝影 */
+  --glass-wb-alert-blur: none;
+  --glass-wb-alert-shadow:
+    var(--glass-wb-contour),
+    0 2px 8px rgba(15, 40, 80, 0.04); /* Inline：轻边界 + 极轻 Rest */
   /* Light 四态从 mid-wash 收成不透明语义实色；无首停近白与 tip alpha。 */
   --glass-wb-alert-success-fill: #dcf6e6;
   --glass-wb-alert-success-icon: var(--glass-wb-online-text);
@@ -1516,12 +1520,12 @@ body .t-notification {
   --glass-wb-alert-error-fill: #ffe5e5;
   --glass-wb-alert-error-icon: #e1251b;
 
-  /* Message / Soft Toast · Semantic Solid（别名 Alert，密度略收）
-     同一语义实色 / 无 frost / Whisper Lift；无左侧色带。
+  /* Message / Toast · Semantic Solid（fill / icon 别名 Alert，密度略收）
+     不透明语义实色 / blur none / 单层 Whisper Lift；无左侧色带。
      question / loading 归 info 面，icon 走行动蓝。 */
   --glass-wb-message-radius: var(--glass-wb-alert-radius);
   --glass-wb-message-blur: var(--glass-wb-alert-blur);
-  --glass-wb-message-shadow: var(--glass-wb-alert-shadow);
+  --glass-wb-message-shadow: 0 10px 28px rgba(0, 80, 180, 0.07);
   --glass-wb-message-padding-y: 10px;
   --glass-wb-message-padding-x: 14px;
   --glass-wb-message-success-fill: var(--glass-wb-alert-success-fill);
@@ -1538,7 +1542,7 @@ body .t-notification {
   --glass-wb-message-loading-icon: var(--glass-wb-btn-blue);
 
   /* Notification / Soft Notice · Semantic Solid（别名 Message，密度略松）
-     同一语义实色 / 无 frost / Whisper Lift；无左侧色带。
+     不透明语义实色 / blur none / 单层 Whisper Lift；无左侧色带。
      Theme 态类挂在图标而非根节点，全局 fill 走 :has + --theme 双保险。 */
   --glass-wb-notification-radius: var(--glass-wb-alert-radius);
   --glass-wb-notification-blur: var(--glass-wb-message-blur);
@@ -1912,7 +1916,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ── Message / Soft Toast（全局主题层）──────────────────────────────────
+/* ── Message / Toast（全局主题层）───────────────────────────────────────
    MessagePlugin 会 teleport 到 body，因此不得依赖组件 scoped 样式。
    复用 Alert semantic solid；覆盖 TD 多层 inset 阴影与默认白卡。 */
 .t-message {

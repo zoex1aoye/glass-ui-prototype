@@ -1,5 +1,5 @@
 /**
- * GlassMessagePlugin — 命令式 Soft Toast 门面（包装 tdesign MessagePlugin）
+ * GlassMessagePlugin — 命令式 Toast 门面（Semantic Solid；包装 tdesign MessagePlugin）
  *
  * - 每次调用合并 className 含 `glass-message`（保留调用方额外 class）
  * - 同步写入 live region（非错误级 status/polite，错误级 alert/assertive）

@@ -1,5 +1,5 @@
 /**
- * GlassNotificationPlugin — 命令式 Soft Notice 门面（包装 tdesign NotificationPlugin）
+ * GlassNotificationPlugin — 命令式 Soft Notice 门面（Semantic Solid；包装 tdesign NotificationPlugin）
  *
  * - 每次调用合并 className 含 `glass-notification glass-notification--{theme}`
  *   （保留调用方额外 class）

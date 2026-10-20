@@ -1,10 +1,9 @@
 <script setup lang="ts">
 /**
- * GlassAlert — 玻璃 Inline Banner / Status Alert（Compound Wrapper 盖 t-alert）
+ * GlassAlert — Inline Banner / WinUI InfoBar（Compound Wrapper 盖 t-alert）
  * Tone Spectrum 四态（success / info / warning / error）+ Dismissible Quiet。
- * Status Soft Plate：Fan Tip 115deg 扇形 fill · Light Frost（.bph 级 blur16）
- * · Whisper Lift（单层柔影）。语义靠 icon + Fan Tip，无左侧色带。边界 = 材质差 + 影。
- * 色值只走 theme token；禁止 Surface 级 blur36 / Ambient+Key 双影 / air / petals。
+ * Semantic Solid：不透明语义实色 · blur none · contour + 极轻 rest。
+ * 语义靠 icon，无左侧色带；色值只走 theme token，禁止浮层级重影。
  */
 import { onMounted } from 'vue'
 
@@ -79,7 +78,7 @@ onMounted(() => {
   backdrop-filter: var(--glass-wb-alert-blur);
 }
 
-/* —— Status Soft Plate 四态：Fan Tip fill + Light Frost + Whisper Lift（无左侧色带） —— */
+/* —— InfoBar 四态：Semantic Solid fill + blur none + 轻 Rest（无左侧色带） —— */
 .glass-alert--success {
   background: var(--glass-wb-alert-success-fill);
   box-shadow: var(--glass-wb-alert-shadow);
