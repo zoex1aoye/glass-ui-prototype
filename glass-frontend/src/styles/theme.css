@@ -1843,6 +1843,26 @@ body .t-notification {
   --glass-layer-l3-standalone-blur: none;
   --glass-layer-l3-standalone-shadow: 0 8px 24px rgba(15, 40, 80, 0.06);
   --glass-layer-l3-hairline: inset 0 0 0 1px rgba(120, 160, 210, 0.12);
+
+  /* Navigation Kit · GlassMenu + GlassBreadcrumb
+     Menu 行态引用已定 Rail Quiet List wash / Whisper 圆角；panel 只复用 L3 fill / hairline。
+     Breadcrumb 只走现有文字档，不新增色板、不绘制描边底卡。 */
+  --glass-wb-menu-item-radius: var(--glass-wb-rail-list-item-radius);
+  --glass-wb-menu-item-color: var(--glass-text-secondary);
+  --glass-wb-menu-item-hover-color: var(--glass-text-primary);
+  --glass-wb-menu-item-active-color: var(--glass-wb-btn-blue);
+  --glass-wb-menu-item-disabled-color: var(--glass-text-disabled);
+  --glass-wb-menu-item-hover-bg: var(--glass-wb-rail-list-item-hover-bg-ice);
+  --glass-wb-menu-item-active-bg: var(--glass-wb-rail-list-item-active-bg-ice);
+  --glass-wb-menu-item-active-hover-bg: var(--glass-wb-rail-list-item-active-hover-bg-ice);
+  --glass-wb-menu-item-pressed-bg: var(--glass-wb-rail-list-item-pressed-bg-ice);
+  --glass-wb-menu-panel-fill: var(--glass-layer-l3-fill);
+  --glass-wb-menu-panel-hairline: var(--glass-layer-l3-hairline);
+  --glass-wb-menu-panel-radius: var(--glass-layer-l3-radius);
+  --glass-wb-breadcrumb-color: var(--glass-text-secondary);
+  --glass-wb-breadcrumb-current-color: var(--glass-text-primary);
+  --glass-wb-breadcrumb-hover-color: var(--glass-wb-btn-blue);
+  --glass-wb-breadcrumb-separator-color: var(--glass-text-muted);
 }
 
 /* Overlay footer · 共享动作行（GlassDialog 默认 / GlassFormPane #footer / Lab 自定义 #footer）
@@ -2933,6 +2953,234 @@ body {
 
   .glass-steps .t-steps-item__inner.t-steps-item--clickable:active {
     transform: none;
+  }
+}
+
+/* ── Glass Menu · GlassMenu（全局主题层）────────────────────────────────
+   Compound Wrapper 盖 t-menu；组件只挂 .glass-menu + --{rail|panel} + --tone-*，
+   本段是唯一视觉出处。rail 透底继承 GlassRail / Surface；panel 复用 L3 材质。
+   item 行态与 Dashboard Rail Quiet List 同源：hover / active / pressed wash，
+   圆角 Whisper、无左侧 active 指示条。 */
+.glass-menu,
+.glass-menu .t-menu {
+  box-sizing: border-box;
+  color: var(--glass-text-primary);
+}
+
+.glass-menu__core.t-default-menu {
+  max-width: 100%;
+}
+
+.glass-menu--rail .t-default-menu,
+.glass-menu--rail .t-default-menu__inner,
+.glass-menu--rail .t-default-menu__inner .t-menu {
+  background: transparent;
+}
+
+.glass-menu--panel .t-default-menu {
+  border-radius: var(--glass-wb-menu-panel-radius);
+  background: var(--glass-wb-menu-panel-fill);
+  box-shadow: var(--glass-wb-menu-panel-hairline);
+}
+
+.glass-menu--tone-ice {
+  --glass-wb-menu-item-hover-bg: var(--glass-wb-rail-list-item-hover-bg-ice);
+  --glass-wb-menu-item-active-bg: var(--glass-wb-rail-list-item-active-bg-ice);
+  --glass-wb-menu-item-active-hover-bg: var(--glass-wb-rail-list-item-active-hover-bg-ice);
+  --glass-wb-menu-item-pressed-bg: var(--glass-wb-rail-list-item-pressed-bg-ice);
+}
+
+.glass-menu--tone-lilac {
+  --glass-wb-menu-item-hover-bg: var(--glass-wb-rail-list-item-hover-bg);
+  --glass-wb-menu-item-active-bg: var(--glass-wb-rail-list-item-active-bg);
+  --glass-wb-menu-item-active-hover-bg: var(--glass-wb-rail-list-item-active-hover-bg);
+  --glass-wb-menu-item-pressed-bg: var(--glass-wb-rail-list-item-pressed-bg);
+}
+
+.glass-menu .t-default-menu__inner .t-menu__logo:not(:empty) {
+  border-bottom-color: var(--glass-border-soft);
+}
+
+.glass-menu .t-default-menu__inner .t-menu__operations:not(:empty) {
+  border-top-color: var(--glass-border-soft);
+}
+
+.glass-menu .t-default-menu:is(.t-menu--light, .t-menu--dark) .t-menu__item {
+  border-left: 0;
+  border-radius: var(--glass-wb-menu-item-radius);
+  color: var(--glass-wb-menu-item-color);
+  background-color: transparent;
+  box-shadow: none;
+  --ripple-color: var(--glass-wb-tonal-ripple);
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s var(--glass-wb-control-ease-lift);
+}
+
+.glass-menu
+  .t-default-menu:is(.t-menu--light, .t-menu--dark)
+  .t-menu__item:hover:not(.t-is-active):not(.t-is-disabled) {
+  color: var(--glass-wb-menu-item-hover-color);
+  background-color: var(--glass-wb-menu-item-hover-bg);
+}
+
+.glass-menu
+  .t-default-menu:is(.t-menu--light, .t-menu--dark)
+  .t-menu__item.t-is-active {
+  color: var(--glass-wb-menu-item-active-color);
+  background-color: var(--glass-wb-menu-item-active-bg);
+}
+
+.glass-menu
+  .t-default-menu:is(.t-menu--light, .t-menu--dark)
+  .t-menu__item.t-is-opened:not(.t-is-active) {
+  color: var(--glass-wb-menu-item-hover-color);
+  background-color: transparent;
+}
+
+.glass-menu
+  .t-default-menu:is(.t-menu--light, .t-menu--dark)
+  .t-menu__item.t-is-opened:not(.t-is-active)
+  .t-icon {
+  color: inherit;
+}
+
+.glass-menu
+  .t-default-menu:is(.t-menu--light, .t-menu--dark)
+  .t-menu__item.t-is-active:hover {
+  color: var(--glass-wb-menu-item-active-color);
+  background-color: var(--glass-wb-menu-item-active-hover-bg);
+}
+
+.glass-menu
+  .t-default-menu:is(.t-menu--light, .t-menu--dark)
+  .t-menu__item.t-is-active:active {
+  background-color: var(--glass-wb-menu-item-pressed-bg);
+}
+
+.glass-menu
+  .t-default-menu:is(.t-menu--light, .t-menu--dark)
+  .t-menu__item:not(.t-is-active):active:not(.t-is-disabled) {
+  background-color: var(--glass-wb-menu-item-pressed-bg);
+}
+
+.glass-menu .t-default-menu:is(.t-menu--light, .t-menu--dark) .t-menu__item.t-is-active .t-icon,
+.glass-menu .t-default-menu:is(.t-menu--light, .t-menu--dark) .t-submenu.t-is-active > .t-menu__item {
+  color: var(--glass-wb-menu-item-active-color);
+}
+
+.glass-menu .t-default-menu:is(.t-menu--light, .t-menu--dark) .t-menu__item.t-is-disabled {
+  color: var(--glass-wb-menu-item-disabled-color);
+  background-color: transparent;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* 盖掉 TD / 主题可能残留的左侧 active strip；Whisper 只靠 pill wash + 蓝字。 */
+.glass-menu .t-default-menu:not(.t-is-collapsed) .t-menu__item.t-is-active::before,
+.glass-menu .t-default-menu:not(.t-is-collapsed) .t-menu__item.t-is-active::after,
+.glass-menu .t-default-menu.t-is-collapsed .t-menu__item.t-is-active::before {
+  content: none;
+  border: 0;
+}
+
+.glass-menu .t-default-menu .t-menu__item:not(.t-is-disabled):active {
+  transform: scale(var(--glass-wb-control-active-scale));
+}
+
+.glass-menu .t-default-menu .t-menu__item:focus-visible,
+.glass-menu .t-default-menu .t-menu__item-link:focus-visible {
+  outline: none;
+  box-shadow: var(--glass-wb-control-focus-ring);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glass-menu .t-default-menu:is(.t-menu--light, .t-menu--dark) .t-menu__item {
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+
+  .glass-menu .t-default-menu .t-menu__item:not(.t-is-disabled):active {
+    transform: none;
+  }
+}
+
+/* ── Glass Breadcrumb · GlassBreadcrumb（全局主题层）────────────────────
+   Quiet 路径：透明底、无描边卡；祖先 secondary，当前项 primary。
+   仅 lineage / separator / focus 走现有 Glass token。 */
+.glass-breadcrumb {
+  display: block;
+  min-width: 0;
+}
+
+.glass-breadcrumb .t-breadcrumb {
+  padding: 0;
+  border: 0;
+  color: var(--glass-wb-breadcrumb-color);
+  background: transparent;
+  box-shadow: none;
+}
+
+.glass-breadcrumb .t-breadcrumb__item {
+  color: var(--glass-wb-breadcrumb-color);
+}
+
+.glass-breadcrumb .t-breadcrumb__item:last-child,
+.glass-breadcrumb .t-breadcrumb__item.t-is-current {
+  color: var(--glass-wb-breadcrumb-current-color);
+}
+
+.glass-breadcrumb .t-breadcrumb__item .t-link {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.glass-breadcrumb .t-breadcrumb__item .t-link:hover,
+.glass-breadcrumb .t-breadcrumb--text-overflow .t-breadcrumb__inner:hover {
+  color: var(--glass-wb-breadcrumb-hover-color);
+}
+
+.glass-breadcrumb .t-breadcrumb__item .t-link:active,
+.glass-breadcrumb .t-breadcrumb--text-overflow .t-breadcrumb__inner:active {
+  color: var(--glass-wb-breadcrumb-current-color);
+  animation: none;
+}
+
+.glass-breadcrumb .t-breadcrumb__separator,
+.glass-breadcrumb .t-breadcrumb__separator .t-icon {
+  color: var(--glass-wb-breadcrumb-separator-color);
+}
+
+.glass-breadcrumb .t-breadcrumb__item .t-icon {
+  color: var(--glass-wb-breadcrumb-separator-color);
+}
+
+.glass-breadcrumb .t-breadcrumb__item:last-child .t-icon,
+.glass-breadcrumb .t-breadcrumb__item.t-is-current .t-icon {
+  color: var(--glass-wb-breadcrumb-current-color);
+}
+
+.glass-breadcrumb .t-breadcrumb__item .t-is-disabled,
+.glass-breadcrumb .t-breadcrumb__item .t-is-disabled .t-breadcrumb__inner {
+  color: var(--glass-text-disabled);
+  cursor: not-allowed;
+}
+
+.glass-breadcrumb .t-breadcrumb__item a:focus-visible {
+  outline: none;
+  box-shadow: var(--glass-wb-control-focus-ring);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glass-breadcrumb .t-breadcrumb__item .t-link,
+  .glass-breadcrumb .t-breadcrumb--text-overflow .t-breadcrumb__inner {
+    transition: none;
+    animation: none;
   }
 }
 

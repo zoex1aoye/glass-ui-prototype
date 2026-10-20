@@ -101,6 +101,22 @@ export { default as GlassListItemMeta } from './GlassListItemMeta.vue'
 export { default as GlassTabs } from './GlassTabs.vue'
 export { TabPanel as GlassTabPanel } from 'tdesign-vue-next'
 
+// ── Navigation / Menu + Breadcrumb（WinUI / Content-on-Mica 导航） ─────────
+// GlassMenu = Compound Wrapper 盖 t-menu（variant: rail|panel；tone: ice|lilac）。
+// TD Menu 子件主要通过 provide/inject 协作，Submenu 仍读取父链 type.name；
+// 故 MenuItem / Submenu / MenuGroup 均直接 re-export，避免薄 SFC 破坏父链判断。
+export { default as GlassMenu } from './GlassMenu.vue'
+export {
+  MenuGroup as GlassMenuGroup,
+  MenuItem as GlassMenuItem,
+  Submenu as GlassSubmenu,
+} from 'tdesign-vue-next'
+// GlassBreadcrumb = Compound Wrapper 盖 t-breadcrumb（Quiet ancestor/current 层级）。
+// TD Breadcrumb 靠 slot 子节点 type.name.endsWith("TBreadcrumbItem") 识别条目；
+// GlassBreadcrumbItem 必须直接 re-export，不能包薄 SFC。
+export { default as GlassBreadcrumb } from './GlassBreadcrumb.vue'
+export { BreadcrumbItem as GlassBreadcrumbItem } from 'tdesign-vue-next'
+
 // ── Flow / Picker（流程指示 · 日期与时间字段） ─────────────────────────────
 // GlassSteps = Compound Wrapper 盖 t-steps（variant: default|dot，视觉在 theme.css）
 // GlassStepItem = TD StepItem 的干净再导出（与 TabPanel 同纪律，不建薄 SFC 包装）

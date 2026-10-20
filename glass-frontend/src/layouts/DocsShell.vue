@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { ChevronRightIcon, SearchIcon } from 'tdesign-icons-vue-next'
-import type { RadioValue } from 'tdesign-vue-next'
+import { useRoute } from 'vue-router'
+import { SearchIcon } from 'tdesign-icons-vue-next'
+import type { BreadcrumbItemProps, RadioValue } from 'tdesign-vue-next'
 
-import { GlassRadioGroup } from '@/components/glass'
+import {
+  GlassBreadcrumb,
+  GlassMenu,
+  GlassMenuGroup,
+  GlassMenuItem,
+  GlassRadioGroup,
+} from '@/components/glass'
 import { messageTextMatches } from '@/scheme/messages'
 import { provideGlassScheme } from '@/scheme/useGlassScheme'
 
@@ -13,7 +19,6 @@ import { docsNavGroups, findDocsEntry } from './docs-nav'
 import { provideDocsProps } from './useDocsProps'
 
 const route = useRoute()
-const router = useRouter()
 
 // 右侧 Props 面板共享状态：provide 给 DocsPropsPanel 与 Lab 页（多页已扩面）
 provideDocsProps()
@@ -58,13 +63,17 @@ const activePath = computed(() => route.path)
 /** 路由 meta.hideProps：试页（如 Dashboard）隐藏右侧 Live Props */
 const showProps = computed(() => route.meta.hideProps !== true)
 
-const breadcrumb = computed(() => findDocsEntry(route.path))
-
-function navigate(path: string): void {
-  if (route.path !== path) {
-    void router.push(path)
+const breadcrumbOptions = computed<BreadcrumbItemProps[]>(() => {
+  const entry = findDocsEntry(route.path)
+  const items: BreadcrumbItemProps[] = [{ content: tt('shell.brand') }]
+  if (entry) {
+    items.push(
+      { content: tt(entry.group.labelKey) },
+      { content: tt(entry.item.labelKey) },
+    )
   }
-}
+  return items
+})
 
 function onLocale(next: RadioValue): void {
   if (next === 'zh' || next === 'en') {
@@ -108,27 +117,36 @@ function onColorScheme(next: RadioValue): void {
       </div>
 
       <nav class="docs-nav" :aria-label="tt('shell.nav.aria')">
-        <div v-for="entry in filteredGroups" :key="entry.group.key" class="docs-nav-group">
-          <div class="docs-nav-group-label">
-            <component :is="entry.group.icon" class="docs-nav-group-icon" size="16" />
-            <span>{{ tt(entry.group.labelKey) }}</span>
-          </div>
-          <div class="docs-nav-items">
-            <button
+        <GlassMenu
+          class="docs-nav-menu"
+          variant="rail"
+          width="100%"
+          :value="activePath"
+        >
+          <GlassMenuGroup
+            v-for="entry in filteredGroups"
+            :key="entry.group.key"
+          >
+            <template #title>
+              <span class="docs-nav-group-title">
+                <component :is="entry.group.icon" class="docs-nav-group-icon" size="16" />
+                <span>{{ tt(entry.group.labelKey) }}</span>
+              </span>
+            </template>
+            <GlassMenuItem
               v-for="item in entry.items"
               :key="item.key"
-              type="button"
-              class="docs-nav-item"
-              :class="{ 'is-active': activePath === item.path }"
-              @click="navigate(item.path)"
+              :value="item.path"
+              :to="item.path"
+              :aria-current="activePath === item.path ? 'page' : undefined"
             >
               <span class="docs-nav-item-text">
                 <span class="docs-nav-item-label">{{ tt(item.labelKey) }}</span>
                 <span class="docs-nav-item-desc">{{ tt(item.descKey) }}</span>
               </span>
-            </button>
-          </div>
-        </div>
+            </GlassMenuItem>
+          </GlassMenuGroup>
+        </GlassMenu>
       </nav>
 
       <div class="docs-sidebar-foot">
@@ -138,15 +156,11 @@ function onColorScheme(next: RadioValue): void {
 
     <div class="docs-main">
       <header class="docs-topbar">
-        <div class="docs-breadcrumb" :aria-label="tt('shell.breadcrumb.aria')">
-          <span class="docs-breadcrumb-root">{{ tt('shell.brand') }}</span>
-          <template v-if="breadcrumb">
-            <ChevronRightIcon size="14" class="docs-breadcrumb-sep" />
-            <span>{{ tt(breadcrumb.group.labelKey) }}</span>
-            <ChevronRightIcon size="14" class="docs-breadcrumb-sep" />
-            <span class="docs-breadcrumb-current">{{ tt(breadcrumb.item.labelKey) }}</span>
-          </template>
-        </div>
+        <GlassBreadcrumb
+          class="docs-breadcrumb"
+          :options="breadcrumbOptions"
+          :aria-label="tt('shell.breadcrumb.aria')"
+        />
 
         <div class="docs-scheme-toggles">
           <GlassRadioGroup
@@ -269,20 +283,33 @@ function onColorScheme(next: RadioValue): void {
   padding: 2px 0 10px;
 }
 
-.docs-nav-group {
-  margin-bottom: 6px;
+.docs-nav-menu {
+  min-height: 100%;
 }
 
-.docs-nav-group-label {
+.docs-nav-menu :deep(.t-default-menu__inner .t-menu) {
+  padding: 0;
+  overflow: visible;
+}
+
+.docs-nav-menu :deep(.t-menu-group + .t-menu-group) {
+  margin-top: 6px;
+}
+
+.docs-nav-menu :deep(.t-menu-group__title) {
+  padding: 8px 10px 6px;
+  color: var(--glass-text-muted);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.docs-nav-group-title {
   display: flex;
   align-items: center;
   gap: 7px;
-  padding: 8px 10px 6px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.4px;
-  text-transform: uppercase;
-  color: var(--glass-text-muted);
 }
 
 .docs-nav-group-icon {
@@ -290,44 +317,20 @@ function onColorScheme(next: RadioValue): void {
   flex-shrink: 0;
 }
 
-.docs-nav-items {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.docs-nav-item {
-  display: flex;
-  align-items: flex-start;
+.docs-nav-menu :deep(.t-menu__item) {
+  height: auto;
   min-height: 34px;
-  padding: 7px 10px 7px 22px;
-  border: none;
-  border-radius: 8px;
-  background: transparent;
-  color: var(--glass-text-secondary);
-  font-size: 13px;
-  cursor: pointer;
+  padding: 7px 10px;
+  line-height: 1.25;
   text-align: left;
-  transition:
-    background-color 0.15s ease,
-    color 0.15s ease;
+  white-space: normal;
 }
 
-.docs-nav-item:hover {
-  background: var(--glass-wb-text-cta-hover-bg);
-  color: var(--glass-wb-btn-blue);
-}
-
-.docs-nav-item.is-active {
-  background: var(--glass-wb-session-active-bg);
-  color: var(--glass-wb-btn-blue);
-  font-weight: 500;
-  box-shadow: var(--glass-wb-session-active-shadow);
-}
-
-.docs-nav-item:focus-visible {
-  outline: none;
-  box-shadow: var(--glass-wb-control-focus-ring);
+.docs-nav-menu :deep(.t-menu__item-link),
+.docs-nav-menu :deep(.t-menu__content) {
+  width: 100%;
+  overflow: visible;
+  white-space: normal;
 }
 
 .docs-nav-item-text {
@@ -339,7 +342,7 @@ function onColorScheme(next: RadioValue): void {
 
 .docs-nav-item-label {
   white-space: nowrap;
-  line-height: 1.25;
+  font-size: 13px;
 }
 
 .docs-nav-item-desc {
@@ -352,9 +355,8 @@ function onColorScheme(next: RadioValue): void {
   text-overflow: ellipsis;
 }
 
-.docs-nav-item:hover .docs-nav-item-desc,
-.docs-nav-item.is-active .docs-nav-item-desc {
-  color: var(--glass-text-muted);
+.docs-nav-menu :deep(.t-menu__item.t-is-active) .docs-nav-item-label {
+  font-weight: 500;
 }
 
 .docs-sidebar-foot {
@@ -387,12 +389,8 @@ function onColorScheme(next: RadioValue): void {
 }
 
 .docs-breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 5px;
   min-width: 0;
-  font-size: 13px;
-  color: var(--glass-text-muted);
+  overflow: hidden;
 }
 
 /* Scheme toggles：locale / color-scheme；controls 由 GlassRadioGroup 提供 token 视觉 */
@@ -401,23 +399,6 @@ function onColorScheme(next: RadioValue): void {
   align-items: center;
   gap: 8px;
   flex-shrink: 0;
-}
-
-.docs-breadcrumb-root {
-  color: var(--glass-text-secondary);
-  font-weight: 500;
-  white-space: nowrap;
-}
-
-.docs-breadcrumb-sep {
-  color: var(--glass-text-muted);
-  flex-shrink: 0;
-}
-
-.docs-breadcrumb-current {
-  color: var(--glass-text-primary);
-  font-weight: 500;
-  white-space: nowrap;
 }
 
 .docs-content {
@@ -464,11 +445,4 @@ function onColorScheme(next: RadioValue): void {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .docs-nav-item {
-    transition:
-      background-color 0.15s ease,
-      color 0.15s ease;
-  }
-}
 </style>

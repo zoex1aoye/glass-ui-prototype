@@ -13,7 +13,12 @@ import {
   PlayCircleIcon,
   RefreshIcon,
 } from 'tdesign-icons-vue-next'
-import type { PrimaryTableCol, TabValue, TableRowData } from 'tdesign-vue-next'
+import type {
+  MenuValue,
+  PrimaryTableCol,
+  TabValue,
+  TableRowData,
+} from 'tdesign-vue-next'
 
 import {
   GlassAlert,
@@ -22,9 +27,8 @@ import {
   GlassBadge,
   GlassButton,
   GlassCard,
-  GlassList,
-  GlassListItem,
-  GlassListItemMeta,
+  GlassMenu,
+  GlassMenuItem,
   GlassPageHeader,
   GlassPanel,
   GlassPosterWash,
@@ -302,6 +306,11 @@ function focusSection(section: (typeof railSections)[number]) {
   })
 }
 
+function onRailChange(value: MenuValue) {
+  const section = railSections.find((item) => item.id === value)
+  if (section) focusSection(section)
+}
+
 function toggleRailTone() {
   railTone.value = railTone.value === 'ice' ? 'lilac' : 'ice'
   lastActionKey.value =
@@ -379,25 +388,26 @@ onBeforeUnmount(() => {
                 </GlassButton>
               </div>
               <nav class="dashboard-rail-nav" :aria-label="tt('dashboard.rail.aria')">
-                <GlassList size="small" class="dashboard-rail-list">
-                  <GlassListItem
+                <GlassMenu
+                  class="dashboard-rail-menu"
+                  variant="rail"
+                  :tone="railTone"
+                  :value="activeSection"
+                  width="100%"
+                  @change="onRailChange"
+                >
+                  <GlassMenuItem
                     v-for="section in railSections"
                     :key="section.id"
-                    role="button"
-                    tabindex="0"
-                    :data-active="activeSection === section.id ? 'true' : undefined"
-                    :class="{ 'is-active': activeSection === section.id }"
+                    :value="section.id"
                     :aria-current="activeSection === section.id ? 'location' : undefined"
-                    @click="focusSection(section)"
-                    @keydown.enter.prevent="focusSection(section)"
-                    @keydown.space.prevent="focusSection(section)"
                   >
-                    <GlassListItemMeta
-                      :title="tt(section.titleKey)"
-                      :description="tt(section.descKey)"
-                    />
-                  </GlassListItem>
-                </GlassList>
+                    <span class="dashboard-rail-item">
+                      <span class="dashboard-rail-item-title">{{ tt(section.titleKey) }}</span>
+                      <span class="dashboard-rail-item-desc">{{ tt(section.descKey) }}</span>
+                    </span>
+                  </GlassMenuItem>
+                </GlassMenu>
               </nav>
             </GlassRail>
 
@@ -676,13 +686,47 @@ onBeforeUnmount(() => {
   overflow: auto;
 }
 
-.dashboard-rail-list {
-  flex: 1;
+.dashboard-rail-menu :deep(.t-default-menu__inner .t-menu) {
+  padding: 0;
+  overflow: visible;
 }
 
-.dashboard-rail-nav :deep(.glass-list-item.t-list-item:focus-visible) {
-  outline: none;
-  box-shadow: var(--glass-wb-control-focus-ring);
+.dashboard-rail-menu :deep(.t-menu__item) {
+  height: auto;
+  min-height: 44px;
+  padding: 7px 10px;
+  line-height: 1.25;
+  text-align: left;
+  white-space: normal;
+}
+
+.dashboard-rail-menu :deep(.t-menu__content) {
+  width: 100%;
+  overflow: visible;
+  white-space: normal;
+}
+
+.dashboard-rail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.dashboard-rail-item-title {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.dashboard-rail-item-desc {
+  overflow: hidden;
+  color: var(--glass-text-muted);
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .dashboard-stage {

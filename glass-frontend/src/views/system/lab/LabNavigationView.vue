@@ -1,14 +1,25 @@
 <script setup lang="ts">
 /**
- * 实验室·导航与步骤 — GlassTabs + GlassSteps Compound Wrapper State Matrix
+ * 实验室·导航与步骤 — GlassMenu + GlassBreadcrumb + GlassTabs + GlassSteps
  * line=Quiet Ink Track · soft=Soft Segment Track · capsule=Soft Segment Track（pill）
  * · card=Soft Card Track。
  * 视觉统一收口在 styles/theme.css；本页只演示变体 / 交互 / placement / 透传，
  * 不写组件内魔法色，不改一级业务导航。
  */
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import {
+  CompassIcon,
+  HomeIcon,
+  LayersIcon,
+  TableIcon,
+} from 'tdesign-icons-vue-next'
+import type { BreadcrumbItemProps, MenuValue } from 'tdesign-vue-next'
 
 import {
+  GlassBreadcrumb,
+  GlassMenu,
+  GlassMenuGroup,
+  GlassMenuItem,
   GlassStepItem,
   GlassSteps,
   GlassTabPanel,
@@ -30,8 +41,52 @@ const docsProps = useDocsProps()
 
 const tabsDemoValue = ref('overview')
 const demoStepsValue = ref(1)
+const liveMenuValue = ref('overview')
+const railMenuValue = ref('navigation')
+const panelMenuValue = ref('activity')
 
 const demoBlocks: DocsDemoBlock[] = [
+  {
+    id: 'menu-options',
+    label: 'GlassMenu',
+    description: 'GlassMenu · variant / collapsed / tone',
+    props: [
+      {
+        key: 'variant',
+        label: 'variant',
+        type: 'select',
+        defaultValue: 'rail',
+        options: [
+          { label: 'rail', value: 'rail' },
+          { label: 'panel', value: 'panel' },
+        ],
+      },
+      { key: 'collapsed', label: 'collapsed', type: 'boolean', defaultValue: false },
+      {
+        key: 'tone',
+        label: 'tone',
+        type: 'select',
+        defaultValue: 'ice',
+        options: [
+          { label: 'ice', value: 'ice' },
+          { label: 'lilac', value: 'lilac' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'breadcrumb-options',
+    label: 'GlassBreadcrumb',
+    description: 'GlassBreadcrumb · maxItemWidth',
+    props: [
+      {
+        key: 'maxItemWidth',
+        label: 'maxItemWidth',
+        type: 'text',
+        defaultValue: '160',
+      },
+    ],
+  },
   {
     id: 'steps-variant',
     label: 'GlassSteps',
@@ -102,6 +157,29 @@ const stepsDemo = computed(() => {
   }
 })
 
+const menuDemo = computed(() => {
+  const v = docsProps.state.values['menu-options'] ?? {}
+  return {
+    variant: (v.variant as 'rail' | 'panel') ?? 'rail',
+    collapsed: Boolean(v.collapsed ?? false),
+    tone: (v.tone as 'ice' | 'lilac') ?? 'ice',
+  }
+})
+
+const breadcrumbDemo = computed(() => {
+  const v = docsProps.state.values['breadcrumb-options'] ?? {}
+  return {
+    maxItemWidth: String(v.maxItemWidth ?? '160'),
+  }
+})
+
+const breadcrumbOptions: BreadcrumbItemProps[] = [
+  { content: 'Glass Component Lab' },
+  { content: 'Navigation & Steps' },
+  { content: 'GlassBreadcrumb' },
+  { content: 'Quiet Path' },
+]
+
 const stepsDefault = ref(1)
 const stepsDot = ref(1)
 const stepsStatus = ref(1)
@@ -123,6 +201,10 @@ function onChange(variant: string, value: string | number) {
 function onStepsChange(variant: string, current: string | number) {
   lastAction.value = `steps change → ${variant} · ${String(current)}`
 }
+
+function onMenuChange(source: string, value: MenuValue) {
+  lastAction.value = `menu change → ${source} · ${String(value)}`
+}
 </script>
 
 <template>
@@ -136,10 +218,83 @@ function onStepsChange(variant: string, current: string | number) {
       <div class="lab-section-label">
         <span class="lab-section-name">{{ tt('lab.section.liveProps') }}</span>
         <span class="lab-section-meta">
-          点选下方演示区块后，右栏 Props 面板可改 GlassTabs / GlassSteps 的 variant 与 disabled；画布即时反映。
+          {{ tt('navigation.live.hint') }}
         </span>
       </div>
       <div class="lab-controls">
+        <div class="lab-control-row">
+          <span class="lab-control-label">{{ tt('navigation.live.menu') }}</span>
+          <div class="lab-control-row-items">
+            <div
+              class="docs-demo-block navigation-live-menu"
+              :class="{ 'is-selected': isDemoSelected('menu-options') }"
+              role="button"
+              tabindex="0"
+              @click="selectDemo('menu-options')"
+              @keydown.enter="selectDemo('menu-options')"
+              @keydown.space.prevent="selectDemo('menu-options')"
+            >
+              <GlassMenu
+                v-model="liveMenuValue"
+                :variant="menuDemo.variant"
+                :tone="menuDemo.tone"
+                :collapsed="menuDemo.collapsed"
+                width="100%"
+                @change="onMenuChange('live', $event)"
+              >
+                <GlassMenuGroup title="Workspace">
+                  <GlassMenuItem value="overview">
+                    <template #icon>
+                      <HomeIcon />
+                    </template>
+                    Overview
+                  </GlassMenuItem>
+                  <GlassMenuItem value="dashboard">
+                    <template #icon>
+                      <LayersIcon />
+                    </template>
+                    Dashboard
+                  </GlassMenuItem>
+                </GlassMenuGroup>
+                <GlassMenuGroup title="Components">
+                  <GlassMenuItem value="data">
+                    <template #icon>
+                      <TableIcon />
+                    </template>
+                    Data
+                  </GlassMenuItem>
+                  <GlassMenuItem value="navigation">
+                    <template #icon>
+                      <CompassIcon />
+                    </template>
+                    Navigation
+                  </GlassMenuItem>
+                </GlassMenuGroup>
+              </GlassMenu>
+            </div>
+          </div>
+        </div>
+
+        <div class="lab-control-row">
+          <span class="lab-control-label">{{ tt('navigation.live.breadcrumb') }}</span>
+          <div class="lab-control-row-items">
+            <div
+              class="docs-demo-block navigation-live-breadcrumb"
+              :class="{ 'is-selected': isDemoSelected('breadcrumb-options') }"
+              role="button"
+              tabindex="0"
+              @click="selectDemo('breadcrumb-options')"
+              @keydown.enter="selectDemo('breadcrumb-options')"
+              @keydown.space.prevent="selectDemo('breadcrumb-options')"
+            >
+              <GlassBreadcrumb
+                :options="breadcrumbOptions"
+                :max-item-width="breadcrumbDemo.maxItemWidth"
+              />
+            </div>
+          </div>
+        </div>
+
         <div class="lab-control-row">
           <span class="lab-control-label">GlassSteps · variant（default / dot）</span>
           <div class="lab-control-row-items">
@@ -190,6 +345,98 @@ function onStepsChange(variant: string, current: string | number) {
               </GlassTabs>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Navigation Kit -->
+    <section class="lab-section">
+      <div class="lab-section-label">
+        <span class="lab-section-name">{{ tt('navigation.section.kit') }}</span>
+        <span class="lab-section-meta">{{ tt('navigation.section.kit.meta') }}</span>
+      </div>
+      <div class="lab-controls">
+        <div class="lab-control-row">
+          <span class="lab-control-label">{{ tt('navigation.section.menu.rail') }}</span>
+          <div class="navigation-menu-showcase">
+            <GlassMenu
+              v-model="railMenuValue"
+              variant="rail"
+              tone="ice"
+              width="100%"
+              @change="onMenuChange('rail', $event)"
+            >
+              <GlassMenuGroup title="Workspace">
+                <GlassMenuItem value="overview">
+                  <template #icon>
+                    <HomeIcon />
+                  </template>
+                  Overview
+                </GlassMenuItem>
+                <GlassMenuItem value="dashboard">
+                  <template #icon>
+                    <LayersIcon />
+                  </template>
+                  Dashboard
+                </GlassMenuItem>
+              </GlassMenuGroup>
+              <GlassMenuGroup title="Components">
+                <GlassMenuItem value="data">
+                  <template #icon>
+                    <TableIcon />
+                  </template>
+                  Data
+                </GlassMenuItem>
+                <GlassMenuItem value="navigation">
+                  <template #icon>
+                    <CompassIcon />
+                  </template>
+                  Navigation
+                </GlassMenuItem>
+              </GlassMenuGroup>
+            </GlassMenu>
+          </div>
+        </div>
+
+        <div class="lab-control-row">
+          <span class="lab-control-label">{{ tt('navigation.section.menu.panel') }}</span>
+          <div class="navigation-menu-showcase">
+            <GlassMenu
+              v-model="panelMenuValue"
+              variant="panel"
+              tone="lilac"
+              width="100%"
+              @change="onMenuChange('panel', $event)"
+            >
+              <GlassMenuGroup title="Activity">
+                <GlassMenuItem value="activity">
+                  <template #icon>
+                    <CompassIcon />
+                  </template>
+                  Activity
+                </GlassMenuItem>
+                <GlassMenuItem value="members">
+                  <template #icon>
+                    <HomeIcon />
+                  </template>
+                  Members
+                </GlassMenuItem>
+              </GlassMenuGroup>
+              <GlassMenuGroup title="Settings">
+                <GlassMenuItem value="preferences">
+                  <template #icon>
+                    <LayersIcon />
+                  </template>
+                  Preferences
+                </GlassMenuItem>
+              </GlassMenuGroup>
+            </GlassMenu>
+          </div>
+        </div>
+
+        <div class="lab-control-row">
+          <span class="lab-control-label">{{ tt('navigation.section.breadcrumb') }}</span>
+          <GlassBreadcrumb :options="breadcrumbOptions" />
         </div>
       </div>
     </section>
@@ -386,3 +633,27 @@ function onStepsChange(variant: string, current: string | number) {
     </section>
   </LabPageShell>
 </template>
+
+<style scoped>
+.navigation-live-menu {
+  width: min(100%, 320px);
+}
+
+.navigation-live-breadcrumb {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.navigation-menu-showcase {
+  width: min(100%, 320px);
+  min-width: 220px;
+}
+
+@media (max-width: 640px) {
+  .navigation-menu-showcase,
+  .navigation-live-menu {
+    width: 100%;
+    min-width: 0;
+  }
+}
+</style>
