@@ -1,11 +1,11 @@
 <script setup lang="ts">
 /**
  * GlassStage — Stage 外壳（Container Catalog · Material Stack z4）
- * - html `.chat` 会话画布：近白微透焦点面，单一材质吃 --glass-wb-stage-*。
+ * - html `.chat` 会话画布：Content Layer / LayerFill，单一材质吃 --glass-wb-stage-*。
+ * - 与 Rail：明度差 + 左缘 1px seam contour（--glass-wb-stage-seam）；Stage 不发光、不成第二张浮卡。
  * - Stage 只承担会话画布；密 KV / 表详情不进 Stage，推荐 GlassPanel variant="standalone"。
- * 几何红线：抬升影交给整板（Floating Plate），Stage 自身不得成第二张浮卡；
- * 外轮廓圆角 = flush token（右上 / 右下），与 Surface __body 同源；左侧贴缝边保持 0。
- * 不加外轮廓 hairline；Surface 仍兜底裁切，与 Rail gap=0，禁止 gutter。
+ * 几何红线：抬升影交给整板；外轮廓圆角 = flush token（右上 / 右下）；与 Rail gap=0；
+ * 分界只用贴缝单侧 contour，禁止 gutter 露边、禁止 Rail+Stage 双线。
  * Stage Nested Chrome：内嵌表用 GlassTable variant="inset"（禁双托盘）；通用嵌板 P1。
  * slots: header（可选）/ default
  */
@@ -23,9 +23,8 @@
 </template>
 
 <style scoped>
-/* z3b Stage：几何壳体 + 单一会话画布材质。抬升影在整板，自身不叠重影。
-   外轮廓右上 / 右下吃 flush token；左侧贴缝边为 0，与 Rail gap=0。
-   外层裁切 backdrop-filter；滚动仍由 __body 的 overflow: auto 承担。 */
+/* Stage：Content Layer / LayerFill。右上/右下 flush；与 Rail gap=0；
+   左缘 seam contour 吃 --glass-wb-stage-shadow（现别名 stage-seam）。 */
 .glass-stage {
   flex: 1;
   min-width: 0;

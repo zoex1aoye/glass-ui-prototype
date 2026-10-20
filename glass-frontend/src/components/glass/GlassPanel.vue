@@ -1,19 +1,20 @@
 <script setup lang="ts">
 /**
- * GlassPanel — Focus Panel（四层栈 L3 · Glass Container 4layer plan）
+ * GlassPanel — Card / LayerFill 分区面（四层栈 L3）
  * html 锚点：`.chat` / `.bchat` / `.bsurf` / soft card 语义对齐
- * 坐在 L1 或 L2 内的焦点面；可多块同层并列。Nested Chrome：
- * - variant="inset"（默认）：嵌在 Surface / Stage 内，Nested Chrome 扁板；
- *   Fan Tip 冷蓝过渡 + frosted 微透 + 双层悬浮影 + 1px lift；仍无外轮廓 hairline
- * - variant="standalone"：Lab 橱窗孤立态，允许轻影（仍弱于 L1）
+ * 坐在 Surface / Stage 内的 Card 分区面；可多块同层并列。
+ * - variant="inset"（默认）：高遮罩单色 LayerFill，靠明度差分区；
+ *   无 blur、无 lift、无多停渐变光，也不叠悬浮影
+ * - variant="standalone"：Lab 橱窗孤立态；LayerFill + contour + 单档静影，
+ *   仍弱于 L1 Surface 影
  * 材质只吃 `--glass-layer-l3-*`。禁止内嵌再放 Surface（禁双托盘）。
  * slots: header? / default / footer?
  */
 withDefaults(
   defineProps<{
-    /** 语义层：Focus Panel 固定 l3；其它值忽略并回落 l3 */
+    /** 语义层：Panel / Card 固定 l3；其它值忽略并回落 l3 */
     layer?: 'l3'
-    /** inset：Fan Tip + frosted + 悬浮影；standalone：橱窗轻影 */
+    /** inset：Card / LayerFill；standalone：LayerFill + contour + 单档静影 */
     variant?: 'inset' | 'standalone'
     title?: string
   }>(),
@@ -48,7 +49,7 @@ withDefaults(
 </template>
 
 <style scoped>
-/* L3 焦点面：几何壳体；材质按 variant 分开，inset 吃 Fan Tip 冷蓝与悬浮影 */
+/* L3 Card：几何壳体；材质按 variant 分为嵌入分区面与橱窗卡 */
 .glass-panel {
   display: flex;
   flex-direction: column;
@@ -58,22 +59,20 @@ withDefaults(
   overflow: hidden;
 }
 
-/* inset 阅读岛：Fan Tip 冷蓝过渡 + 轻 frosted 微透 + 双层悬浮影 + 1px lift。
-   宿主 L1 可透叠感知；仍无外轮廓 hairline，容器层叠材质另轨。 */
+/* inset Card：LayerFill + 弱 contour + 极轻 rest 影；无 blur / lift / 双层光柱。 */
 .glass-panel--inset {
   background: var(--glass-layer-l3-inset-fill);
   -webkit-backdrop-filter: var(--glass-layer-l3-inset-blur);
   backdrop-filter: var(--glass-layer-l3-inset-blur);
   box-shadow: var(--glass-layer-l3-inset-shadow);
-  transform: translateY(calc(0px - var(--glass-layer-l3-inset-lift)));
 }
 
-/* standalone 橱窗孤立态：轻影供 Lab / 无宿主场景；仍弱于 L1 Host Tray */
+/* standalone 橱窗孤立态：同族 contour + 单档静影；仍弱于 L1 Surface */
 .glass-panel--standalone {
   background: var(--glass-layer-l3-standalone-fill);
   -webkit-backdrop-filter: var(--glass-layer-l3-standalone-blur);
   backdrop-filter: var(--glass-layer-l3-standalone-blur);
-  box-shadow: var(--glass-layer-l3-hairline), var(--glass-layer-l3-standalone-shadow);
+  box-shadow: var(--glass-wb-contour), var(--glass-layer-l3-standalone-shadow);
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 /**
- * GlassRail — Frost Rail 外壳（Container Catalog · Material Stack z2）
+ * GlassRail — Content-on-Mica 导航带（Container Catalog · Material Stack z2）
  * html 选择器：`.rail`
- * 磨砂侧栏：width / tone / wash / blur。默认 ice；lilac 仅换低 alpha 紫 wash，
- * 并在轨内 remap Quiet List hover；active 近白微透（沿用 List 圆角，无 tip），由 theme.css 收口。
+ * 明度差分界：width / tone / wash / blur。默认 ice 为极淡冷 tint；lilac 仅换低 alpha 紫 tint，
+ * 并在轨内 remap Quiet List hover；active 为低透 wash + 标题蓝字（圆角 Whisper，无指示条），由 theme.css 收口。
  * 外轮廓圆角 = flush token（左上 / 左下），
- * 与 Surface __body 同源；右侧贴缝边保持 0。Surface 仍兜底裁切，与 Stage gap=0，禁止 gutter。
+ * 作为 Surface 直接子项时与 Stage gap=0；右侧贴缝边保持 0。Surface padding 露边并兜底裁切。
  * 几何红线：禁止大圆角 / 重阴影 / 描边；内部控件由消费方放 t-*。
  */
 withDefaults(
@@ -29,9 +29,9 @@ withDefaults(
 </template>
 
 <style scoped>
-/* Frost Glass Rail —— Surface 内 Rail 分区：z2 磨砂侧栏。
+/* Content-on-Mica Rail —— Surface 内导航带分区：透底、与 Stage 靠明度差分界。
    外轮廓左上 / 左下吃 flush token；右侧贴缝边为 0，与 Stage gap=0。
-   overflow: hidden 辅助裁切 backdrop-filter，避免 blur 穿出圆角。 */
+   backdrop-filter 仍吃 token；当前 token 为 none，不产生磨砂模糊。 */
 .glass-rail {
   flex-shrink: 0;
   display: flex;
@@ -39,18 +39,19 @@ withDefaults(
   border-radius: var(--glass-wb-stack-flush-radius) 0 0 var(--glass-wb-stack-flush-radius);
   overflow: hidden;
   min-height: 0;
+  box-shadow: var(--glass-wb-rail-shadow);
 }
 
-/* 默认冰蓝轨：wash / blur；轨内 List hover 近白微洗（与 active 近白板同族）。
-   必须在此 remap —— 否则会吃到 Quiet List 的 text-cta 冷雾，轨上像「没生效」。 */
+/* 默认冰蓝轨：wash / blur；轨内 List 使用 alipay@10% hover 与 alipay@12% active Whisper。
+   必须在此 remap —— 否则会吃到 Quiet List 的通用雾洗。 */
 .glass-rail--ice {
   background: var(--glass-wb-rail-wash);
   -webkit-backdrop-filter: var(--glass-wb-rail-blur);
   backdrop-filter: var(--glass-wb-rail-blur);
-  --glass-wb-list-item-hover-bg: var(--glass-wb-session-hover-bg);
+  --glass-wb-list-item-hover-bg: var(--glass-wb-rail-list-item-hover-bg-ice);
 }
 
-/* lilac 轨：紫只做 wash；轨内 hover=淡紫洗 token；active 近白微透由 theme.css 收口。 */
+/* lilac 轨：紫只做 wash；轨内 hover / active 保持低透紫洗，圆角 Whisper。 */
 .glass-rail--lilac {
   background: var(--glass-wb-rail-wash-lilac);
   -webkit-backdrop-filter: var(--glass-wb-rail-blur-lilac);

@@ -47,6 +47,9 @@ const filteredGroups = computed(() => {
 
 const activePath = computed(() => route.path)
 
+/** 路由 meta.hideProps：试页（如 Dashboard）隐藏右侧 Live Props */
+const showProps = computed(() => route.meta.hideProps !== true)
+
 const breadcrumb = computed(() => findDocsEntry(route.path))
 
 function navigate(path: string): void {
@@ -193,7 +196,7 @@ function onColorScheme(next: GlassColorScheme): void {
         <main class="docs-stage">
           <router-view />
         </main>
-        <aside class="docs-props">
+        <aside v-if="showProps" class="docs-props">
           <DocsPropsPanel />
         </aside>
       </div>

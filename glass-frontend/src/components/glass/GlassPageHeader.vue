@@ -1,39 +1,20 @@
 <script setup lang="ts">
 /**
- * GlassPageHeader — Region / PageHeader（四层栈 L2 · Glass Container 4layer plan）
+ * GlassPageHeader — WinUI Region Layer / PageHeader（四层栈 L2）
  * html 锚点：`.ph` / `.t1 .bph`
  * 坐在 L1 Surface 内的分区条 / 页头条；可多条同层并列。
- * 定稿 A · 2026-10-20：112° 半透扇形 + blur + lift 0 + 轻软影；无白 rim。
- * `--weighted`：默认 true（同扇形 tip 略提）；可显式 false 关闭。
+ * 单档 Region Layer：唯一 fill 含轻 alipay whisper；四周 1px contour + 极轻 rest，无 blur / lift。
  * 材质只吃 `--glass-layer-l2-*`；薄原生壳，禁止包 t-card、禁止白核实色核、禁止第二 Host Tray。
  * slots: leading / default（标题区补充）/ actions
  */
-withDefaults(
-  defineProps<{
-    title?: string
-    subtitle?: string
-    /** 默认 true：微透条；false 走更实 fill（仍走 token，不写死色） */
-    glass?: boolean
-    /** 重物压感。默认 true；false 回落 default 扇形。 */
-    weighted?: boolean
-  }>(),
-  {
-    title: undefined,
-    subtitle: undefined,
-    glass: true,
-    weighted: true,
-  },
-)
+defineProps<{
+  title?: string
+  subtitle?: string
+}>()
 </script>
 
 <template>
-  <header
-    class="glass-page-header"
-    :class="[
-      glass ? undefined : 'glass-page-header--solid',
-      weighted ? 'glass-page-header--weighted' : undefined,
-    ]"
-  >
+  <header class="glass-page-header">
     <div v-if="$slots.leading" class="glass-page-header__leading">
       <slot name="leading" />
     </div>
@@ -55,7 +36,7 @@ withDefaults(
 </template>
 
 <style scoped>
-/* L2 分区壳 · 定稿 A：112° 半透扇形 + blur + lift 0 + 轻软影；无白 rim */
+/* 单档 L2 Region Layer：唯一 fill + contour / 极轻 rest；无 blur / lift */
 .glass-page-header {
   flex: none;
   display: flex;
@@ -67,7 +48,7 @@ withDefaults(
   background: var(--glass-layer-l2-fill);
   -webkit-backdrop-filter: var(--glass-layer-l2-blur);
   backdrop-filter: var(--glass-layer-l2-blur);
-  box-shadow: var(--glass-layer-l2-rim), var(--glass-layer-l2-shadow);
+  box-shadow: var(--glass-layer-l2-shadow);
   transform: translateY(var(--glass-layer-l2-lift, 0));
 }
 
@@ -76,17 +57,6 @@ withDefaults(
   .glass-page-header {
     transform: none;
   }
-}
-
-/* 有 actions：同扇形 tip 略提；影与 default 同档 */
-.glass-page-header--weighted {
-  background: var(--glass-layer-l2-fill-weighted);
-  box-shadow: var(--glass-layer-l2-shadow-weighted);
-}
-
-/* glass=false：更实一档，仍走 L2 token（压过 weighted 渐变底，影仍可 weighted） */
-.glass-page-header--solid {
-  background: var(--glass-layer-l2-fill-solid);
 }
 
 .glass-page-header__leading {

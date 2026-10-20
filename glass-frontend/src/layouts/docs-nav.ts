@@ -45,6 +45,12 @@ export const docsNavGroups: DocsNavGroup[] = [
         descKey: 'nav.item.overview.desc',
         path: '/',
       },
+      {
+        key: 'dashboard',
+        labelKey: 'nav.item.dashboard',
+        descKey: 'nav.item.dashboard.desc',
+        path: '/dashboard',
+      },
     ],
   },
   {

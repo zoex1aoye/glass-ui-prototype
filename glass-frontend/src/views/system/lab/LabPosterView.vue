@@ -55,13 +55,10 @@ const demoBlocks: DocsDemoBlock[] = [
     ],
   },
   {
-    id: 'page-header-weighted',
+    id: 'page-header',
     label: 'Page Header',
-    description: 'GlassPageHeader · weighted / glass',
-    props: [
-      { key: 'weighted', label: 'weighted', type: 'boolean', defaultValue: true },
-      { key: 'glass', label: 'glass', type: 'boolean', defaultValue: true },
-    ],
+    description: 'GlassPageHeader · 单档 Region Layer',
+    props: [],
   },
 ]
 
@@ -89,13 +86,6 @@ const panelDemo = computed(() => {
   }
 })
 
-const pageHeaderDemo = computed(() => {
-  const v = docsProps.state.values['page-header-weighted'] ?? {}
-  return {
-    weighted: Boolean(v.weighted ?? true),
-    glass: Boolean(v.glass ?? true),
-  }
-})
 </script>
 
 <template>
@@ -108,7 +98,7 @@ const pageHeaderDemo = computed(() => {
       <div class="lab-section-label">
         <span class="lab-section-name">{{ tt('lab.section.liveProps') }}</span>
         <span class="lab-section-meta">
-          点选下方演示区块后，右栏 Props 面板可改 variant / title / weighted / glass；画布控件即时反映。
+          点选下方演示区块后，右栏 Props 面板可改 variant / title；Page Header 为单档 Region Layer。
         </span>
       </div>
       <div class="lab-controls">
@@ -132,22 +122,20 @@ const pageHeaderDemo = computed(() => {
         </div>
 
         <div class="lab-control-row">
-          <span class="lab-control-label">Page Header · weighted / glass</span>
+          <span class="lab-control-label">Page Header · Region Layer</span>
           <div class="lab-control-row-items">
             <div
               class="docs-demo-block"
-              :class="{ 'is-selected': isDemoSelected('page-header-weighted') }"
+              :class="{ 'is-selected': isDemoSelected('page-header') }"
               role="button"
               tabindex="0"
-              @click="selectDemo('page-header-weighted')"
-              @keydown.enter="selectDemo('page-header-weighted')"
-              @keydown.space.prevent="selectDemo('page-header-weighted')"
+              @click="selectDemo('page-header')"
+              @keydown.enter="selectDemo('page-header')"
+              @keydown.space.prevent="selectDemo('page-header')"
             >
               <GlassPageHeader
                 title="页头条示意"
-                subtitle="weighted / glass 即时反映"
-                :weighted="pageHeaderDemo.weighted"
-                :glass="pageHeaderDemo.glass"
+                subtitle="单档 Region Layer · 统一 fill / shadow"
               />
             </div>
           </div>
@@ -168,10 +156,10 @@ const pageHeaderDemo = computed(() => {
         <div class="lab-poster-block">
           <div class="lab-cat-strip lab-cat-strip--stack">
             <span class="lab-cat-name">单组件橱窗 · 叠 PosterWash</span>
-            <span class="lab-cat-impl">Surface · PageHeader(weighted=false) · Panel</span>
+            <span class="lab-cat-impl">Surface · PageHeader（Region Layer） · Panel</span>
             <code class="lab-cat-html">.hero-air + .hero-petals 之上</code>
             <span class="lab-cat-rule">
-              Do：玻璃微透吃 wash 色场 · 有 actions 仍关 weighted 用 default fan · Don’t：t-card 冒充 Tray / 双托盘
+              Do：单档 Region Layer 吃 wash 色场 · 有 actions 仍保持同一材质 · Don’t：t-card 冒充 Tray / 双托盘
             </span>
           </div>
           <div class="lab-poster-showcase">
@@ -182,8 +170,7 @@ const pageHeaderDemo = computed(() => {
             </GlassSurface>
             <GlassPageHeader
               title="页头条 · 叠 wash"
-              subtitle="L2 · 带 actions · weighted=false · 坐 PosterWash 底"
-              :weighted="false"
+              subtitle="L2 · 带 actions · 单档 Region Layer · 坐 PosterWash 底"
             >
               <template #actions>
                 <span class="lab-poster-action">对照</span>
@@ -199,10 +186,10 @@ const pageHeaderDemo = computed(() => {
         <div class="lab-poster-block">
           <div class="lab-cat-strip lab-cat-strip--stack">
             <span class="lab-cat-name">Living · 唯一 Host Tray</span>
-            <span class="lab-cat-impl">Surface → PageHeader(weighted=false) → Rail | Stage Flush</span>
+            <span class="lab-cat-impl">Surface → PageHeader（Region Layer） → Rail | Stage Flush</span>
             <code class="lab-cat-html">.surface → .bph → .rail | .bchat（gap=0）</code>
             <span class="lab-cat-rule">
-              Do：整树唯一 L1 · Rail|Stage 贴缝 Flush · Living 页头对齐橱窗 default fan（可关 weighted）·
+              Do：整树唯一 L1 · Rail|Stage 贴缝 Flush · Living 页头为单档 Region Layer ·
               Don’t：双托盘 / 中缝 gutter 冒充 Inset Reveal
             </span>
           </div>
@@ -210,8 +197,7 @@ const pageHeaderDemo = computed(() => {
             <div class="lab-poster-living-stack">
               <GlassPageHeader
                 title="设置与分区"
-                subtitle="L2 · 坐 Host Tray 内 · weighted=false 对齐橱窗 fan"
-                :weighted="false"
+                subtitle="L2 · 坐 Host Tray 内 · 单档 Region Layer"
               >
                 <template #actions>
                   <span class="lab-poster-action">对照方案</span>
@@ -284,7 +270,6 @@ const pageHeaderDemo = computed(() => {
               <GlassPageHeader
                 title="大容器 · 同相改写"
                 subtitle="Surface / PageHeader / Stage · 大面蓝染 5–15%"
-                :weighted="false"
               >
                 <template #actions>
                   <GlassButton variant="quiet">行动点</GlassButton>

@@ -68,19 +68,26 @@ html.dark {
       transparent 70%
     );
 
-  /* Surface / L1：暗色强制 frost。
-     GlassSurface--raster 组件内会再绑 --glass-layer-l1-fill-raster（浅色 PNG），
-     故 fill-raster / blur-raster 必须一并改写，否则海报技法 Living 仍露浅色托盘。 */
+  /* Surface / L1：Mica/Base。高遮罩中性蓝灰基底，不靠 backdrop blur 或像素光栈。 */
+  --glass-wb-contour: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  /* A 试：略降遮罩，让 L0 PosterWash 色场可透进板心（仍 blur:none） */
+  --glass-wb-surface-fill-mica: color-mix(in srgb, #1e3348 82%, transparent);
   --glass-wb-surface-fill-frost: linear-gradient(
     165deg,
     color-mix(in srgb, var(--td-brand-color-2) 58%, var(--td-gray-color-13)) 0%,
     color-mix(in srgb, var(--td-brand-color-1) 48%, var(--td-gray-color-13)) 55%,
     color-mix(in srgb, var(--td-brand-color-1) 35%, var(--td-gray-color-14)) 100%
   );
-  --glass-wb-surface-fill: var(--glass-wb-surface-fill-frost);
-  --glass-wb-surface-blur: var(--glass-wb-surface-blur-frost);
-  --glass-wb-surface-rim: inset 0 0 0 1px color-mix(in srgb, var(--td-brand-color-8) 14%, transparent);
-  --glass-wb-surface-shadow: var(--td-shadow-3), 0 6px 16px color-mix(in srgb, var(--td-gray-color-14) 55%, transparent);
+  --glass-wb-surface-fill: var(--glass-wb-surface-fill-mica);
+  /* deprecated compatibility alias：不再引用 PNG，等价 mica。 */
+  --glass-wb-surface-raster: var(--glass-wb-surface-fill-mica);
+  --glass-wb-surface-blur-mica: none;
+  --glass-wb-surface-blur-raster: var(--glass-wb-surface-blur-mica);
+  --glass-wb-surface-blur-frost: blur(10px) saturate(1.08);
+  --glass-wb-surface-blur: var(--glass-wb-surface-blur-mica);
+  --glass-wb-surface-rim: var(--glass-wb-contour);
+  --glass-wb-surface-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  /* air token 仅为旧主题兼容保留；GlassSurface 不再渲染 __air。 */
   --glass-wb-surface-air:
     radial-gradient(
       52% 44% at 14% 78%,
@@ -93,76 +100,110 @@ html.dark {
       transparent 70%
     ),
     transparent;
-  --glass-layer-l1-fill: var(--glass-wb-surface-fill-frost);
-  --glass-layer-l1-blur: var(--glass-wb-surface-blur-frost);
+  --glass-layer-l1-fill: var(--glass-wb-surface-fill-mica);
+  --glass-layer-l1-blur: var(--glass-wb-surface-blur-mica);
+  --glass-layer-l1-fill-mica: var(--glass-wb-surface-fill-mica);
   --glass-layer-l1-fill-frost: var(--glass-wb-surface-fill-frost);
   --glass-layer-l1-blur-frost: var(--glass-wb-surface-blur-frost);
-  /* 关键：覆盖 raster 默认浅 PNG，与 frost 同材质 */
-  --glass-layer-l1-fill-raster: var(--glass-wb-surface-fill-frost);
-  --glass-layer-l1-blur-raster: var(--glass-wb-surface-blur-frost);
+  --glass-layer-l1-blur-mica: var(--glass-wb-surface-blur-mica);
+  /* deprecated：raster 调用等价 mica。 */
+  --glass-layer-l1-fill-raster: var(--glass-wb-surface-fill-mica);
+  --glass-layer-l1-blur-raster: var(--glass-wb-surface-blur-mica);
   --glass-layer-l1-rim: var(--glass-wb-surface-rim);
   --glass-layer-l1-shadow: var(--glass-wb-surface-shadow);
   --glass-layer-l1-air: var(--glass-wb-surface-air);
 
-  /* Rail / Stage */
-  --glass-wb-rail-wash:
-    radial-gradient(
-      70% 36% at 28% 12%,
-      color-mix(in srgb, var(--td-brand-color-8) 14%, transparent),
-      transparent 55%
-    ),
-    color-mix(in srgb, var(--td-brand-color-2) 45%, var(--td-bg-color-secondarycontainer));
-  --glass-wb-rail-wash-lilac:
-    radial-gradient(
-      70% 36% at 28% 12%,
-      color-mix(in srgb, var(--glass-chroma-ai) 14%, transparent),
-      transparent 55%
-    ),
-    color-mix(in srgb, var(--glass-chroma-ai) 10%, var(--td-bg-color-secondarycontainer));
+  /* Rail / Stage：Content-on-Mica。Rail 是透底导航带，Stage 是略亮的 LayerFill；
+     分区靠明度差，不靠 blur、径向 blooms 或 Stage 自身阴影。 */
+  --glass-wb-rail-wash: color-mix(in srgb, var(--td-brand-color-5) 12%, transparent);
+  --glass-wb-rail-wash-lilac: color-mix(in srgb, var(--glass-chroma-ai) 6%, transparent);
+  --glass-wb-rail-blur: none;
+  --glass-wb-rail-blur-lilac: none;
+  /* Flush 导航带 rest；与 Stage 同档，禁双层光柱 */
+  --glass-wb-rail-shadow: 0 6px 16px rgba(0, 0, 0, 0.14);
+  --glass-wb-rail-list-item-hover-bg-ice: color-mix(
+    in srgb,
+    var(--glass-chroma-alipay) 10%,
+    transparent
+  );
   --glass-wb-rail-list-item-hover-bg: color-mix(
     in srgb,
+    var(--glass-chroma-ai) 8%,
+    transparent
+  );
+  --glass-wb-rail-list-item-active-bg-ice: color-mix(
+    in srgb,
+    var(--glass-chroma-alipay) 12%,
+    transparent
+  );
+  --glass-wb-rail-list-item-active-bg: color-mix(
+    in srgb,
     var(--glass-chroma-ai) 10%,
-    var(--td-bg-color-container-hover)
+    transparent
   );
-  /* Rail active：明显重于 hover 轻洗（禁再 alias hover，否则与悬停同糊） */
-  --glass-wb-rail-list-item-active-bg: color-mix(in srgb, var(--td-brand-color) 26%, transparent);
-  --glass-wb-stage-fill: linear-gradient(
-    165deg,
-    color-mix(in srgb, var(--td-brand-color-1) 42%, var(--td-bg-color-container)),
-    color-mix(in srgb, var(--td-brand-color-1) 28%, var(--td-bg-color-page))
+  --glass-wb-rail-list-item-active-hover-bg-ice: color-mix(
+    in srgb,
+    var(--glass-chroma-alipay) 14%,
+    transparent
   );
+  --glass-wb-rail-list-item-active-hover-bg: color-mix(
+    in srgb,
+    var(--glass-chroma-ai) 12%,
+    transparent
+  );
+  --glass-wb-rail-list-item-pressed-bg-ice: color-mix(
+    in srgb,
+    var(--glass-chroma-alipay) 16%,
+    transparent
+  );
+  --glass-wb-rail-list-item-pressed-bg: color-mix(
+    in srgb,
+    var(--glass-chroma-ai) 14%,
+    transparent
+  );
+  /* Rail list 行：圆角 Whisper；无 active 指示条 */
+  --glass-wb-rail-list-item-radius: var(--glass-wb-list-item-radius);
+  --glass-wb-stage-fill: color-mix(in srgb, #263d54 82%, transparent);
+  --glass-wb-stage-blur: none;
+  /* 贴缝单侧 contour（Stage 左缘），与 --glass-wb-contour 同色；禁 gutter */
+  --glass-wb-stage-seam: inset 1px 0 0 rgba(255, 255, 255, 0.08);
+  /* 贴缝 contour + rest（与 Rail 同档） */
+  --glass-wb-stage-shadow:
+    var(--glass-wb-stage-seam),
+    0 6px 16px rgba(0, 0, 0, 0.14);
+  /* deprecated compatibility token：无 __body 消费者；抬升只留给 Surface。 */
   --glass-wb-body-shadow: var(--td-shadow-2);
 
-  /* L2 Region / PageHeader */
-  --glass-layer-l2-fill: linear-gradient(
-    112deg,
-    color-mix(in srgb, var(--td-brand-color-2) 62%, var(--td-bg-color-container)) 0%,
-    color-mix(in srgb, var(--td-brand-color-1) 52%, var(--td-bg-color-secondarycontainer)) 42%,
-    color-mix(in srgb, var(--td-brand-color-3) 38%, var(--td-bg-color-container)) 66%,
-    color-mix(in srgb, var(--td-brand-color-4) 32%, transparent) 100%
+  /* L2 Region / PageHeader：WinUI Region Layer。
+     单档近实深 Layer，唯一 fill 含 7% alipay whisper；分界走四周 1px contour + 极轻 rest。 */
+  --glass-layer-l2-fill: color-mix(
+    in srgb,
+    var(--glass-chroma-alipay) 7%,
+    color-mix(in srgb, #233b53 94%, transparent)
   );
-  --glass-layer-l2-fill-weighted: linear-gradient(
-    112deg,
-    color-mix(in srgb, var(--td-brand-color-2) 72%, var(--td-bg-color-container)) 0%,
-    color-mix(in srgb, var(--td-brand-color-1) 60%, var(--td-bg-color-secondarycontainer)) 42%,
-    color-mix(in srgb, var(--td-brand-color-3) 48%, var(--td-bg-color-container)) 66%,
-    color-mix(in srgb, var(--td-brand-color-4) 42%, var(--td-bg-color-page)) 100%
-  );
-  --glass-layer-l2-fill-solid: color-mix(in srgb, var(--td-brand-color-1) 55%, var(--td-bg-color-container));
-  --glass-layer-l2-shadow: var(--td-shadow-1);
-  --glass-layer-l2-shadow-weighted: var(--glass-layer-l2-shadow);
+  --glass-layer-l2-blur: none;
+  --glass-layer-l2-shadow:
+    var(--glass-wb-contour),
+    0 4px 12px rgba(0, 0, 0, 0.14);
+  --glass-layer-l2-rim: none;
+  --glass-layer-l2-lift: 0;
 
-  /* L3 Focus Panel */
+  /* L3 Panel / Card：明度分层的 LayerFill；inset 无影无位移，standalone 单档静影。 */
   --glass-layer-l3-fill: color-mix(in srgb, var(--td-brand-color-2) 42%, transparent);
-  --glass-layer-l3-inset-fill: linear-gradient(
-    145deg,
-    color-mix(in srgb, var(--td-brand-color-2) 40%, transparent) 0%,
-    color-mix(in srgb, var(--td-brand-color-3) 45%, transparent) 46%,
-    color-mix(in srgb, var(--td-brand-color-6) 12%, transparent) 100%
+  --glass-layer-l3-inset-fill: color-mix(in srgb, #2c445d 92%, transparent);
+  --glass-layer-l3-inset-blur: none;
+  /* 弱 contour + 极轻 rest 影；仍无 lift / 双层光柱；rest 弱于 standalone */
+  --glass-layer-l3-inset-shadow:
+    var(--glass-wb-contour),
+    0 4px 12px rgba(0, 0, 0, 0.1);
+  --glass-layer-l3-inset-lift: 0px;
+  --glass-layer-l3-standalone-fill: color-mix(
+    in srgb,
+    var(--glass-chroma-alipay) 8%,
+    color-mix(in srgb, #304b65 94%, transparent)
   );
-  --glass-layer-l3-inset-shadow: var(--td-shadow-2);
-  --glass-layer-l3-standalone-fill: color-mix(in srgb, var(--td-brand-color-2) 48%, transparent);
-  --glass-layer-l3-standalone-shadow: var(--td-shadow-2);
+  --glass-layer-l3-standalone-blur: none;
+  --glass-layer-l3-standalone-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
   --glass-layer-l3-hairline: inset 0 0 0 1px color-mix(in srgb, var(--td-brand-color-8) 16%, transparent);
 
   /* 工作台：search / session / soft / field — TD container 阶 + brand 冷染 */
@@ -216,8 +257,14 @@ html.dark {
   --glass-wb-dropdown-item-hover-bg: color-mix(in srgb, var(--td-brand-color) 14%, transparent);
   --glass-wb-dropdown-item-active-bg: color-mix(in srgb, var(--td-brand-color) 20%, transparent);
   --glass-wb-table-fill: color-mix(in srgb, var(--td-brand-color-1) 25%, var(--td-bg-color-container));
-  --glass-wb-table-header-fill: color-mix(in srgb, var(--td-brand-color-2) 35%, var(--td-bg-color-secondarycontainer));
-  --glass-wb-table-shadow: var(--td-shadow-2);
+  --glass-wb-table-blur: blur(8px);
+  --glass-wb-table-header-fill: color-mix(
+    in srgb,
+    var(--glass-chroma-alipay) 14%,
+    color-mix(in srgb, var(--td-bg-color-secondarycontainer) 82%, transparent)
+  );
+  --glass-wb-table-header-blur: none;
+  --glass-wb-table-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
   --glass-wb-table-hairline: inset 0 0 0 1px color-mix(in srgb, var(--td-brand-color-8) 18%, transparent);
   /* 轻 mask：浅色=白 28% 提亮霜。暗色=近白 18% + 轻 blur 磨砂（禁 td-mask 0.6 实黑、
      禁纯黑半透炭洞、禁高 alpha 白粉笔板）。loading 文案 primary。 */
@@ -233,14 +280,19 @@ html.dark {
   );
   --glass-wb-table-inset-hairline: inset 0 0 0 1px
     color-mix(in srgb, var(--td-brand-color-8) 14%, transparent);
-  --glass-wb-table-row-hover: color-mix(in srgb, var(--td-brand-color) 12%, transparent);
+  --glass-wb-table-row-hover: color-mix(in srgb, var(--glass-chroma-alipay) 10%, transparent);
   /* Selected Whisper：冷蓝行动选中，禁 AI 紫满行（紫只做点缀） */
-  --glass-wb-table-row-selected: color-mix(in srgb, var(--td-brand-color) 18%, transparent);
-  --glass-wb-table-expanded-fill: color-mix(in srgb, var(--td-brand-color-2) 28%, transparent);
+  --glass-wb-table-row-selected: color-mix(in srgb, var(--glass-chroma-alipay) 12%, transparent);
+  --glass-wb-table-row-selected-hover: color-mix(
+    in srgb,
+    var(--glass-chroma-alipay) 15%,
+    transparent
+  );
+  --glass-wb-table-expanded-fill: color-mix(in srgb, var(--glass-chroma-alipay) 5%, transparent);
   --glass-wb-table-fixed-header-fill: color-mix(
     in srgb,
-    var(--td-brand-color-2) 40%,
-    var(--td-bg-color-secondarycontainer)
+    var(--glass-chroma-alipay) 14%,
+    color-mix(in srgb, var(--td-bg-color-secondarycontainer) 94%, transparent)
   );
   --glass-wb-table-fixed-cell-fill: color-mix(
     in srgb,
@@ -249,12 +301,17 @@ html.dark {
   );
   --glass-wb-table-fixed-cell-hover-fill: color-mix(
     in srgb,
-    var(--td-brand-color) 10%,
+    var(--glass-chroma-alipay) 10%,
     var(--glass-wb-table-fixed-cell-fill)
   );
   --glass-wb-table-fixed-cell-selected-fill: color-mix(
     in srgb,
-    var(--td-brand-color) 14%,
+    var(--glass-chroma-alipay) 12%,
+    var(--glass-wb-table-fixed-cell-fill)
+  );
+  --glass-wb-table-fixed-cell-selected-hover-fill: color-mix(
+    in srgb,
+    var(--glass-chroma-alipay) 15%,
     var(--glass-wb-table-fixed-cell-fill)
   );
   --glass-wb-table-drag-chosen-fill: color-mix(
@@ -481,68 +538,104 @@ body .t-notification {
   /* AI 工作台 —— z2 Behind Surface（整块浮层）+ z3 Rail|Stage 内部贴缝 */
   --glass-rail-width: 260px;
 
-  /* z2 Behind Surface：默认 A 合成光栅 / 可选近白微透 + 多层柔阴影 + 大圆角，禁止 border 描边。
-     「被看见」= 相对页底外边距（app-content）+ 整框 inset（surface-pad）四周露玻璃。
+  /* L1 Mica/Base：默认高遮罩冰壳 + 中性 contour + 单档静影；frost 仅作强透展示。
+     「被看见」= 相对 L0 PosterWash 外边距 + 整框 inset（surface-pad）四周露 L0。
      Rail/Stage 之间 gap 必须为 0，禁止用中间缝露底板。 */
   --glass-wb-surface-pad: 16px;
-  /* Surface 双材质：默认 raster 直接铺 A 合成光栅；frost 为近白微透供 PosterWash 透底。 */
-  --glass-wb-surface-raster: url('@/assets/glass/surface-a-composite-raster.png');
+  --glass-wb-contour: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+  /* A 试：略降遮罩，让 L0 PosterWash 色场可透进板心（仍 blur:none） */
+  --glass-wb-surface-fill-mica: color-mix(in srgb, #f7fbff 82%, transparent);
   --glass-wb-surface-fill-frost: linear-gradient(
     165deg,
     rgba(253, 254, 255, 0.62) 0%,
     rgba(248, 252, 255, 0.5) 55%,
     rgba(240, 247, 254, 0.42) 100%
   );
-  /* 兼容 Poster 材质技法等既有调用；GlassSurface 默认走 raster。 */
-  --glass-wb-surface-fill: var(--glass-wb-surface-fill-frost);
-  --glass-wb-surface-blur-raster: none;
-  --glass-wb-surface-blur-frost: blur(36px) saturate(1.2);
-  --glass-wb-surface-blur: var(--glass-wb-surface-blur-frost);
-  /* 淡白 rim：只做边界提亮，不写成 1px 硬描边。 */
-  --glass-wb-surface-rim: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
-  /* Ambient（大范围极低 alpha） + Key（稍紧、略下偏移） */
-  --glass-wb-surface-shadow:
-    0 30px 64px rgba(15, 60, 140, 0.13),
-    0 6px 16px rgba(15, 60, 140, 0.05);
+  --glass-wb-surface-fill: var(--glass-wb-surface-fill-mica);
+  /* deprecated compatibility alias：PNG 资源可留盘，但不再被引用。 */
+  --glass-wb-surface-raster: var(--glass-wb-surface-fill-mica);
+  --glass-wb-surface-blur-mica: none;
+  --glass-wb-surface-blur-raster: var(--glass-wb-surface-blur-mica);
+  --glass-wb-surface-blur-frost: blur(10px) saturate(1.08);
+  --glass-wb-surface-blur: var(--glass-wb-surface-blur-mica);
+  --glass-wb-surface-rim: var(--glass-wb-contour);
+  --glass-wb-surface-shadow: 0 8px 24px rgba(15, 40, 80, 0.08);
   /* v5 .surface 本体圆角 20px；与 Region 的 16px 分档。 */
   --glass-wb-surface-radius: 20px;
   /* Region（PageHeader / Panel）同档 16。 */
   --glass-wb-stack-radius-region: 16px;
   /* Flush 外角：L1=pad=16 时 nest 公式为 0，固定 8 保 backdrop 裁切；贴缝边仍 0。
-     Surface __body / Rail 左 / Stage 右 同源吃本 token。 */
+     Rail 左 / Stage 右 作为 Surface 直接子项时同源吃本 token。 */
   --glass-wb-stack-flush-radius: 8px;
 
-  /* z3a Session Rail：z2 磨砂冰蓝冷侧栏（html .rail / .widgets）
-     主层实色 frost-blue，比 Surface 露边更冷更实；可选顶部冷青轻团叠压。
-     禁止近白 .bsurf 主材质、大圆角 / 重阴影 / 描边（外轮廓由 Surface overflow 裁）。 */
-  --glass-wb-rail-wash:
-    radial-gradient(70% 36% at 28% 12%, rgba(79, 195, 255, 0.24), transparent 55%),
-    rgba(198, 222, 250, 0.56);
-  --glass-wb-rail-blur: blur(20px) saturate(1.18);
-  /* Rail lilac tone：AI 紫只做低 alpha wash，不铺满浓紫板；明度贴近冰蓝轨。
-     列表态在 lilac 轨内 remap：hover 淡紫洗、active 近白微透（无左侧紫 tip）；
-     字色沿用 primary / secondary，不反白。 */
-  --glass-wb-rail-wash-lilac:
-    radial-gradient(
-      70% 36% at 28% 12%,
-      color-mix(in srgb, var(--glass-chroma-ai) 18%, transparent),
-      transparent 55%
-    ),
-    color-mix(in srgb, var(--glass-chroma-ai) 14%, rgba(248, 246, 252, 0.72));
-  --glass-wb-rail-blur-lilac: blur(20px) saturate(1.12);
-  /* 轨内 List hover（lilac）：低 alpha 淡紫洗；ice 在 .glass-rail--ice  remap 到 session-hover */
-  --glass-wb-rail-list-item-hover-bg: color-mix(in srgb, var(--glass-chroma-ai) 8%, rgba(255, 255, 255, 0.72));
-  /* 轨内 List active：近白微透（禁深紫板 / 禁反白字）；抬升影可与 session-active 共用 */
-  --glass-wb-rail-list-item-active-bg: rgba(252, 254, 255, 0.72);
+  /* Rail：Content-on-Mica 导航带（html .rail / .widgets）。
+     透底、极淡冷 tint，仅与 Mica 形成明度 / 色相区分；无 blur、无顶部 bloom。
+     禁止厚实 frost-blue 板、大圆角 / 重阴影 / 描边（外轮廓由 Surface overflow 裁）。 */
+  --glass-wb-rail-wash: color-mix(in srgb, var(--glass-chroma-ice) 28%, transparent);
+  --glass-wb-rail-blur: none;
+  --glass-wb-rail-shadow: 0 6px 16px rgba(15, 40, 80, 0.06);
+  /* Rail lilac tone：AI 紫只做低 alpha tint，不铺满浓紫板。
+     列表态在 lilac 轨内 remap：hover / active 均为低透紫洗；
+     轨内 List：圆角 Whisper；选中靠 wash + 标题蓝字，无指示条。 */
+  --glass-wb-rail-wash-lilac: color-mix(in srgb, var(--glass-chroma-ai) 6%, transparent);
+  --glass-wb-rail-blur-lilac: none;
+  /* 轨内 List：hover / active Whisper；选中与叠加悬停均保持低透 wash。 */
+  --glass-wb-rail-list-item-hover-bg-ice: color-mix(
+    in srgb,
+    var(--glass-chroma-alipay) 10%,
+    transparent
+  );
+  --glass-wb-rail-list-item-hover-bg: color-mix(
+    in srgb,
+    var(--glass-chroma-ai) 8%,
+    transparent
+  );
+  --glass-wb-rail-list-item-active-bg-ice: color-mix(
+    in srgb,
+    var(--glass-chroma-alipay) 12%,
+    transparent
+  );
+  --glass-wb-rail-list-item-active-bg: color-mix(
+    in srgb,
+    var(--glass-chroma-ai) 10%,
+    transparent
+  );
+  --glass-wb-rail-list-item-active-hover-bg-ice: color-mix(
+    in srgb,
+    var(--glass-chroma-alipay) 15%,
+    transparent
+  );
+  --glass-wb-rail-list-item-active-hover-bg: color-mix(
+    in srgb,
+    var(--glass-chroma-ai) 12%,
+    transparent
+  );
+  --glass-wb-rail-list-item-pressed-bg-ice: color-mix(
+    in srgb,
+    var(--glass-chroma-alipay) 17%,
+    transparent
+  );
+  --glass-wb-rail-list-item-pressed-bg: color-mix(
+    in srgb,
+    var(--glass-chroma-ai) 14%,
+    transparent
+  );
+  --glass-wb-rail-list-item-radius: var(--glass-wb-list-item-radius);
   --glass-wb-list-item-active-shadow: var(--glass-wb-session-active-shadow);
 
-  /* z3b Stage：z4 近白微透焦点面（html .chat）
-     比 Surface 露边更亮更暖；抬升影交给整板，Stage 自身不得成第二张浮卡 */
-  --glass-wb-stage-fill: linear-gradient(165deg, rgba(255, 255, 255, 0.74), rgba(248, 252, 255, 0.58));
-  --glass-wb-stage-blur: blur(22px) saturate(1.15);
-  --glass-wb-stage-shadow: none;
+  /* Stage：Content Layer / LayerFill（html .chat）。
+     低透近白、略亮于 Mica；分区不靠渐变光团。抬升影只留在整板。 */
+  --glass-wb-stage-fill: color-mix(in srgb, #ffffff 78%, transparent);
+  --glass-wb-stage-blur: none;
+  /* 贴缝单侧 contour（Stage 左缘），与 --glass-wb-contour 同色；禁双线、禁 gutter 露边 */
+  --glass-wb-stage-seam: inset 1px 0 0 rgba(0, 0, 0, 0.06);
+  /* 贴缝 contour + rest（与 Rail 同档） */
+  --glass-wb-stage-shadow:
+    var(--glass-wb-stage-seam),
+    0 6px 16px rgba(15, 40, 80, 0.06);
 
-  /* Rail|Stage 贴缝整板：一体柔影（html chat Ambient+Key，略收） */
+  /* deprecated compatibility token：无 __body 消费者；抬升只留给 Surface。
+     Rail|Stage 贴缝为 gap=0，不靠中缝或第二层阴影分区。 */
   --glass-wb-body-shadow:
     0 20px 48px rgba(15, 60, 140, 0.1),
     0 4px 12px rgba(15, 60, 140, 0.05);
@@ -1215,24 +1308,36 @@ body .t-notification {
 
   /* Data Grid / Glass Table · Quiet Grid（t1–t4 大容器映射 · 单一语言）
      t1 Host Tray   → shell fill + blur + soft shadow（禁实白 Excel 卡 + 重阴影）
-     Header Band    → Workbench Left Nav / Frost Rail 磨砂冰蓝平铺；标题行一体带；字 secondary
+     Header Band    → Content Layer：近白层 + 轻 alipay 染；标题行一体带；字 secondary
      t3 Quiet Ribbon → 水平细分割 + pagination Quiet Chrome
      t4 Near-White  → 行体透明吃外壳；空态 muted
-     Hover Whisper / Selected Whisper → session-hover 族 / 极淡紫
+     Hover Whisper / Selected Whisper → alipay 10% / 12% / 15%；整行 wash，无左 pill
      权威映射：.agents/tmp-glass-table-t1t4-plan.md */
   --glass-wb-table-fill: rgba(250, 253, 255, 0.55); /* t1 .big Host Tray 微透近白 */
-  --glass-wb-table-blur: blur(20px); /* t1 .big blur≈20 */
+  --glass-wb-table-blur: blur(8px); /* 托盘只留一档轻 blur，避免表体自成 Frost */
   --glass-wb-table-radius: 16px; /* soft radius 14–16 */
-  --glass-wb-table-shadow:
-    0 16px 40px rgba(15, 60, 140, 0.07),
-    0 4px 12px rgba(15, 60, 140, 0.04); /* 柔影抬浮，非 Excel 重阴影 */
+  --glass-wb-table-shadow: 0 8px 24px rgba(15, 60, 140, 0.06); /* 单档静影，非 Excel 重阴影 */
   --glass-wb-table-hairline: inset 0 0 0 1px rgba(120, 160, 210, 0.18); /* Quiet 轮廓，勿脏方框 */
-  /* Workbench Left Nav / Frost Rail / Header Band ← html .hero-ico — 磨砂冰蓝平铺，整行只画一次 */
-  --glass-wb-table-header-fill: rgba(198, 222, 250, 0.44);
-  --glass-wb-table-row-hover: var(--glass-wb-session-hover-bg); /* Hover Whisper */
-  /* Selected Whisper：冷蓝微 wash（行动选中）；AI 紫仅点缀，禁满行脏紫 */
+  /* Content Layer / Header Band：近白层 + alipay 染（14%，表头需比行 Whisper 更醒目） */
+  --glass-wb-table-header-fill: color-mix(
+    in srgb,
+    var(--glass-chroma-alipay) 14%,
+    rgba(252, 254, 255, 0.85)
+  );
+  --glass-wb-table-header-blur: none;
+  /* Hover / Selected Whisper：alipay 10 / 12 / 15 阶梯；AI 紫只做点缀，禁满行脏紫 */
+  --glass-wb-table-row-hover: color-mix(in srgb, var(--glass-chroma-alipay) 10%, transparent);
   --glass-wb-table-row-selected: color-mix(in srgb, var(--glass-chroma-alipay) 12%, transparent);
-  --glass-wb-table-expanded-fill: rgba(198, 222, 250, 0.22); /* 展开行 Quiet wash，不另起卡片 */
+  --glass-wb-table-row-selected-hover: color-mix(
+    in srgb,
+    var(--glass-chroma-alipay) 15%,
+    transparent
+  );
+  --glass-wb-table-expanded-fill: color-mix(
+    in srgb,
+    var(--glass-chroma-alipay) 4%,
+    transparent
+  ); /* 展开行 Quiet wash，不另起卡片 */
   --glass-wb-table-loading-mask: rgba(255, 255, 255, 0.28); /* t4 轻 mask */
   --glass-wb-loading-overlay-blur: none; /* 浅色轻霜不额外 blur；暗色覆写磨砂 */
   /* 固定列：取代 TD 2px 灰硬边；横向滚动时才由 TD 状态类触发。
@@ -1240,11 +1345,28 @@ body .t-notification {
   --glass-wb-table-fixed-shadow-line: rgba(120, 160, 210, 0.14);
   --glass-wb-table-fixed-shadow-left: 5px 0 10px -6px rgba(15, 60, 140, 0.08);
   --glass-wb-table-fixed-shadow-right: -5px 0 10px -6px rgba(15, 60, 140, 0.08);
-  /* 固定列遮罩：滚动时盖住底层列，仍保持近白玻璃而非实白 Excel 格 */
-  --glass-wb-table-fixed-header-fill: rgba(213, 231, 251, 0.98);
+  /* 固定列遮罩：滚动时盖住底层列；表头与 Header Band 同族，不再单独浓蓝 */
+  --glass-wb-table-fixed-header-fill: color-mix(
+    in srgb,
+    var(--glass-chroma-alipay) 14%,
+    rgba(252, 254, 255, 0.94)
+  );
   --glass-wb-table-fixed-cell-fill: rgba(250, 253, 255, 0.94);
-  --glass-wb-table-fixed-cell-hover-fill: rgba(246, 251, 255, 0.96);
-  --glass-wb-table-fixed-cell-selected-fill: rgba(245, 246, 255, 0.96);
+  --glass-wb-table-fixed-cell-hover-fill: color-mix(
+    in srgb,
+    var(--glass-chroma-alipay) 10%,
+    var(--glass-wb-table-fixed-cell-fill)
+  );
+  --glass-wb-table-fixed-cell-selected-fill: color-mix(
+    in srgb,
+    var(--glass-chroma-alipay) 12%,
+    var(--glass-wb-table-fixed-cell-fill)
+  );
+  --glass-wb-table-fixed-cell-selected-hover-fill: color-mix(
+    in srgb,
+    var(--glass-chroma-alipay) 15%,
+    var(--glass-wb-table-fixed-cell-fill)
+  );
   /* 行拖拽：chosen 轻提、ghost 轻留白；沿用 Quiet Grid 近白族 */
   --glass-wb-table-drag-chosen-fill: rgba(250, 253, 255, 0.72);
   --glass-wb-table-drag-chosen-shadow: 0 6px 16px rgba(15, 60, 140, 0.08);
@@ -1275,12 +1397,20 @@ body .t-notification {
   --glass-wb-list-item-pad-s: 8px 12px;
   --glass-wb-list-item-pad-l: 14px 16px;
   --glass-wb-list-item-radius: 12px;
+  /* 字号是 GlassList 全局契约；size 只切 padding，不再联动字号。 */
+  --glass-wb-list-title-size: 13px;
+  --glass-wb-list-title-line-height: 20px;
+  --glass-wb-list-title-weight: 600;
+  --glass-wb-list-description-size: 12px;
+  --glass-wb-list-description-line-height: 18px;
+  --glass-wb-list-item-font-size: 14px;
+  --glass-wb-list-item-line-height: 22px;
   /* Hover Whisper：对齐 DocsShell nav hover（--glass-wb-text-cta-hover-bg 极淡冷雾）；
      禁 alipay 实色块洗。与 active（session 白板+抬升影）同族：hover 雾 / active 板。 */
   --glass-wb-list-item-hover-bg: var(--glass-wb-text-cta-hover-bg);
   --glass-wb-list-item-transition: background-color 0.15s ease, box-shadow 0.15s ease;
   --glass-wb-list-split-color: var(--glass-border-soft);
-  /* stripe / rail active：同 nav `.is-active` session 白板 + 抬升影 */
+  /* stripe：沿用 session 白板 + 抬升影；轨内 active 另行覆盖为低透 wash + pill */
   --glass-wb-list-stripe-bg: var(--glass-wb-session-active-bg);
   --glass-wb-list-item-active-shadow: var(--glass-wb-session-active-shadow);
   --glass-wb-list-title-color: var(--glass-text-primary);
@@ -1655,80 +1785,63 @@ body .t-notification {
   --glass-poster-page-air-d-blur: blur(40px);
   --glass-poster-page-air-d-opacity: 0.4;
 
-  /* L1 Host Tray / Surface —— 默认 raster；frost 由组件 modifier 切换，禁 pad=0 */
-  --glass-layer-l1-fill: var(--glass-wb-surface-raster);
-  --glass-layer-l1-blur: var(--glass-wb-surface-blur-raster);
-  --glass-layer-l1-fill-raster: var(--glass-wb-surface-raster);
+  /* L1 Mica/Base —— 默认 mica；frost 由组件 modifier 切换，禁 pad=0 */
+  --glass-layer-l1-fill: var(--glass-wb-surface-fill-mica);
+  --glass-layer-l1-blur: var(--glass-wb-surface-blur-mica);
+  --glass-layer-l1-fill-mica: var(--glass-wb-surface-fill-mica);
+  --glass-layer-l1-blur-mica: var(--glass-wb-surface-blur-mica);
+  /* deprecated：旧 raster 调用与 --glass-wb-surface-raster 均等价 mica。 */
+  --glass-layer-l1-fill-raster: var(--glass-wb-surface-fill-mica);
   --glass-layer-l1-fill-frost: var(--glass-wb-surface-fill-frost);
-  --glass-layer-l1-blur-raster: var(--glass-wb-surface-blur-raster);
+  --glass-layer-l1-blur-raster: var(--glass-wb-surface-blur-mica);
   --glass-layer-l1-blur-frost: var(--glass-wb-surface-blur-frost);
   --glass-layer-l1-rim: var(--glass-wb-surface-rim);
   --glass-layer-l1-shadow: var(--glass-wb-surface-shadow);
   --glass-layer-l1-radius: var(--glass-wb-surface-radius);
   --glass-layer-l1-pad: var(--glass-wb-surface-pad);
+  /* legacy compatibility tokens：组件已不渲染 air。 */
   --glass-layer-l1-air: var(--glass-wb-surface-air);
   --glass-layer-l1-air-blur: var(--glass-wb-surface-air-blur);
 
-  /* L2 Region / PageHeader —— 定稿 A · 2026-10-20
-     112° 白→冰蓝半透扇形 + blur(18px) saturate(1.12)；lift 0；
-     无白 rim / 无描边；轻软影与加权态同档，禁旧 chip 影 / lift 重影。 */
-  --glass-layer-l2-fill: linear-gradient(
-    112deg,
-    rgba(255, 255, 255, 0.9) 0%,
-    rgba(248, 252, 255, 0.8) 42%,
-    rgba(232, 244, 255, 0.74) 66%,
-    rgba(180, 216, 255, 0.58) 100%
+  /* L2 Region / PageHeader：WinUI Region Layer。
+     单档近白 Layer，唯一 fill 含 7% alipay whisper；分界走四周 1px contour + 极轻 rest。 */
+  --glass-layer-l2-fill: color-mix(
+    in srgb,
+    var(--glass-chroma-alipay) 7%,
+    color-mix(in srgb, #fbfdff 90%, transparent)
   );
-  /* Actions「重物压感」：同 112° 扇形，仅 tip 略提；影与 default 同档。 */
-  --glass-layer-l2-fill-weighted: linear-gradient(
-    112deg,
-    rgba(255, 255, 255, 0.9) 0%,
-    rgba(248, 252, 255, 0.8) 42%,
-    rgba(232, 244, 255, 0.74) 66%,
-    rgba(168, 208, 255, 0.66) 100%
-  );
-  --glass-layer-l2-fill-solid: rgba(252, 254, 255, 0.92);
-  --glass-layer-l2-blur: blur(18px) saturate(1.12);
+  --glass-layer-l2-blur: none;
   --glass-layer-l2-shadow:
-    0 10px 26px rgba(20, 60, 130, 0.1),
-    0 2px 6px rgba(20, 60, 130, 0.045);
-  --glass-layer-l2-shadow-weighted:
-    0 10px 26px rgba(20, 60, 130, 0.1),
-    0 2px 6px rgba(20, 60, 130, 0.045);
-  /* 用户纠偏：不要白边；边界只靠材质差 + 轻软影。 */
+    var(--glass-wb-contour),
+    0 4px 12px rgba(15, 40, 80, 0.04);
   --glass-layer-l2-rim: none;
-  /* 定稿 A：平面轻浮，不再位移抬升。 */
   --glass-layer-l2-lift: 0;
   --glass-layer-l2-radius: var(--glass-wb-stack-radius-region);
   --glass-layer-l2-height: 56px;
 
-  /* L3 Focus Panel —— Fan Tip 冷蓝焦点 / frosted 微透 / 双层悬浮影；无外轮廓 hairline
-     inset = Nested Chrome 单托盘：左更开 → 冰蓝中段 → 蓝染尖，靠材质差 + 影提升阅读边界；
-     轻 frosted 让宿主 L1 透叠可感，悬浮影弱于或贴近 L2 PageHeader；
-     禁止粉笔白实底、双托盘或 hairline。 */
+  /* L3 Panel / Card —— Card / LayerFill 分区面。
+     inset = 高遮罩近白单色面，靠明度差与 Stage 分区：禁多停渐变光、blur、lift、悬浮影；
+     standalone = 比 inset 更实的 LayerFill，可叠 6–10% alipay，contour + 单档静影；
+     禁止双托盘、双层光柱或将 Panel 做成第三块 Frost 玻璃。 */
   --glass-layer-l3-fill: rgba(252, 254, 255, 0.56);
   --glass-layer-l3-blur: blur(18px);
   --glass-layer-l3-shadow: none;
   --glass-layer-l3-radius: var(--glass-wb-stack-radius-region);
-  --glass-layer-l3-inset-fill: linear-gradient(
-    145deg,
-    rgba(255, 255, 255, 0.4) 0%,
-    rgba(220, 238, 255, 0.48) 46%,
-    rgba(22, 119, 255, 0.1) 100%
-  );
-  --glass-layer-l3-inset-blur: blur(14px) saturate(1.14);
-  /* 双层柔影抬悬浮；L3 保持自身轻软档，不与 L2 定稿 A 轻软影混用 */
+  --glass-layer-l3-inset-fill: color-mix(in srgb, #ffffff 90%, transparent);
+  --glass-layer-l3-inset-blur: none;
+  /* 弱 contour + 极轻 rest 影；仍无 lift / 双层光柱；rest 弱于 standalone(0.06) */
   --glass-layer-l3-inset-shadow:
-    0 14px 36px rgba(15, 60, 140, 0.1),
-    0 4px 12px rgba(15, 60, 140, 0.05);
-  --glass-layer-l3-inset-lift: 1px;
-  --glass-layer-l3-inset-hairline: none; /* 容器禁外轮廓 hairline；分层靠字色 / 明度冷暖 */
-  --glass-layer-l3-standalone-fill: rgba(252, 254, 255, 0.62);
-  --glass-layer-l3-standalone-blur: blur(18px);
-  /* 橱窗同步略抬；standalone 略强于 inset，维持 L3 自身层级 */
-  --glass-layer-l3-standalone-shadow:
-    0 16px 40px rgba(15, 60, 140, 0.105),
-    0 4px 12px rgba(15, 60, 140, 0.055);
+    var(--glass-wb-contour),
+    0 4px 12px rgba(15, 40, 80, 0.04);
+  --glass-layer-l3-inset-lift: 0px;
+  --glass-layer-l3-inset-hairline: var(--glass-wb-contour);
+  --glass-layer-l3-standalone-fill: color-mix(
+    in srgb,
+    var(--glass-chroma-alipay) 8%,
+    color-mix(in srgb, #ffffff 96%, transparent)
+  );
+  --glass-layer-l3-standalone-blur: none;
+  --glass-layer-l3-standalone-shadow: 0 8px 24px rgba(15, 40, 80, 0.06);
   --glass-layer-l3-hairline: inset 0 0 0 1px rgba(120, 160, 210, 0.12);
 }
 
@@ -4477,6 +4590,8 @@ body {
 .glass-list.t-list .glass-list-item.t-list-item {
   padding: var(--glass-wb-list-item-pad);
   border-radius: var(--glass-wb-list-item-radius);
+  font-size: var(--glass-wb-list-item-font-size);
+  line-height: var(--glass-wb-list-item-line-height);
   transition: var(--glass-wb-list-item-transition);
 }
 
@@ -4492,28 +4607,48 @@ body {
   background: var(--glass-wb-list-item-hover-bg);
 }
 
-/* Rail tone → 轨内 Quiet List hover 重映射（与 GlassRail scoped 双保险；禁漏 ice） */
+/* Rail tone → 轨内 Quiet List 状态重映射（与 GlassRail scoped 双保险；禁漏 ice） */
 .glass-rail--ice {
-  --glass-wb-list-item-hover-bg: var(--glass-wb-session-hover-bg);
+  --glass-wb-list-item-hover-bg: var(--glass-wb-rail-list-item-hover-bg-ice);
+  --glass-wb-rail-list-item-active-current-bg: var(--glass-wb-rail-list-item-active-bg-ice);
+  --glass-wb-rail-list-item-active-hover-current-bg:
+    var(--glass-wb-rail-list-item-active-hover-bg-ice);
+  --glass-wb-rail-list-item-pressed-current-bg: var(--glass-wb-rail-list-item-pressed-bg-ice);
 }
 
 .glass-rail--lilac {
   --glass-wb-list-item-hover-bg: var(--glass-wb-rail-list-item-hover-bg);
+  --glass-wb-rail-list-item-active-current-bg: var(--glass-wb-rail-list-item-active-bg);
+  --glass-wb-rail-list-item-active-hover-current-bg: var(--glass-wb-rail-list-item-active-hover-bg);
+  --glass-wb-rail-list-item-pressed-current-bg: var(--glass-wb-rail-list-item-pressed-bg);
 }
 
-/* Rail 列表 active：近白微透井 + 轻抬升影 + 蓝字；无 tip / 无贴边横条。 */
+/* Rail 列表：圆角 Whisper；无指示条 / 无抬升影。 */
+.glass-rail
+  .glass-list.t-list
+  .t-list__inner
+  .glass-list-item.t-list-item {
+  position: relative;
+  overflow: visible;
+  border-radius: var(--glass-wb-rail-list-item-radius);
+}
+
 .glass-rail .glass-list.t-list .t-list__inner .glass-list-item.t-list-item.is-active,
 .glass-rail .glass-list.t-list .t-list__inner .glass-list-item.t-list-item[data-active='true'] {
-  background: var(--glass-wb-rail-list-item-active-bg);
-  box-shadow: var(--glass-wb-list-item-active-shadow);
-  color: var(--glass-wb-btn-blue);
-  font-weight: 500;
+  background: var(--glass-wb-rail-list-item-active-current-bg);
+  box-shadow: none;
 }
 
 .glass-rail .glass-list.t-list .t-list__inner .glass-list-item.t-list-item.is-active:hover,
 .glass-rail .glass-list.t-list .t-list__inner .glass-list-item.t-list-item[data-active='true']:hover {
-  background: var(--glass-wb-rail-list-item-active-bg);
-  box-shadow: var(--glass-wb-list-item-active-shadow);
+  background: var(--glass-wb-rail-list-item-active-hover-current-bg);
+  box-shadow: none;
+}
+
+.glass-rail .glass-list.t-list .t-list__inner .glass-list-item.t-list-item.is-active:active,
+.glass-rail .glass-list.t-list .t-list__inner .glass-list-item.t-list-item[data-active='true']:active {
+  background: var(--glass-wb-rail-list-item-pressed-current-bg);
+  box-shadow: none;
 }
 
 .glass-rail
@@ -4559,10 +4694,15 @@ body {
 
 .glass-list-item-meta .t-list-item__meta-title {
   color: var(--glass-wb-list-title-color);
+  font-size: var(--glass-wb-list-title-size);
+  font-weight: var(--glass-wb-list-title-weight);
+  line-height: var(--glass-wb-list-title-line-height);
 }
 
 .glass-list-item-meta .t-list-item__meta-description {
   color: var(--glass-wb-list-description-color);
+  font-size: var(--glass-wb-list-description-size);
+  line-height: var(--glass-wb-list-description-line-height);
 }
 
 /* ── Sound Wave Loading · GlassLoading（全局主题层）────────────────────

@@ -16,6 +16,12 @@ const router = createRouter({
           meta: { title: 'Overview' },
         },
         {
+          path: 'dashboard',
+          name: 'dashboard',
+          component: () => import('@/views/system/lab/LabDashboardView.vue'),
+          meta: { title: 'Dashboard', hideProps: true },
+        },
+        {
           path: 'layout',
           name: 'layout',
           component: () => import('@/views/system/lab/LabLayoutView.vue'),
@@ -73,6 +79,7 @@ const router = createRouter({
     },
     // 旧 /system/lab/* 与 /workbench → 扁平 path / 首页
     { path: '/system/lab', redirect: '/' },
+    { path: '/system/lab/dashboard', redirect: '/dashboard' },
     { path: '/system/lab/workbench', redirect: '/' },
     { path: '/system/lab/containers', redirect: '/layout' },
     { path: '/system/lab/layout', redirect: '/layout' },

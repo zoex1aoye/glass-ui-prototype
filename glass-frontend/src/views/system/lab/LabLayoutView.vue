@@ -56,11 +56,8 @@ const demoBlocks: DocsDemoBlock[] = [
   {
     id: 'page-header',
     label: 'Page Header',
-    description: 'GlassPageHeader · weighted / glass',
-    props: [
-      { key: 'weighted', label: 'weighted', type: 'boolean', defaultValue: true },
-      { key: 'glass', label: 'glass', type: 'boolean', defaultValue: true },
-    ],
+    description: 'GlassPageHeader · 单档 Region Layer',
+    props: [],
   },
   {
     id: 'surface-material',
@@ -71,10 +68,10 @@ const demoBlocks: DocsDemoBlock[] = [
         key: 'material',
         label: 'material',
         type: 'select',
-        defaultValue: 'raster',
+        defaultValue: 'mica',
         options: [
-          { label: 'raster · A 合成光栅', value: 'raster' },
-          { label: 'frost · 近白微透', value: 'frost' },
+          { label: 'mica · Mica/Base（默认）', value: 'mica' },
+          { label: 'frost · 强透展示', value: 'frost' },
         ],
       },
     ],
@@ -122,17 +119,9 @@ const focusPanel = computed(() => {
   }
 })
 
-const pageHeader = computed(() => {
-  const v = docsProps.state.values['page-header'] ?? {}
-  return {
-    weighted: Boolean(v.weighted ?? true),
-    glass: Boolean(v.glass ?? true),
-  }
-})
-
-const surfaceMaterial = computed<'raster' | 'frost'>(() => {
+const surfaceMaterial = computed<'mica' | 'frost'>(() => {
   const v = docsProps.state.values['surface-material'] ?? {}
-  return v.material === 'frost' ? 'frost' : 'raster'
+  return v.material === 'frost' ? 'frost' : 'mica'
 })
 
 const railTone = computed<'ice' | 'lilac'>(() => {
@@ -151,10 +140,10 @@ const railListRows = [
 /** Material Stack 图例：对照 L0–L3 + 旧 z 档 */
 const stackLegend = [
   { z: 'L0', name: 'Poster Wash', swatch: 'wash', selector: '--glass-layer-l0 / .poster-air' },
-  { z: 'L1', name: 'Host Tray / Surface', swatch: 'surface', selector: 'GlassSurface · raster | frost' },
+  { z: 'L1', name: 'Mica / Base', swatch: 'surface', selector: 'GlassSurface · mica | frost' },
   { z: 'L2', name: 'Region / PageHeader', swatch: 'header', selector: 'GlassPageHeader · .bph' },
   { z: 'L3', name: 'Focus Panel', swatch: 'stage', selector: 'GlassPanel · .bchat' },
-  { z: 'z2', name: 'Frost Rail（Flush）', swatch: 'rail', selector: 'GlassRail · .rail' },
+  { z: 'z2', name: 'Content-on-Mica Rail（Flush）', swatch: 'rail', selector: 'GlassRail · .rail' },
 ] as const
 
 /** 对照 mock：仅静态示意，不进入 glass/index.ts 可发布导出面 */
@@ -187,7 +176,7 @@ const gapCards = [
       <div class="lab-section-label">
         <span class="lab-section-name">{{ tt('lab.section.liveProps') }}</span>
         <span class="lab-section-meta">
-          点选下方演示区块后，右栏 Props 面板可改 variant / title / weighted / glass / material；画布控件即时反映。
+          点选下方演示区块后，右栏 Props 面板可改 variant / title / material / tone；Page Header 为单档 Region Layer。
         </span>
       </div>
       <div class="lab-controls">
@@ -224,7 +213,7 @@ const gapCards = [
               @keydown.enter="selectDemo('rail-tone')"
               @keydown.space.prevent="selectDemo('rail-tone')"
             >
-              <GlassSurface class="lab-rail-tone-swatch" material="frost">
+              <GlassSurface class="lab-rail-tone-swatch" material="mica">
                 <GlassRail :tone="railTone" class="lab-rail-tone-swatch__rail">
                   <div class="lab-rail-tone-swatch__head">
                     <span class="lab-rail-tone-swatch__title">会话</span>
@@ -271,7 +260,7 @@ const gapCards = [
         </div>
 
         <div class="lab-control-row">
-          <span class="lab-control-label">Page Header · weighted / glass</span>
+          <span class="lab-control-label">Page Header · Region Layer</span>
           <div class="lab-control-row-items">
             <div
               class="docs-demo-block"
@@ -284,9 +273,7 @@ const gapCards = [
             >
               <GlassPageHeader
                 title="页头条示意"
-                subtitle="weighted / glass 即时反映"
-                :weighted="pageHeader.weighted"
-                :glass="pageHeader.glass"
+                subtitle="单档 Region Layer · 统一 fill / shadow"
               />
             </div>
           </div>
@@ -306,11 +293,11 @@ const gapCards = [
     <div class="lab-showcase-grid">
         <div class="lab-showcase-card">
           <div class="lab-cat-strip lab-cat-strip--stack">
-            <span class="lab-cat-name">Host Tray / Behind Surface</span>
+            <span class="lab-cat-name">Mica / Base Surface</span>
             <span class="lab-cat-impl">L1 · GlassSurface</span>
-            <code class="lab-cat-html">.surface · .big(+.air+.pane)</code>
+            <code class="lab-cat-html">.glass-surface--mica · .glass-surface--frost</code>
             <span class="lab-cat-rule">
-              Do：默认 raster 光栅，frost 显式切换 · Don’t：t-card 当托盘 / 双托盘 / raster 叠 air
+              Do：默认 mica 基底，frost 仅作强透展示 · Don’t：t-card 当托盘 / 双托盘 / PNG 或 air 光栈
             </span>
           </div>
           <div class="lab-frame lab-frame--showcase">
@@ -345,12 +332,12 @@ const gapCards = [
             <span class="lab-cat-impl">L3 · GlassPanel · standalone</span>
             <code class="lab-cat-html">.bsurf / soft card</code>
             <span class="lab-cat-rule">
-              Do：standalone 橱窗轻影 · Don’t：Panel 内再放 Surface
+              Do：Card / LayerFill + contour + 单档静影 · Don’t：Panel 内再放 Surface
             </span>
           </div>
           <div class="lab-frame lab-frame--showcase lab-frame--l0">
             <GlassPanel variant="standalone" title="焦点面示意">
-              <p class="lab-panel-copy">橱窗孤立态 · variant=standalone · 轻影弱于 L1。</p>
+              <p class="lab-panel-copy">橱窗孤立态 · Card / LayerFill · contour + 单档静影弱于 L1。</p>
             </GlassPanel>
           </div>
         </div>
@@ -382,8 +369,7 @@ const gapCards = [
           <div class="lab-living-stack">
             <GlassPageHeader
               title="设置与分区"
-              subtitle="L2 · 坐 Host Tray 内 · weighted=false 对齐橱窗 fan"
-              :weighted="false"
+              subtitle="L2 · 坐 Host Tray 内 · 单档 Region Layer"
             >
               <template #actions>
                 <span class="lab-living-action">对照方案</span>
@@ -392,16 +378,16 @@ const gapCards = [
             <div class="lab-living-panels">
               <GlassPanel title="Panel A · 表单区">
                 <p class="lab-panel-copy">
-                  L3 inset · Fan Tip 过渡 + frosted 微透 + 悬浮影；仍无外轮廓 hairline。露边只来自 L1 四周 pad，不是 Panel 间隙。
+                  L3 inset · Card / LayerFill 分区面，无 blur / lift / 多停渐变光；露边只来自 L1 四周 pad，不是 Panel 间隙。
                 </p>
               </GlassPanel>
               <GlassPanel title="Panel B · 列表区">
                 <p class="lab-panel-copy">
-                  同层并列 gap&gt;0 · 非 Rail|Stage Flush；Fan Tip 与 frosted 同源。禁止再套 Surface。
+                  同层并列 gap&gt;0 · 非 Rail|Stage Flush；Card / LayerFill 靠明度差分层。禁止再套 Surface。
                 </p>
               </GlassPanel>
               <GlassPanel title="Panel C · 说明">
-                <p class="lab-panel-copy">Fan Tip 过渡 + frosted 微透 + 悬浮影（lift 1px）· 多容器可纵排 / 栅格，仍单托盘。</p>
+                <p class="lab-panel-copy">Card / LayerFill · 单色分区面（无 blur / lift）· 多容器可纵排 / 栅格，仍单托盘。</p>
               </GlassPanel>
             </div>
           </div>
@@ -409,11 +395,11 @@ const gapCards = [
       </div>
       <div class="lab-control-note">
         验收：托盘=GlassSurface · L1 / Lab frame=20 · Region=16 · Flush 外角=8（PageHeader / Panel 同档 Region）· Surface
-        <code>__body</code> 外轮廓=flush(L1-pad)=16px；贴缝无 gutter。能指出玻璃底板在 Surface 四周露边；
+        直排 Rail|Stage，pad=16px；贴缝无 gutter。能指出玻璃底板在 Surface 四周露边；
         Panel 间隙不是露边；整树只有一个 L1；须能指出
-        PageHeader 读成定稿 A 半透扇形 + lift 0 + 轻软影（无白 rim）；Panel 读成 Fan Tip 过渡 + frosted
-        微透 + 悬浮影（lift 1px），维持 L3 自身轻软档且无外轮廓 hairline。L0 为简化 page-level
-        小样；完整整装底见「实验室·整装背景」。
+        PageHeader 读成 Region Layer + 底缘 seam + 极轻 rest（无 blur / rim）；Panel 读成 Card / LayerFill
+        单色分区面（无 blur / lift），standalone 才用 contour + 单档静影。L0 为简化 page-level 小样；
+        完整整装底见「实验室·整装背景」。
       </div>
     </section>
 
@@ -442,59 +428,59 @@ const gapCards = [
         <span class="lab-section-meta">既有 · 单独托盘 + stub Rail|Stage · 标注 Inset Reveal 露边</span>
       </div>
       <div class="lab-cat-strip">
-        <span class="lab-cat-name">Host Tray / Behind Surface</span>
+        <span class="lab-cat-name">Mica / Base Surface</span>
         <span class="lab-cat-impl">GlassSurface</span>
-        <code class="lab-cat-html">.surface · .big(+.air+.pane) · .t1 .big</code>
+        <code class="lab-cat-html">.glass-surface--mica · .glass-surface--frost</code>
         <span class="lab-cat-rule">
-          Do：默认 raster 光栅；frost 才显示 surface-air bloom · Don't：用 t-card 当托盘 /
-          Surface 外再套 Host Tray / raster 叠 air
+          Do：默认 mica 基底；frost 仅强透并默认关 air · Don't：用 t-card 当托盘 /
+          Surface 外再套 Host Tray / PNG 或 air 光栈
         </span>
       </div>
       <div class="lab-frame lab-frame--surface">
         <GlassSurface class="lab-surface">
           <div class="lab-stub lab-stub--rail">
-            <span class="lab-stub-tag">Rail 区（Frost · stub）</span>
+            <span class="lab-stub-tag">Rail 区（Content-on-Mica · stub）</span>
           </div>
           <div class="lab-stub lab-stub--stage">
-            <span class="lab-stub-tag">Stage 区（L3 Flush · stub）</span>
+            <span class="lab-stub-tag">Stage 区（LayerFill · stub）</span>
           </div>
         </GlassSurface>
       </div>
       <div class="lab-control-note">
         托盘=GlassSurface · 阶梯 L1 / Lab frame=16 · Region=16 · Flush 外角=8。
-        Floating Plate：抬升影在 Surface <code>__body</code> 整板 · Stage 自身不再叠重影 · 露边是四周
+        Floating Plate：抬升影在 Surface 整板 · Stage 自身不再叠重影 · 露边是四周
         inset pad，不是 Rail–Stage 中缝。
       </div>
     </section>
 
-    <!-- 5. Frost Rail | Near-White Stage -->
+    <!-- 5. Content-on-Mica Rail | LayerFill Stage -->
     <section class="lab-section">
       <div class="lab-section-label">
         <span class="lab-section-name">{{ tt('layout.section.flush') }}</span>
         <span class="lab-section-meta">既有 · gap=0 贴缝对照 · 明度差分界 · 禁中间 gutter 当露边</span>
       </div>
       <div class="lab-cat-strip">
-        <span class="lab-cat-name">Frost Rail | Near-White Stage</span>
+        <span class="lab-cat-name">Content-on-Mica Rail | LayerFill Stage</span>
         <span class="lab-cat-impl">GlassRail + GlassStage</span>
         <code class="lab-cat-html">.rail | .chat · .bchat（.surface 内 .work gap=0）</code>
         <span class="lab-cat-rule">
-          Do：Flush Stitch（gap=0）由 Surface <code>__body</code> 保证 · Nested Chrome 外轮廓由 Surface
+          Do：Flush Stitch（gap=0）由 Surface 直接子项布局保证 · Nested Chrome 外轮廓由 Surface
           overflow 裁切 · Don't：把 Rail–Stage 中间 gutter 当 Inset Reveal 露边 / Stage 抬成第二浮卡
         </span>
       </div>
       <div class="lab-frame lab-frame--surface">
         <GlassSurface class="lab-surface">
           <GlassRail class="lab-rail lab-rail--mini">
-            <div class="lab-stub-tag">Frost Rail · Flush L3</div>
+            <div class="lab-stub-tag">Rail · Content-on-Mica</div>
           </GlassRail>
           <GlassStage>
             <template #header>
-              <div class="lab-stage-title">Near-White Stage · Flush L3</div>
+              <div class="lab-stage-title">LayerFill Stage · Flush</div>
             </template>
             <div class="lab-flush-note">
               几何：托盘=GlassSurface · L1 / Lab frame=16 · Region=16 · Flush 外角=8（贴缝边 0）。
-              Surface <code>__body</code> 外轮廓=flush(L1-pad)=16px。
-              Flush Stitch：Rail | Stage 贴缝 gap=0、无 gutter，靠磨砂冰蓝 vs 近白的明度差分界。
+              Surface 直排 Rail|Stage → pad=16px · 外角=flush-radius 8px。
+              Flush Stitch：Rail | Stage 贴缝 gap=0、无 gutter，靠极淡冷 tint vs LayerFill 的明度差分界。
               Rail 左角 / Stage 右角吃 flush-radius；backdrop 不得漏方角。露边只来自 Host Tray
               四周 Inset Reveal；禁止在中缝加 gutter 伪造露边。
             </div>
@@ -545,19 +531,19 @@ const gapCards = [
           </GlassRail>
           <GlassStage>
             <template #header>
-              <div class="lab-stage-title">Near-White Stage · {{ railTone }}</div>
+              <div class="lab-stage-title">LayerFill Stage · {{ railTone }}</div>
             </template>
             <div class="lab-flush-note">
-              紫只做 wash；字深色；选中近白。Ice 默认仍走原
-              <code>--glass-wb-rail-wash</code> / <code>--glass-wb-rail-blur</code>；
-              lilac 只换低 alpha 紫 wash 与轨内列表 hover，active 用近白微透（无 tip），
+              紫只做 tint；字深色；选中近白。Ice 默认只吃极淡冷
+              <code>--glass-wb-rail-wash</code>，blur 为 <code>none</code>；
+              lilac 只换低 alpha 紫 tint 与轨内列表 hover，active 用近白微透（无 tip），
               不铺满浓紫板、不反白。
             </div>
           </GlassStage>
         </GlassSurface>
       </div>
       <div class="lab-control-note">
-        验收：紫只做 wash；字深色；选中近白。ice 默认未回归；lilac 轨内 4 行 Quiet List
+        验收：紫只做 tint；字深色；选中近白。ice 默认仅极淡冷 tint；lilac 轨内 4 行 Quiet List
         可读，1 行 active 近白微透（Quiet 圆角，无 tip）；悬停为淡紫洗。
         点选本演示块后，右栏 Rail · tone 可切 ice / lilac。
       </div>
@@ -868,7 +854,7 @@ const gapCards = [
   margin-top: 8px;
 }
 
-/* Surface __body 默认横向 Flush；Living 用单列子树纵排多容器 */
+/* Surface 默认横向 Flush；Living 用单列子树纵排多容器 */
 .lab-living-stack {
   flex: 1;
   width: 100%;

@@ -7,12 +7,12 @@
  * - Data Grid / Glass Table：内容区表格，坐在 Stage / Surface 内，禁止另造「实白 Excel 卡」
  * - Quiet Grid：细水平分割线、低对比表头；默认无粗外框、无强斑马
  * - t1 Host Tray：外壳微透近白托盘 + backdrop blur + 柔影（html .big）
- * - Header Band / Workbench Left Nav / Frost Rail：标题行一体条带（html .hero-ico 磨砂冰蓝平铺）
+ * - Header Band / Content Layer：标题行一体条带（近白层 + 轻 alipay 染，不铺厚 frost 蓝）
  * - Stage Nested Chrome / Inset Plate：Stage 内嵌扁板（近白微 wash、blur/shadow none）
  * - t3 Quiet Ribbon：水平细分割 + pagination Quiet Chrome（无竖线）
  * - t4 Near-White：行体近白透明吃外壳；空态 muted（html .bchat）
  * - Row Density：行高对齐 Capsule / Form 垂直节奏（偏紧凑；t-table size="small"）
- * - Hover Whisper / Selected Whisper：行悬停轻提亮 / 选中极淡紫，对齐会话 list（软、不砸）
+ * - Hover Whisper / Selected Whisper：alipay 10% / 12% / 15% 整行 Wash，对齐轨内 List（无左 Pill）
  * - Compound Wrapper：外壳材质由本 wrapper 承担，t-table 仅作内芯
  *
  * variant（外壳语义，Lab / 业务页按宿主选择）：
@@ -722,14 +722,14 @@ function onTableChange(data: TableChangeData, context: TableChangeContext<GlassT
   background: transparent;
 }
 
-/* Header Band / Workbench Left Nav / Frost Rail：整条标题行只画一次磨砂冰蓝平铺（html .hero-ico）
+/* Header Band / Content Layer / Whisper：整条标题行只画一次轻品牌 wash
    fill 只挂 thead（TDesign 即 .t-table__header）整行层；tr / th 透明，
    禁止 per-th 径向/独立 fill（会碎成霜面瓷砖），禁止 thead+tr 叠画半透明 fill。
-   blur 照搬 .hero-ico；禁止全量 --shadow-soft / --shadow-lift（嵌 tray/inset 会二次抬层）。 */
+   blur 走 table token；禁止全量 --shadow-soft / --shadow-lift（嵌 tray/inset 会二次抬层）。 */
 .glass-table__core :deep(thead.t-table__header) {
   background: var(--glass-wb-table-header-fill);
-  -webkit-backdrop-filter: blur(26px) saturate(1.2);
-  backdrop-filter: blur(26px) saturate(1.2);
+  -webkit-backdrop-filter: var(--glass-wb-table-header-blur);
+  backdrop-filter: var(--glass-wb-table-header-blur);
   /* 带两端圆角（外壳 overflow:hidden 亦会裁切顶角） */
   border-radius: var(--table-shell-radius) var(--table-shell-radius) 0 0;
 }
@@ -878,23 +878,6 @@ function onTableChange(data: TableChangeData, context: TableChangeContext<GlassT
 .glass-table
   :deep(.glass-table__core.t-table--column-fixed .t-table__body tr:hover > .t-table__cell--fixed-right) {
   background: var(--glass-wb-table-fixed-cell-hover-fill);
-}
-
-.glass-table
-  :deep(
-    .glass-table__core.t-table--column-fixed
-      .t-table__body
-      .t-table__row--selected
-      > .t-table__cell--fixed-left
-  ),
-.glass-table
-  :deep(
-    .glass-table__core.t-table--column-fixed
-      .t-table__body
-      .t-table__row--selected
-      > .t-table__cell--fixed-right
-  ) {
-  background: var(--glass-wb-table-fixed-cell-selected-fill);
 }
 
 /* 展开行：沿用 Quiet Grid 的水平 Ribbon，内容区只做浅 wash，不另起卡片 */
@@ -1115,13 +1098,49 @@ function onTableChange(data: TableChangeData, context: TableChangeContext<GlassT
   box-shadow: var(--glass-wb-field-focus-ring);
 }
 
-/* Selected Whisper：近白 / 极淡紫 wash，禁止高饱和块色 */
+/* Selected Whisper：alipay 12% 整行 wash；selected+hover 加深到 15%，不加左 Pill */
 .glass-table__core :deep(.t-table__row--selected > td) {
   background: var(--glass-wb-table-row-selected);
 }
 
 .glass-table__core :deep(.t-table__row--selected:hover > td) {
-  background: var(--glass-wb-table-row-selected);
+  background: var(--glass-wb-table-row-selected-hover);
+}
+
+/* 固定列必须保留遮底 fill；selected / selected+hover 在通用行态之后覆盖，
+   避免半透 wash 让横滚后的底层文字透出。 */
+.glass-table
+  :deep(
+    .glass-table__core.t-table--column-fixed
+      .t-table__body
+      .t-table__row--selected
+      > .t-table__cell--fixed-left
+  ),
+.glass-table
+  :deep(
+    .glass-table__core.t-table--column-fixed
+      .t-table__body
+      .t-table__row--selected
+      > .t-table__cell--fixed-right
+  ) {
+  background: var(--glass-wb-table-fixed-cell-selected-fill);
+}
+
+.glass-table
+  :deep(
+    .glass-table__core.t-table--column-fixed
+      .t-table__body
+      .t-table__row--selected:hover
+      > .t-table__cell--fixed-left
+  ),
+.glass-table
+  :deep(
+    .glass-table__core.t-table--column-fixed
+      .t-table__body
+      .t-table__row--selected:hover
+      > .t-table__cell--fixed-right
+  ) {
+  background: var(--glass-wb-table-fixed-cell-selected-hover-fill);
 }
 
 /* t4 Near-White 空态：muted 字色，保持玻璃透明底 */

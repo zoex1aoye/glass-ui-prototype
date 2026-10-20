@@ -35,6 +35,11 @@ const hubCards = [
     descKey: 'overview.hub.overview.desc',
   },
   {
+    path: '/dashboard',
+    titleKey: 'overview.hub.dashboard.title',
+    descKey: 'overview.hub.dashboard.desc',
+  },
+  {
     path: '/layout',
     titleKey: 'overview.hub.layout.title',
     descKey: 'overview.hub.layout.desc',
