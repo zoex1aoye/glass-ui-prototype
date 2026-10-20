@@ -142,7 +142,7 @@ function onRoleClick(option: DropdownOption) {
 .glass-composer__card {
   border: 1px solid var(--glass-border-soft);
   border-radius: var(--glass-wb-card-radius);
-  background: var(--glass-wb-white);
+  background: var(--glass-wb-field-bg);
   padding: 14px 16px 12px;
   box-shadow: var(--glass-wb-card-shadow);
 }

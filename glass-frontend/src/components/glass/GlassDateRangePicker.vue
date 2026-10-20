@@ -155,7 +155,7 @@ function onUpdateModelValue(value: DateRangeValue) {
   padding: 0 12px;
   border-radius: var(--glass-wb-field-radius);
   border: none;
-  background: var(--glass-wb-white);
+  background: var(--glass-wb-field-bg);
   box-shadow: var(--glass-wb-field-hairline);
   box-sizing: border-box;
   transition: box-shadow 0.15s ease;

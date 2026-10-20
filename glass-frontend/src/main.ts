@@ -10,7 +10,10 @@ import '@fontsource/noto-sans-sc/700.css'
 
 import App from './App.vue'
 import router from './router'
+import { initGlassScheme } from './scheme/useGlassScheme'
 import './styles/theme.css'
+
+initGlassScheme()
 
 const app = createApp(App)
 

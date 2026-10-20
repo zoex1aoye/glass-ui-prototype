@@ -1,65 +1,83 @@
 <script setup lang="ts">
 /**
  * 组件实验室总览 · Lab Hub
- * Material / Density / Tone 三行宪章摘要 + 卡片链到 Living Demo。
+ * 宪章 + 七色 / 深度 + 海报主技法（过渡 / 微透 / 悬浮）+ Living Demo hub。
+ * 可见文案走 scheme messages（overview.*）；中文槽位与迁移前一致。
  */
 import { useRouter } from 'vue-router'
+
+import { GlassPanel } from '@/components/glass'
+import { useGlassScheme } from '@/scheme/useGlassScheme'
 
 import LabPageShell from './LabPageShell.vue'
 import './lab-shared.css'
 
 const router = useRouter()
+const { tt } = useGlassScheme()
+
+const paletteSwatchKeys = [
+  'alipay',
+  'zhihu',
+  'cyan',
+  'poster',
+  'ice',
+  'frost',
+  'paper',
+  'ai',
+] as const
+
+const depthSwatchKeys = ['z0', 'z1', 'z2', 'z3', 'z4'] as const
 
 const hubCards = [
   {
     path: '/',
-    title: '总览',
-    desc: 'Material / Density / Tone 宪章 · Live Props 指引 · Living Demo 全量索引',
+    titleKey: 'overview.hub.overview.title',
+    descKey: 'overview.hub.overview.desc',
   },
   {
     path: '/layout',
-    title: '布局',
-    desc: '四层栈 L0–L3 · Surface / Panel / Rail / Stage · Flush / 禁双托盘；Composer 见 Inputs · Table 见 Data',
+    titleKey: 'overview.hub.layout.title',
+    descKey: 'overview.hub.layout.desc',
   },
   {
     path: '/poster',
-    title: '海报技法',
-    desc: '七色 / 深度五档 · 海报三技法 · 小物件↔大容器 · 换算表 · PosterWash 整装舞台',
+    titleKey: 'overview.hub.poster.title',
+    descKey: 'overview.hub.poster.desc',
   },
   {
     path: '/actions',
-    title: '按钮与行动',
-    desc: 'Primary Pill · Quiet Chrome · Action Pair · StickyTool FAB 52',
+    titleKey: 'overview.hub.actions.title',
+    descKey: 'overview.hub.actions.desc',
   },
   {
     path: '/inputs',
-    title: '输入与日期',
-    desc: 'Capsule Search / Field / Suggest Chip / Composer · Date / Time / Range Picker · Calendar',
+    titleKey: 'overview.hub.inputs.title',
+    descKey: 'overview.hub.inputs.desc',
   },
   {
     path: '/forms',
-    title: '表单密度',
-    desc: 'Glass Form Density · Field 38 + radius 12 · Choice Quiet 三件统一 Action Blue · Radio variant×appearance 2×2',
+    titleKey: 'overview.hub.forms.title',
+    descKey: 'overview.hub.forms.desc',
   },
   {
     path: '/overlay',
-    title: '遮罩与整装',
-    desc: 'GlassDialog Confirm Sheet · GlassFormPane 表单整装 · Popconfirm · 选型边界',
+    titleKey: 'overview.hub.overlay.title',
+    descKey: 'overview.hub.overlay.desc',
   },
   {
     path: '/feedback',
-    title: '反馈与加载',
-    desc: 'Inline Banner · Soft Toast / Notice · Sound Wave Loading / Fullscreen',
+    titleKey: 'overview.hub.feedback.title',
+    descKey: 'overview.hub.feedback.desc',
   },
   {
     path: '/data',
-    title: '数据展示',
-    desc: 'Quiet Grid · Descriptions / Card / Bubble / Progress / Comment / Collapse · Badge',
+    titleKey: 'overview.hub.data.title',
+    descKey: 'overview.hub.data.desc',
   },
   {
     path: '/navigation',
-    title: '导航与步骤',
-    desc: 'GlassTabs · line / soft / capsule / card · GlassSteps default / dot · 状态与只读',
+    titleKey: 'overview.hub.navigation.title',
+    descKey: 'overview.hub.navigation.desc',
   },
 ] as const
 
@@ -69,44 +87,135 @@ function go(path: string) {
 </script>
 
 <template>
-  <LabPageShell
-    title="组件实验室 · Glass Component Lab"
-    desc="独立 Demo 路由族。视觉权威已定 --glass-wb-* / --glass-* token；每页 Living Demo 可点可用。"
-  >
+  <LabPageShell :title="tt('overview.page.title')" :desc="tt('overview.page.desc')">
     <!-- 宪章三行摘要 -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">风格一致性宪章</span>
-        <span class="lab-section-meta">Material Stack / Density / Tone · 术语用于注释、分区标题与面包屑</span>
+        <span class="lab-section-name">{{ tt('overview.charter.name') }}</span>
+        <span class="lab-section-meta">{{ tt('overview.charter.meta') }}</span>
       </div>
       <div class="lab-charter">
         <div class="lab-charter-row">
           <span class="lab-charter-term">Material</span>
-          <span>
-            Poster Wash(z0) · Host Tray / Behind Surface(z3) · Frost Glass(Rail) · Near-White Stage /
-            Floating Plate(Stage) · Inset Reveal · Flush Stitch(gap=0) · surface-air bloom
-          </span>
+          <span>{{ tt('overview.charter.material') }}</span>
         </div>
         <div class="lab-charter-row">
           <span class="lab-charter-term">Density</span>
-          <span>
-            Capsule Search 33 · Field·Pill 38 / radius 999 · Table size=small · FAB 52 · 同页同一垂直节奏
-          </span>
+          <span>{{ tt('overview.charter.density') }}</span>
         </div>
         <div class="lab-charter-row">
           <span class="lab-charter-term">Tone</span>
-          <span>
-            小物件满浓蓝（Primary Pill / Affordant Orb）vs 大容器 5–15% 蓝染；无锐白高光核；无 1px 硬描边
-          </span>
+          <span>{{ tt('overview.charter.tone') }}</span>
         </div>
+      </div>
+    </section>
+
+    <!-- 七色分工 · 深度五档（自 Poster §2 迁入） -->
+    <section class="lab-section">
+      <div class="lab-section-label">
+        <span class="lab-section-name">{{ tt('overview.hues.name') }}</span>
+        <span class="lab-section-meta">{{ tt('overview.hues.meta') }}</span>
+      </div>
+      <GlassPanel variant="standalone" class="lab-palette-panel">
+        <div class="lab-palette-content">
+          <p class="lab-palette-lead">
+            <b>{{ tt('overview.hues.lead.bold') }}</b>
+            {{ tt('overview.hues.lead.copy') }}
+          </p>
+          <ul class="lab-swatch-list" :aria-label="tt('overview.hues.swatchAria')">
+            <li v-for="key in paletteSwatchKeys" :key="key" class="lab-swatch">
+              <span
+                class="lab-swatch-dot"
+                :class="`lab-swatch-dot--${key}`"
+                aria-hidden="true"
+              />
+              <span class="lab-swatch-copy">
+                <b>{{ tt(`overview.hues.swatch.${key}.name`) }}</b>
+                <span>{{ tt(`overview.hues.swatch.${key}.role`) }}</span>
+              </span>
+            </li>
+          </ul>
+          <div class="lab-depth-block">
+            <span class="lab-depth-title">{{ tt('overview.hues.depthTitle') }}</span>
+            <ol class="lab-depth-list" :aria-label="tt('overview.hues.depthAria')">
+              <li v-for="key in depthSwatchKeys" :key="key" class="lab-depth-item">
+                <span
+                  class="lab-depth-tile"
+                  :class="`lab-depth-tile--${key}`"
+                  aria-hidden="true"
+                />
+                <span class="lab-depth-name">{{ tt(`overview.hues.depth.${key}.name`) }}</span>
+                <span class="lab-depth-role">{{ tt(`overview.hues.depth.${key}.role`) }}</span>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </GlassPanel>
+    </section>
+
+    <!-- 海报主技法 · 过渡 / 微透 / 悬浮（合并橱窗） -->
+    <section class="lab-section">
+      <div class="lab-section-label">
+        <span class="lab-section-name">{{ tt('overview.tech.name') }}</span>
+        <span class="lab-section-meta">{{ tt('overview.tech.meta') }}</span>
+      </div>
+      <div class="lab-tech-grid lab-tech-grid--trio">
+        <GlassPanel
+          variant="standalone"
+          :title="tt('overview.transition.title')"
+          class="lab-tech-card"
+        >
+          <div class="lab-tech-content">
+            <div class="lab-tech-visual lab-tech-visual--transition" aria-hidden="true">
+              <span class="lab-petal-orb" />
+            </div>
+            <p class="lab-tech-copy">{{ tt('overview.transition.copy') }}</p>
+          </div>
+        </GlassPanel>
+
+        <GlassPanel
+          variant="standalone"
+          :title="tt('overview.tech.vitreous.title')"
+          class="lab-tech-card"
+        >
+          <div class="lab-tech-content">
+            <div class="lab-tech-visual lab-tech-visual--see" aria-hidden="true">
+              <span class="lab-tech-vitreous-layer lab-tech-vitreous-layer--a" />
+              <span class="lab-tech-vitreous-layer lab-tech-vitreous-layer--b" />
+              <span class="lab-tech-vitreous-cover" />
+            </div>
+            <p class="lab-tech-copy">{{ tt('overview.tech.vitreous.copy') }}</p>
+          </div>
+        </GlassPanel>
+
+        <GlassPanel
+          variant="standalone"
+          :title="tt('overview.tech.float.title')"
+          class="lab-tech-card"
+        >
+          <div class="lab-tech-content">
+            <div class="lab-tech-visual lab-tech-visual--float" aria-hidden="true">
+              <span class="lab-tech-float-disc lab-tech-float-disc--far" />
+              <span class="lab-tech-float-disc lab-tech-float-disc--mid" />
+              <span class="lab-tech-float-disc lab-tech-float-disc--near" />
+            </div>
+            <p class="lab-tech-copy">{{ tt('overview.tech.float.copy') }}</p>
+          </div>
+        </GlassPanel>
+      </div>
+      <div class="lab-rule-note">
+        <b>{{ tt('overview.transition.rule.lead') }}</b>
+        {{ tt('overview.transition.rule.copy') }}<b>{{
+          tt('overview.transition.rule.emphasis')
+        }}</b>{{ tt('overview.transition.rule.tail') }}
       </div>
     </section>
 
     <!-- Living Demo 卡片链 -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">Living Demo 导航</span>
-        <span class="lab-section-meta">每路由独立文件 · 双通道：侧栏「实验室·」扁平子项 + 下方卡片</span>
+        <span class="lab-section-name">{{ tt('overview.hub.name') }}</span>
+        <span class="lab-section-meta">{{ tt('overview.hub.meta') }}</span>
       </div>
       <div class="lab-hub-grid">
         <button
@@ -117,8 +226,8 @@ function go(path: string) {
           @click="go(card.path)"
           @keydown.enter="go(card.path)"
         >
-          <span class="lab-hub-card-title">{{ card.title }}</span>
-          <span class="lab-hub-card-desc">{{ card.desc }}</span>
+          <span class="lab-hub-card-title">{{ tt(card.titleKey) }}</span>
+          <span class="lab-hub-card-desc">{{ tt(card.descKey) }}</span>
         </button>
       </div>
     </section>
@@ -126,14 +235,10 @@ function go(path: string) {
     <!-- Live Props 试用指引 -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">Live Props 试用指引</span>
-        <span class="lab-section-meta">各页顶部均有「0. Live Props Demo」区块：点选演示卡片后，右栏 Props 面板即可改属性并即时反映。</span>
+        <span class="lab-section-name">{{ tt('overview.live.name') }}</span>
+        <span class="lab-section-meta">{{ tt('overview.live.meta') }}</span>
       </div>
-      <p class="lab-control-note">
-        Inputs / Overlay / Feedback / Forms / Layout 五页已打通完整闭环；Navigation / Data / Poster
-        也各有一个可调区块。Overview 仅作索引说明，不硬造无控件 Props。
-      </p>
+      <p class="lab-control-note">{{ tt('overview.live.note') }}</p>
     </section>
-
   </LabPageShell>
 </template>

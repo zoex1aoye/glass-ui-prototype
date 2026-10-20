@@ -21,8 +21,12 @@ import {
 import { useDocsProps } from '@/layouts/useDocsProps'
 import type { DocsDemoBlock } from '@/layouts/useDocsProps'
 
+import { useGlassScheme } from '@/scheme/useGlassScheme'
+
 import LabPageShell from './LabPageShell.vue'
 import './lab-shared.css'
+
+const { tt } = useGlassScheme()
 
 const lastAction = ref('（尚未交互）')
 const docsProps = useDocsProps()
@@ -209,13 +213,13 @@ onBeforeUnmount(() => {
 
 <template>
   <LabPageShell
-    title="实验室·反馈与加载"
-    desc="Inline Banner / Soft Toast / Soft Notice / Sound Wave Loading。状态反馈按单一消息通道呈现；Loading 同时覆盖独立 spinner、包裹遮罩与 fullscreen。"
+    :title="tt('feedback.page.title')"
+    :desc="tt('feedback.page.desc')"
     :live="lastAction"
   >
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">0. Live Props Demo</span>
+        <span class="lab-section-name">{{ tt('lab.section.liveProps') }}</span>
         <span class="lab-section-meta">
           点选下方演示区块后，右栏 Props 面板可改 theme / closeBtn / title；画布控件即时反映。
         </span>
@@ -248,7 +252,7 @@ onBeforeUnmount(() => {
 
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">1. Inline Banner / Status Alert</span>
+        <span class="lab-section-name">{{ tt('feedback.section.banner') }}</span>
         <span class="lab-section-meta">
           Status Soft Plate · Fan Tip · Light Frost · Whisper Lift · Glass Host Demo（无左侧色带）
         </span>
@@ -319,7 +323,7 @@ onBeforeUnmount(() => {
 
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">2. Soft Toast / Message</span>
+        <span class="lab-section-name">{{ tt('feedback.section.toast') }}</span>
         <span class="lab-section-meta">
           GlassMessage + GlassMessagePlugin · Status Soft Plate · Plugin Portal · 底层 t-message
         </span>
@@ -367,7 +371,7 @@ onBeforeUnmount(() => {
 
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">3. Soft Notice / Notification</span>
+        <span class="lab-section-name">{{ tt('feedback.section.notice') }}</span>
         <span class="lab-section-meta">
           GlassNotification + GlassNotificationPlugin · Notice Soft Plate · Plugin Portal · 底层 t-notification
         </span>
@@ -446,7 +450,7 @@ onBeforeUnmount(() => {
 
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">4. Loading · 三条竖向音浪 · 错峰起伏 / 轻 mask</span>
+        <span class="lab-section-name">{{ tt('feedback.section.loading') }}</span>
         <span class="lab-section-meta">
           TDesign：t-loading（size / text / fullscreen / showOverlay / delay / indicator / attach / inheritColor）·
           玻璃：三条竖向音浪条错峰伸缩、无描边；reduced-motion 静止为三根中等高度 ·

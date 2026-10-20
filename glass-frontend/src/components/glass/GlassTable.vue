@@ -1099,7 +1099,7 @@ function onTableChange(data: TableChangeData, context: TableChangeContext<GlassT
   height: 30px;
   border-color: transparent;
   border-radius: var(--glass-wb-field-radius);
-  background: var(--glass-wb-white);
+  background: var(--glass-wb-field-bg);
   box-shadow: var(--glass-wb-field-hairline);
   transition: box-shadow 0.15s ease;
 }

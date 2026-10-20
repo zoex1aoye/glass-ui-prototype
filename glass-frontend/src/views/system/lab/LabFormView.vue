@@ -21,8 +21,12 @@ import {
 import { useDocsProps } from '@/layouts/useDocsProps'
 import type { DocsDemoBlock } from '@/layouts/useDocsProps'
 
+import { useGlassScheme } from '@/scheme/useGlassScheme'
+
 import LabPageShell from './LabPageShell.vue'
 import './lab-shared.css'
+
+const { tt } = useGlassScheme()
 
 const lastAction = ref('（尚未交互）')
 const docsProps = useDocsProps()
@@ -266,14 +270,14 @@ const widthSyncOptions = [
 
 <template>
   <LabPageShell
-    title="实验室·表单密度"
-    desc="Glass Form Density · Quiet Field Chrome · Label Rhythm · Validation Whisper · Popup Width Sync · Field 38 + radius 12。矩阵 A–G 覆盖 top / left / right / Choice / Whisper / Disabled·Readonly / Width Sync。"
+    :title="tt('forms.page.title')"
+    :desc="tt('forms.page.desc')"
     :live="lastAction"
   >
     <!-- 0. Live Props Demo -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">0. Live Props Demo</span>
+        <span class="lab-section-name">{{ tt('lab.section.liveProps') }}</span>
         <span class="lab-section-meta">
           点选下方演示区块后，右栏 Props 面板可改 variant / appearance / disabled / labelAlign / readonly；画布控件即时反映。
         </span>
@@ -341,7 +345,7 @@ const widthSyncOptions = [
     <!-- A · Living · top -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">A · Living · top（默认 Glass Density）</span>
+        <span class="lab-section-name">{{ tt('forms.section.a') }}</span>
         <span class="lab-section-meta">
           GlassForm · GlassSelect · 底层 t-form / t-select / t-textarea · Quiet Field Chrome · Soft Surface
         </span>
@@ -396,7 +400,7 @@ const widthSyncOptions = [
     <!-- B · Label Align · left -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">B · Label Align · left</span>
+        <span class="lab-section-name">{{ tt('forms.section.b') }}</span>
         <span class="lab-section-meta">
           Label Rhythm · labelWidth 96 · 控件列与 Field 38 垂直居中 · 短表示意
         </span>
@@ -430,7 +434,7 @@ const widthSyncOptions = [
     <!-- C · Label Align · right -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">C · Label Align · right</span>
+        <span class="lab-section-name">{{ tt('forms.section.c') }}</span>
         <span class="lab-section-meta">
           Label Rhythm · labelWidth 96 · 右对齐标签 · 与 B 同密度
         </span>
@@ -464,7 +468,7 @@ const widthSyncOptions = [
     <!-- D · Controls · Choice -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">D · Controls · Choice Quiet</span>
+        <span class="lab-section-name">{{ tt('forms.section.d') }}</span>
         <span class="lab-section-meta">
           CheckboxGroup + RadioGroup + Switch · 字色 secondary · 三者选中统一 Action Blue · 禁用降透 · 无脏方框
         </span>
@@ -495,7 +499,7 @@ const widthSyncOptions = [
     <!-- D+ · Radio Group · variant × appearance 3×2 -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">D+ · GlassRadioGroup — variant × appearance</span>
+        <span class="lab-section-name">{{ tt('forms.section.dPlus') }}</span>
         <span class="lab-section-meta">
           variant=default/rounded/capsule × appearance=outline/filled 3×2 矩阵
           · 形状：default 圆点 · rounded 圆角矩形 · capsule 真胶囊
@@ -552,7 +556,7 @@ const widthSyncOptions = [
     <!-- E · Validation Whisper -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">E · Validation Whisper</span>
+        <span class="lab-section-name">{{ tt('forms.section.e') }}</span>
         <span class="lab-section-meta">
           error（required）· setValidateMessage 注入 warning + success · 12px 柔色 tip · statusIcon=false ·
           submit 失败落焦首个无效字段
@@ -587,7 +591,7 @@ const widthSyncOptions = [
     <!-- F · Disabled / Readonly -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">F · Disabled / Readonly</span>
+        <span class="lab-section-name">{{ tt('forms.section.f') }}</span>
         <span class="lab-section-meta">
           整表 disabled 降透（Glass 壳同步）· 整表 readonly 透传 Form API · Quiet hairline 保持边界可读
         </span>
@@ -633,7 +637,7 @@ const widthSyncOptions = [
     <!-- G · Popup Width Sync -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">G · Popup Width Sync</span>
+        <span class="lab-section-name">{{ tt('forms.section.g') }}</span>
         <span class="lab-section-meta">
           固定宽 280px 触发器 + filterable（Form 内）· 下拉宽同步 · hover 无内环
         </span>

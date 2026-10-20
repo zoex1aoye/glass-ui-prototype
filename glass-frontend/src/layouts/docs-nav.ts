@@ -13,13 +13,17 @@ import {
 
 export interface DocsNavItem {
   key: string
-  label: string
+  /** messages.ts 键，渲染时 t(labelKey) */
+  labelKey: string
+  /** messages.ts 键，侧栏 label 下安静一行说明；搜索亦匹配 */
+  descKey: string
   path: string
 }
 
 export interface DocsNavGroup {
   key: string
-  label: string
+  /** messages.ts 键，渲染时 t(labelKey) */
+  labelKey: string
   icon: Component
   items: DocsNavItem[]
 }
@@ -27,64 +31,131 @@ export interface DocsNavGroup {
 /**
  * DocsShell 左侧可搜索目录唯一数据源。
  * 扁平 path 与 router/index.ts 对齐；禁止写入 示范壳业务导航（今日现场 / 作业空间 / …）。
+ * 可见文案走 labelKey → scheme messages（zh/en），禁止在此硬编码展示串。
  */
 export const docsNavGroups: DocsNavGroup[] = [
   {
     key: 'overview',
-    label: 'Overview',
+    labelKey: 'nav.group.overview',
     icon: HomeIcon,
-    items: [{ key: 'overview', label: 'Overview', path: '/' }],
+    items: [
+      {
+        key: 'overview',
+        labelKey: 'nav.item.overview',
+        descKey: 'nav.item.overview.desc',
+        path: '/',
+      },
+    ],
   },
   {
     key: 'layout',
-    label: 'Layout',
+    labelKey: 'nav.group.layout',
     icon: LayersIcon,
     items: [
-      { key: 'layout', label: 'Layout', path: '/layout' },
-      { key: 'poster', label: 'Poster 技法', path: '/poster' },
+      {
+        key: 'layout',
+        labelKey: 'nav.item.layout',
+        descKey: 'nav.item.layout.desc',
+        path: '/layout',
+      },
+      {
+        key: 'poster',
+        labelKey: 'nav.item.poster',
+        descKey: 'nav.item.poster.desc',
+        path: '/poster',
+      },
     ],
   },
   {
     key: 'actions',
-    label: 'Actions',
+    labelKey: 'nav.group.actions',
     icon: ButtonIcon,
-    items: [{ key: 'actions', label: 'Actions', path: '/actions' }],
+    items: [
+      {
+        key: 'actions',
+        labelKey: 'nav.item.actions',
+        descKey: 'nav.item.actions.desc',
+        path: '/actions',
+      },
+    ],
   },
   {
     key: 'inputs',
-    label: 'Inputs',
+    labelKey: 'nav.group.inputs',
     icon: KeyboardIcon,
-    items: [{ key: 'inputs', label: 'Inputs', path: '/inputs' }],
+    items: [
+      {
+        key: 'inputs',
+        labelKey: 'nav.item.inputs',
+        descKey: 'nav.item.inputs.desc',
+        path: '/inputs',
+      },
+    ],
   },
   {
     key: 'forms',
-    label: 'Forms',
+    labelKey: 'nav.group.forms',
     icon: FormIcon,
-    items: [{ key: 'forms', label: 'Forms', path: '/forms' }],
+    items: [
+      {
+        key: 'forms',
+        labelKey: 'nav.item.forms',
+        descKey: 'nav.item.forms.desc',
+        path: '/forms',
+      },
+    ],
   },
   {
     key: 'overlay',
-    label: 'Overlay',
+    labelKey: 'nav.group.overlay',
     icon: ViewModuleIcon,
-    items: [{ key: 'overlay', label: 'Overlay', path: '/overlay' }],
+    items: [
+      {
+        key: 'overlay',
+        labelKey: 'nav.item.overlay',
+        descKey: 'nav.item.overlay.desc',
+        path: '/overlay',
+      },
+    ],
   },
   {
     key: 'feedback',
-    label: 'Feedback',
+    labelKey: 'nav.group.feedback',
     icon: NotificationIcon,
-    items: [{ key: 'feedback', label: 'Feedback', path: '/feedback' }],
+    items: [
+      {
+        key: 'feedback',
+        labelKey: 'nav.item.feedback',
+        descKey: 'nav.item.feedback.desc',
+        path: '/feedback',
+      },
+    ],
   },
   {
     key: 'data',
-    label: 'Data',
+    labelKey: 'nav.group.data',
     icon: TableIcon,
-    items: [{ key: 'data', label: 'Data', path: '/data' }],
+    items: [
+      {
+        key: 'data',
+        labelKey: 'nav.item.data',
+        descKey: 'nav.item.data.desc',
+        path: '/data',
+      },
+    ],
   },
   {
     key: 'navigation',
-    label: 'Navigation',
+    labelKey: 'nav.group.navigation',
     icon: CompassIcon,
-    items: [{ key: 'navigation', label: 'Navigation', path: '/navigation' }],
+    items: [
+      {
+        key: 'navigation',
+        labelKey: 'nav.item.navigation',
+        descKey: 'nav.item.navigation.desc',
+        path: '/navigation',
+      },
+    ],
   },
 ]
 

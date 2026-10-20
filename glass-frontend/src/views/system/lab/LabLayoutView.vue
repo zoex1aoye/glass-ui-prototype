@@ -23,8 +23,12 @@ import {
 import { useDocsProps } from '@/layouts/useDocsProps'
 import type { DocsDemoBlock } from '@/layouts/useDocsProps'
 
+import { useGlassScheme } from '@/scheme/useGlassScheme'
+
 import LabPageShell from './LabPageShell.vue'
 import './lab-shared.css'
+
+const { tt } = useGlassScheme()
 
 const lastAction = ref('（尚未交互）')
 
@@ -174,14 +178,14 @@ const gapCards = [
 
 <template>
   <LabPageShell
-    title="实验室·布局"
-    desc="四层栈 L0–L3 · Surface / Panel / Rail / Stage · PageHeader / standalone Focus Panel 宿主示范 · Flush 贴缝。视觉权威已定 --glass-wb-* / --glass-*；禁双托盘。"
+    :title="tt('layout.page.title')"
+    :desc="tt('layout.page.desc')"
     :live="lastAction"
   >
     <!-- 0. Live Props Demo -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">0. Live Props Demo</span>
+        <span class="lab-section-name">{{ tt('lab.section.liveProps') }}</span>
         <span class="lab-section-meta">
           点选下方演示区块后，右栏 Props 面板可改 variant / title / weighted / glass / material；画布控件即时反映。
         </span>
@@ -293,7 +297,7 @@ const gapCards = [
     <!-- 1. 单组件橱窗 -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">1. 单组件橱窗</span>
+        <span class="lab-section-name">{{ tt('layout.section.showcase') }}</span>
         <span class="lab-section-meta">
           Surface / PageHeader / standalone Focus Panel 各独立一块 ·
           标注「橱窗孤立态」· 非整装工作台
@@ -357,7 +361,7 @@ const gapCards = [
     <!-- 2. 四层栈 Living -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">2. 四层栈 Living</span>
+        <span class="lab-section-name">{{ tt('layout.section.stack') }}</span>
         <span class="lab-section-meta">
           L0 海报底 → L1 Surface → L2 PageHeader → ≥2× L3 Panel（gap&gt;0，非 Flush）· 禁双托盘
         </span>
@@ -416,7 +420,7 @@ const gapCards = [
     <!-- 3. Material Stack 图例 -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">3. Material Stack 图例（L0–L3）</span>
+        <span class="lab-section-name">{{ tt('layout.section.legend') }}</span>
         <span class="lab-section-meta">
           层语义 + Flush Rail 对照 · 视觉权威 glass token · 此处为简化 page-level L0；完整整装底见「Poster 技法」
         </span>
@@ -434,7 +438,7 @@ const gapCards = [
     <!-- 4. Host Tray（既有） -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">4. Host Tray / Behind Surface</span>
+        <span class="lab-section-name">{{ tt('layout.section.hostTray') }}</span>
         <span class="lab-section-meta">既有 · 单独托盘 + stub Rail|Stage · 标注 Inset Reveal 露边</span>
       </div>
       <div class="lab-cat-strip">
@@ -466,7 +470,7 @@ const gapCards = [
     <!-- 5. Frost Rail | Near-White Stage -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">5. Frost Rail | Near-White Stage · Flush Stitch</span>
+        <span class="lab-section-name">{{ tt('layout.section.flush') }}</span>
         <span class="lab-section-meta">既有 · gap=0 贴缝对照 · 明度差分界 · 禁中间 gutter 当露边</span>
       </div>
       <div class="lab-cat-strip">
@@ -499,7 +503,7 @@ const gapCards = [
       </div>
 
       <div class="lab-section-label">
-        <span class="lab-section-name">5b. Rail tone · Lilac + Quiet List</span>
+        <span class="lab-section-name">{{ tt('layout.section.railTone') }}</span>
         <span class="lab-section-meta">
           Live Props：Rail · tone（ice 默认 / lilac）· 轨内嵌 GlassList 4 行，1 行 is-active
         </span>
@@ -562,7 +566,7 @@ const gapCards = [
     <!-- 6. 对照 mock（非导出面） -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">6. 对照 mock（非导出面）</span>
+        <span class="lab-section-name">{{ tt('layout.section.mock') }}</span>
         <span class="lab-section-meta">
           Ice Crystal Shell / Icon Cold Rail 仅作 Lab 静态示意 ·
           不加入 glass/index.ts（Lab-only 静态对照）

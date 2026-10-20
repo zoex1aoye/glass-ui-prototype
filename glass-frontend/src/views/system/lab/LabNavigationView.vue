@@ -18,8 +18,12 @@ import {
 import { useDocsProps } from '@/layouts/useDocsProps'
 import type { DocsDemoBlock } from '@/layouts/useDocsProps'
 
+import { useGlassScheme } from '@/scheme/useGlassScheme'
+
 import LabPageShell from './LabPageShell.vue'
 import './lab-shared.css'
+
+const { tt } = useGlassScheme()
 
 const lastAction = ref('（尚未交互）')
 const docsProps = useDocsProps()
@@ -123,14 +127,14 @@ function onStepsChange(variant: string, current: string | number) {
 
 <template>
   <LabPageShell
-    title="实验室·导航与步骤"
-    desc="GlassTabs（line / soft / capsule / card）+ GlassSteps（default=Quiet Number Path · dot=Soft Dot Path）。Hover Whisper · Active Press · Focus Ring · disabled / readonly · placement 透传。"
+    :title="tt('navigation.page.title')"
+    :desc="tt('navigation.page.desc')"
     :live="lastAction"
   >
     <!-- 0. Live Props Demo -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">0. Live Props Demo</span>
+        <span class="lab-section-name">{{ tt('lab.section.liveProps') }}</span>
         <span class="lab-section-meta">
           点选下方演示区块后，右栏 Props 面板可改 GlassTabs / GlassSteps 的 variant 与 disabled；画布即时反映。
         </span>
@@ -193,7 +197,7 @@ function onStepsChange(variant: string, current: string | number) {
     <!-- 1. Variants matrix -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">1. GlassTabs Variants</span>
+        <span class="lab-section-name">{{ tt('navigation.section.tabs') }}</span>
         <span class="lab-section-meta">
           line（默认）· soft · capsule · card；各 4 面板（概览 / 明细 / 设置 / 备注）· 底层 t-tabs ·
           视觉仅 class 钩子 + theme.css
@@ -245,7 +249,7 @@ function onStepsChange(variant: string, current: string | number) {
     <!-- 2. Interaction -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">2. Interaction</span>
+        <span class="lab-section-name">{{ tt('navigation.section.interaction') }}</span>
         <span class="lab-section-meta">
           Hover Whisper（未选中冷洗）· Tabs：Tab 进入 tablist，←/→ 移动焦点（left 放置用 ↑/↓），
           Home/End 跳首尾，Enter/Space 激活 · disabled 面板不可切换 · reduced-motion 下无缩放
@@ -270,7 +274,7 @@ function onStepsChange(variant: string, current: string | number) {
     <!-- 3. Placement -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">3. Placement 轻示</span>
+        <span class="lab-section-name">{{ tt('navigation.section.placement') }}</span>
         <span class="lab-section-meta">top 为视觉主形态；left 仅透传轻示（不设为一等公民）</span>
       </div>
       <div class="lab-controls">
@@ -288,7 +292,7 @@ function onStepsChange(variant: string, current: string | number) {
     <!-- 4. Raw contrast -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">4. 对照 · 裸 t-tabs（非导出面）</span>
+        <span class="lab-section-name">{{ tt('navigation.section.bareTabs') }}</span>
         <span class="lab-section-meta">仅用于对照，不进入 components/glass 导出；演示 v-model 透传一致</span>
       </div>
       <div class="lab-controls">
@@ -306,7 +310,7 @@ function onStepsChange(variant: string, current: string | number) {
     <!-- Steps Variants -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">5. GlassSteps Variants</span>
+        <span class="lab-section-name">{{ tt('navigation.section.steps') }}</span>
         <span class="lab-section-meta">
           default（默认）· dot；底层 t-steps · 视觉仅 class 钩子 + theme.css ·
           可点步（非 readonly）Tab 可达，Enter / Space 切换；当前步 aria-current="step" ·
@@ -351,7 +355,7 @@ function onStepsChange(variant: string, current: string | number) {
     <!-- Steps Status -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">6. Steps Status</span>
+        <span class="lab-section-name">{{ tt('navigation.section.status') }}</span>
         <span class="lab-section-meta">
           process / finish / error / default · readonly 禁点（降强调无 hover）·
           process 步 focus-visible 可见环 · reduced-motion 下无缩放

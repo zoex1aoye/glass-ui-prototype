@@ -1,6 +1,7 @@
 <script setup lang="ts">
 /**
- * 实验室·海报技法 — 七色分工 / 海报三技法 / 小物件↔大容器 / 换算表
+ * 实验室·海报技法 — Living Demo / 小物件↔大容器 / 换算表。
+ * 七色·深度、过渡、微透·悬浮摘录见 Overview。
  * 保留 PosterWash 整装舞台（html「整装工作台 · 真实组件」全局底）。只消费 glass/* 已导出。
  * 禁双托盘；禁 t-card 冒充 Tray；不改 AppShell 全站背景（Track I）。
  * 页面内 min-height 舞台，避免实白 content-panel 盖死 PosterWash。
@@ -25,29 +26,14 @@ import {
 import { useDocsProps } from '@/layouts/useDocsProps'
 import type { DocsDemoBlock } from '@/layouts/useDocsProps'
 
+import { useGlassScheme } from '@/scheme/useGlassScheme'
+
 import LabPageShell from './LabPageShell.vue'
 import './lab-shared.css'
 
+const { tt } = useGlassScheme()
+
 const docsProps = useDocsProps()
-
-const paletteSwatches = [
-  { key: 'alipay', name: '支付宝蓝', role: '用户气泡 / 发送钮 / 徽标' },
-  { key: 'zhihu', name: '知乎蓝', role: '行动点 / FAB / 主按钮' },
-  { key: 'cyan', name: '冰青芯', role: '进度亮端 / 花瓣芯' },
-  { key: 'poster', name: '海报灰白底', role: 'z0 页面基座' },
-  { key: 'ice', name: '冰晶白', role: 'z1 hero 外壳' },
-  { key: 'frost', name: '磨砂冰蓝', role: 'z2 图标栏 / Rail / 舞台' },
-  { key: 'paper', name: '暖纸白', role: 'z3 Surface / 页头 / 卡片' },
-  { key: 'ai', name: 'AI 紫', role: '选中态 / 引用卡 / 徽章点缀' },
-] as const
-
-const depthSwatches = [
-  { key: 'z0', name: 'z0', role: '海报灰白底' },
-  { key: 'z1', name: 'z1', role: '冰晶白外壳' },
-  { key: 'z2', name: 'z2', role: '磨砂冰蓝侧栏' },
-  { key: 'z3', name: 'z3', role: '暖纸白卡片' },
-  { key: 'z4', name: 'z4', role: '近白会话窗' },
-] as const
 
 const demoBlocks: DocsDemoBlock[] = [
   {
@@ -114,13 +100,13 @@ const pageHeaderDemo = computed(() => {
 
 <template>
   <LabPageShell
-    title="实验室·海报技法"
-    desc="Design System Lab · 七色分工、海报三技法、小物件↔大容器与换算表；保留 PosterWash 整装舞台，只消费已导出 Glass* 与 --glass-* token。"
+    :title="tt('poster.page.title')"
+    :desc="tt('poster.page.desc')"
   >
     <!-- 0. Live Props Demo -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">0. Live Props Demo</span>
+        <span class="lab-section-name">{{ tt('lab.section.liveProps') }}</span>
         <span class="lab-section-meta">
           点选下方演示区块后，右栏 Props 面板可改 variant / title / weighted / glass；画布控件即时反映。
         </span>
@@ -172,7 +158,7 @@ const pageHeaderDemo = computed(() => {
     <!-- 主舞台：PosterWash 全幅底 + 单组件橱窗 + Living -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">1. 整装背景舞台</span>
+        <span class="lab-section-name">{{ tt('poster.section.stage') }}</span>
         <span class="lab-section-meta">
           GlassPosterWash 固定 cover（含安全过冲）作根底 · 单组件橱窗 + Living 叠层 · 页内 min-height 保证 wash 可见
         </span>
@@ -255,109 +241,10 @@ const pageHeaderDemo = computed(() => {
       </div>
     </section>
 
-    <!-- 2. 七色分工 · 深度五档 -->
+    <!-- 2. 小物件 ↔ 大容器 -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">2. 七色分工 · 深度五档</span>
-        <span class="lab-section-meta">
-          七色各守其位、同色不相连；z0 → z4 靠明度差、冷暖差与影差逐层叠拼悬浮。
-        </span>
-      </div>
-      <GlassPanel variant="standalone" class="poster-palette-panel">
-        <div class="poster-palette-content">
-          <p class="poster-lead">
-            <b>小物件满浓，大容器改写。</b>
-            双蓝分工只落在行动与品牌锚；冰青芯只做亮端；AI 紫只做点缀。容器从海报灰白底逐层提亮到近白，
-            不靠粉笔白实色大卡或硬描边。
-          </p>
-          <ul class="poster-swatch-list" aria-label="七色分工">
-            <li v-for="swatch in paletteSwatches" :key="swatch.key" class="poster-swatch">
-              <span
-                class="poster-swatch-dot"
-                :class="`poster-swatch-dot--${swatch.key}`"
-                aria-hidden="true"
-              />
-              <span class="poster-swatch-copy">
-                <b>{{ swatch.name }}</b>
-                <span>{{ swatch.role }}</span>
-              </span>
-            </li>
-          </ul>
-          <div class="poster-depth-block">
-            <span class="poster-depth-title">深度五档 · 容器逐层提亮</span>
-            <ol class="poster-depth-list" aria-label="深度五档">
-              <li v-for="depth in depthSwatches" :key="depth.key" class="poster-depth-item">
-                <span
-                  class="poster-depth-tile"
-                  :class="`poster-depth-tile--${depth.key}`"
-                  aria-hidden="true"
-                />
-                <span class="poster-depth-name">{{ depth.name }}</span>
-                <span class="poster-depth-role">{{ depth.role }}</span>
-              </li>
-            </ol>
-          </div>
-        </div>
-      </GlassPanel>
-    </section>
-
-    <!-- 3. 海报三技法 -->
-    <section class="lab-section">
-      <div class="lab-section-label">
-        <span class="lab-section-name">3. 海报三技法</span>
-        <span class="lab-section-meta">
-          过渡 · 微透 · 悬浮：先理解小物件的海报浓度，再换算到大容器。
-        </span>
-      </div>
-      <div class="poster-tech-grid">
-        <GlassPanel variant="standalone" title="过渡 · 花瓣" class="poster-tech-card">
-          <div class="poster-tech-content">
-            <div class="poster-tech-visual poster-tech-visual--transition" aria-hidden="true">
-              <span class="poster-petal-orb" />
-            </div>
-            <p class="poster-tech-copy">
-              饱和蓝只在芯部，薄边稀释到近透冰蓝；大面把同色相渐变拉长、降对比。
-            </p>
-          </div>
-        </GlassPanel>
-
-        <GlassPanel variant="standalone" title="微透 · 叠压染色" class="poster-tech-card">
-          <div class="poster-tech-content">
-            <div class="poster-tech-visual poster-tech-visual--see" aria-hidden="true">
-              <span class="poster-vitreous-layer poster-vitreous-layer--a" />
-              <span class="poster-vitreous-layer poster-vitreous-layer--b" />
-              <span class="poster-vitreous-cover" />
-            </div>
-            <p class="poster-tech-copy">
-              近白半透 + backdrop blur 罩住背后形体；交叠处自然加深，深度来自层叠。
-            </p>
-          </div>
-        </GlassPanel>
-
-        <GlassPanel variant="standalone" title="悬浮 · 层间漂浮" class="poster-tech-card">
-          <div class="poster-tech-content">
-            <div class="poster-tech-visual poster-tech-visual--float" aria-hidden="true">
-              <span class="poster-float-disc poster-float-disc--far" />
-              <span class="poster-float-disc poster-float-disc--mid" />
-              <span class="poster-float-disc poster-float-disc--near" />
-            </div>
-            <p class="poster-tech-copy">
-              多层半透漂在灰白底上；远层更虚更淡，极柔大范围影承担景深。
-            </p>
-          </div>
-        </GlassPanel>
-      </div>
-      <div class="poster-rule-note">
-        <b>换算铁律：</b>
-        小物件可满浓——冰白→青→支付宝蓝→知乎蓝长程过渡，禁止白色高光核；
-        大容器必须同色相拉长、降对比、改微透，大面蓝染控制在 <b>5–15%</b>，蓝从背后虚化场透出。
-      </div>
-    </section>
-
-    <!-- 4. 小物件 ↔ 大容器 -->
-    <section class="lab-section">
-      <div class="lab-section-label">
-        <span class="lab-section-name">4. 小物件 ↔ 大容器</span>
+        <span class="lab-section-name">{{ tt('poster.section.scale') }}</span>
         <span class="lab-section-meta">
           左列贴海报浓度；右列把同一色相拉长、降对比、改微透。对照 t1 花瓣扇形过渡语义。
         </span>
@@ -421,10 +308,10 @@ const pageHeaderDemo = computed(() => {
       </GlassPosterWash>
     </section>
 
-    <!-- 5. 换算表 -->
+    <!-- 3. 换算表 -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">5. 海报 → 大容器换算表</span>
+        <span class="lab-section-name">{{ tt('poster.section.table') }}</span>
         <span class="lab-section-meta">
           同一技法在小物件与大容器上的不同落法；色深行是优先裁决。
         </span>
@@ -621,19 +508,6 @@ const pageHeaderDemo = computed(() => {
   padding: 8px 4px 12px;
 }
 
-/* ── 2. 七色分工 · 深度五档 ─────────────────────────────────────────── */
-.poster-palette-panel {
-  min-width: 0;
-}
-
-.poster-palette-content {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.poster-lead,
-.poster-tech-copy,
 .poster-object-copy,
 .poster-big-copy {
   margin: 0;
@@ -642,325 +516,7 @@ const pageHeaderDemo = computed(() => {
   color: var(--glass-text-secondary);
 }
 
-.poster-lead b,
-.poster-rule-note b {
-  color: var(--glass-text-primary);
-}
-
-.poster-swatch-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.poster-swatch {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-width: 0;
-  padding: 6px 11px 6px 7px;
-  border-radius: 999px;
-  background: var(--glass-wb-pill-quiet-bg);
-  -webkit-backdrop-filter: var(--glass-wb-pill-quiet-blur);
-  backdrop-filter: var(--glass-wb-pill-quiet-blur);
-  box-shadow: var(--glass-wb-pill-quiet-shadow);
-}
-
-.poster-swatch-dot {
-  width: 15px;
-  height: 15px;
-  flex: none;
-  border-radius: 50%;
-  box-shadow: inset 0 0 0 1px var(--glass-border-soft);
-}
-
-.poster-swatch-dot--alipay {
-  background: var(--glass-chroma-alipay);
-}
-
-.poster-swatch-dot--zhihu {
-  background: var(--glass-chroma-zhihu);
-}
-
-.poster-swatch-dot--cyan {
-  background: var(--glass-chroma-cyan);
-}
-
-.poster-swatch-dot--poster {
-  background: var(--glass-chroma-poster);
-}
-
-.poster-swatch-dot--ice {
-  background: var(--glass-chroma-ice);
-}
-
-.poster-swatch-dot--frost {
-  background: var(--glass-chroma-frost);
-}
-
-.poster-swatch-dot--paper {
-  background: var(--glass-chroma-paper);
-}
-
-.poster-swatch-dot--ai {
-  background: var(--glass-chroma-ai);
-}
-
-.poster-swatch-copy {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  min-width: 0;
-  font-size: 11px;
-  line-height: 1.35;
-  color: var(--glass-text-secondary);
-}
-
-.poster-swatch-copy b {
-  font-size: 12px;
-  color: var(--glass-text-primary);
-}
-
-.poster-depth-block {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding-top: 14px;
-  box-shadow: 0 -1px 0 var(--glass-border-soft);
-}
-
-.poster-depth-title {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--glass-text-primary);
-}
-
-.poster-depth-list {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.poster-depth-item {
-  display: grid;
-  gap: 4px;
-  min-width: 0;
-}
-
-.poster-depth-tile {
-  height: 38px;
-  border-radius: 12px;
-  box-shadow: inset 0 0 0 1px var(--glass-border-soft);
-}
-
-.poster-depth-tile--z0 {
-  background: var(--glass-chroma-poster);
-}
-
-.poster-depth-tile--z1 {
-  background: var(--glass-chroma-ice);
-}
-
-.poster-depth-tile--z2 {
-  background: var(--glass-chroma-frost);
-}
-
-.poster-depth-tile--z3 {
-  background: var(--glass-chroma-paper);
-}
-
-.poster-depth-tile--z4 {
-  background: var(--glass-wb-stage-fill);
-}
-
-.poster-depth-name {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--glass-text-primary);
-}
-
-.poster-depth-role {
-  overflow: hidden;
-  font-size: 10.5px;
-  line-height: 1.4;
-  color: var(--glass-text-muted);
-  text-overflow: ellipsis;
-}
-
-/* ── 3. 海报三技法 ─────────────────────────────────────────────────── */
-.poster-tech-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-}
-
-.poster-tech-card {
-  min-width: 0;
-}
-
-.poster-tech-content {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.poster-tech-visual {
-  position: relative;
-  min-height: 132px;
-  overflow: hidden;
-  border-radius: 14px;
-  background: var(--glass-chroma-frost);
-}
-
-.poster-petal-orb {
-  position: absolute;
-  top: 14%;
-  left: 14%;
-  width: 116px;
-  height: 96px;
-  border-radius: 58% 42% 48% 52% / 42% 58% 42% 58%;
-  background: linear-gradient(
-    150deg,
-    color-mix(in srgb, var(--glass-chroma-ice) 18%, transparent),
-    color-mix(in srgb, var(--glass-chroma-cyan) 38%, transparent) 34%,
-    color-mix(in srgb, var(--glass-chroma-alipay) 48%, transparent) 68%,
-    color-mix(in srgb, var(--glass-chroma-zhihu) 18%, transparent)
-  );
-  box-shadow: var(--glass-wb-pill-quiet-shadow);
-  filter: blur(0.4px);
-  opacity: 0.9;
-  transform: rotate(-24deg);
-}
-
-.poster-petal-orb::after {
-  position: absolute;
-  inset: 18% -10% -10% 28%;
-  border-radius: inherit;
-  background: linear-gradient(
-    155deg,
-    color-mix(in srgb, var(--glass-chroma-cyan) 22%, transparent),
-    color-mix(in srgb, var(--glass-chroma-zhihu) 30%, transparent) 58%,
-    transparent
-  );
-  content: '';
-  filter: blur(1px);
-  opacity: 0.78;
-  transform: rotate(18deg);
-}
-
-.poster-tech-visual--see {
-  -webkit-backdrop-filter: var(--glass-wb-surface-blur);
-  backdrop-filter: var(--glass-wb-surface-blur);
-}
-
-.poster-vitreous-layer,
-.poster-vitreous-cover {
-  position: absolute;
-  border-radius: 16px;
-}
-
-.poster-vitreous-layer--a {
-  top: 18%;
-  left: 11%;
-  width: 58%;
-  height: 64%;
-  background: linear-gradient(
-    145deg,
-    color-mix(in srgb, var(--glass-chroma-cyan) 38%, transparent),
-    color-mix(in srgb, var(--glass-chroma-alipay) 22%, transparent)
-  );
-  filter: blur(7px);
-  opacity: 0.72;
-  transform: rotate(-10deg);
-}
-
-.poster-vitreous-layer--b {
-  right: 10%;
-  bottom: 12%;
-  width: 48%;
-  height: 55%;
-  background: linear-gradient(
-    160deg,
-    color-mix(in srgb, var(--glass-chroma-zhihu) 30%, transparent),
-    color-mix(in srgb, var(--glass-chroma-ice) 46%, transparent)
-  );
-  filter: blur(9px);
-  opacity: 0.66;
-  transform: rotate(8deg);
-}
-
-.poster-vitreous-cover {
-  inset: 24% 16%;
-  background: var(--glass-wb-surface-fill);
-  -webkit-backdrop-filter: var(--glass-wb-surface-blur);
-  backdrop-filter: var(--glass-wb-surface-blur);
-  box-shadow: var(--glass-wb-pill-quiet-shadow);
-}
-
-.poster-tech-visual--float {
-  background:
-    radial-gradient(
-      60% 55% at 30% 28%,
-      color-mix(in srgb, var(--glass-chroma-ice) 42%, transparent),
-      transparent
-    ),
-    var(--glass-chroma-frost);
-}
-
-.poster-float-disc {
-  position: absolute;
-  border-radius: 50%;
-  background: var(--glass-chroma-paper);
-  -webkit-backdrop-filter: var(--glass-wb-surface-blur);
-  backdrop-filter: var(--glass-wb-surface-blur);
-  box-shadow: var(--glass-wb-pill-quiet-shadow);
-}
-
-.poster-float-disc--far {
-  top: 12%;
-  right: 10%;
-  width: 54px;
-  height: 54px;
-  opacity: 0.42;
-  filter: blur(2px);
-}
-
-.poster-float-disc--mid {
-  top: 28%;
-  left: 16%;
-  width: 68px;
-  height: 68px;
-  opacity: 0.66;
-  filter: blur(1px);
-}
-
-.poster-float-disc--near {
-  right: 22%;
-  bottom: 10%;
-  width: 78px;
-  height: 78px;
-  background: var(--glass-chroma-ice);
-}
-
-.poster-rule-note {
-  padding: 12px 15px;
-  border-radius: 14px;
-  background: var(--glass-chroma-frost);
-  -webkit-backdrop-filter: var(--glass-wb-pill-quiet-blur);
-  backdrop-filter: var(--glass-wb-pill-quiet-blur);
-  box-shadow: var(--glass-wb-pill-quiet-shadow);
-  font-size: 12px;
-  line-height: 1.65;
-  color: var(--glass-text-secondary);
-}
-
-/* ── 4. 小物件 ↔ 大容器 ────────────────────────────────────────────── */
+/* ── 2. 小物件 ↔ 大容器 ────────────────────────────────────────────── */
 .poster-pair-wash {
   min-height: 520px;
   padding: 20px;
@@ -1080,7 +636,7 @@ const pageHeaderDemo = computed(() => {
   color: var(--glass-wb-pill-quiet-color);
 }
 
-/* ── 5. 换算表 ─────────────────────────────────────────────────────── */
+/* ── 3. 换算表 ─────────────────────────────────────────────────────── */
 .poster-table-wrap {
   overflow-x: auto;
   border-radius: 14px;
@@ -1126,13 +682,8 @@ const pageHeaderDemo = computed(() => {
 }
 
 @media (max-width: 980px) {
-  .poster-tech-grid,
   .poster-pair-grid {
     grid-template-columns: 1fr;
-  }
-
-  .poster-depth-list {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .poster-object-panel,
@@ -1144,10 +695,6 @@ const pageHeaderDemo = computed(() => {
 @media (max-width: 640px) {
   .poster-pair-wash {
     padding: 12px;
-  }
-
-  .poster-depth-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .poster-object-row--split {

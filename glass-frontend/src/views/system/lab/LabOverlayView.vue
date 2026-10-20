@@ -20,8 +20,12 @@ import {
   GlassSelect,
 } from '@/components/glass'
 
+import { useGlassScheme } from '@/scheme/useGlassScheme'
+
 import LabPageShell from './LabPageShell.vue'
 import './lab-shared.css'
+
+const { tt } = useGlassScheme()
 
 const lastAction = ref('（尚未交互）')
 
@@ -338,13 +342,13 @@ function onResetClose({ trigger }: DialogCloseContext) {
 
 <template>
   <LabPageShell
-    title="实验室·遮罩与整装"
-    desc="Overlay 选型活文档：GlassDialog Confirm Sheet 负责短确认 / 危险确认；GlassFormPane 负责多段表单整装会话窗；GlassPopconfirm 负责页内低干扰确认。Scrim 共用，分区只用 Pure Spacing。"
+    :title="tt('overlay.page.title')"
+    :desc="tt('overlay.page.desc')"
     :live="lastAction"
   >
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">0. Dialog / FormPane 边界</span>
+        <span class="lab-section-name">{{ tt('overlay.section.boundary') }}</span>
         <span class="lab-section-meta">
           先看任务形态，再选浮层；风险确认与表单整装不混用
         </span>
@@ -390,7 +394,7 @@ function onResetClose({ trigger }: DialogCloseContext) {
 
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">1. Confirm Sheet / Dialog + Inline Confirm / Popconfirm</span>
+        <span class="lab-section-name">{{ tt('overlay.section.confirm') }}</span>
         <span class="lab-section-meta">
           GlassDialog + GlassPopconfirm · Modal Scrim · Destructive vs Neutral Confirm ·
           脚钮 = GlassButton（确认 primary/danger · 取消 quiet）· 底层 t-dialog / t-popconfirm
@@ -458,7 +462,7 @@ function onResetClose({ trigger }: DialogCloseContext) {
 
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">2. FormPane × Form vs Dialog × Form</span>
+        <span class="lab-section-name">{{ tt('overlay.section.formPane') }}</span>
         <span class="lab-section-meta">
           GlassFormPane = 表单整装会话窗；GlassDialog = Confirm Sheet（短确认 / 危险确认）·
           Submit-via-Form Protocol · Async Confirm Loading · Reset-on-Close

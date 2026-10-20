@@ -28,8 +28,12 @@ import {
 import { useDocsProps } from '@/layouts/useDocsProps'
 import type { DocsDemoBlock } from '@/layouts/useDocsProps'
 
+import { useGlassScheme } from '@/scheme/useGlassScheme'
+
 import LabPageShell from './LabPageShell.vue'
 import './lab-shared.css'
+
+const { tt } = useGlassScheme()
 
 const demoSuggestions = ['生成演示摘要', '查看示例进度', '整理演示备注'] as const
 
@@ -238,14 +242,14 @@ function onCalendarMonthChange(
 
 <template>
   <LabPageShell
-    title="实验室·输入与胶囊"
-    desc="Capsule Field Pill 999 · Field 38 / radius 12 · Input Quiet Chrome（hairline Fade / ring only）· Date / Time / Range Picker · Calendar。Focus Ring Follows Radius · Kill Inner Rect · Suggest Chip Lift / Quiet Active Wash / Icon Leading。"
+    :title="tt('inputs.page.title')"
+    :desc="tt('inputs.page.desc')"
     :live="lastAction"
   >
     <!-- 0. Live Props Demo -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">0. Live Props Demo</span>
+        <span class="lab-section-name">{{ tt('lab.section.liveProps') }}</span>
         <span class="lab-section-meta">
           点选下方演示区块后，右栏 Props 面板可改 clearable / disabled / search / text / theme；画布控件即时反映。
         </span>
@@ -345,7 +349,7 @@ function onCalendarMonthChange(
     <!-- Capsule Field -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">1. Capsule Field / Capsule Search</span>
+        <span class="lab-section-name">{{ tt('inputs.section.capsule') }}</span>
         <span class="lab-section-meta">
           GlassSearchCapsule · Pill 999 / Quiet Chrome · t-input（borderless / prefixIcon / size /
           clearable）· 外层 :focus-within 柔环贴胶囊圆角 · 内芯 Kill Inner Rect
@@ -387,7 +391,7 @@ function onCalendarMonthChange(
     <!-- Field GlassInput -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">2. Field · GlassInput</span>
+        <span class="lab-section-name">{{ tt('inputs.section.field') }}</span>
         <span class="lab-section-meta">
           Field 38 / radius 12（--glass-wb-field-radius）· search 变体仍 Field 圆角 · 同样 Kill Inner Rect +
           外层 focus-within · disabled 降强调无环
@@ -421,7 +425,7 @@ function onCalendarMonthChange(
     <!-- 裸 t-input 对照 -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">3. 裸 t-input 对照（非回归目标）</span>
+        <span class="lab-section-name">{{ tt('inputs.section.bareInput') }}</span>
         <span class="lab-section-meta">
           保留 TDesign 默认矩形 focus（.t-input--focused 的 border + box-shadow 贴 --td-radius-default）·
           用来显 Kill Inner Rect 差异
@@ -456,7 +460,7 @@ function onCalendarMonthChange(
     <!-- Form 内嵌 -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">4. Form 内嵌（无双环）</span>
+        <span class="lab-section-name">{{ tt('inputs.section.formEmbed') }}</span>
         <span class="lab-section-meta">
           GlassForm + GlassInput · 组件自带 Kill 与 Form 兜底对齐 · 校验仍正确 · focus 只出现一层柔环
         </span>
@@ -479,7 +483,7 @@ function onCalendarMonthChange(
     <!-- Suggest Chip -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">5. Suggest Chip</span>
+        <span class="lab-section-name">{{ tt('inputs.section.chip') }}</span>
         <span class="lab-section-meta">
           GlassSuggestChip · 底层 t-button · 欢迎态建议入口 · Suggest Chip Lift · Quiet Active Wash ·
           Icon Leading（#icon 14–16px）
@@ -520,7 +524,7 @@ function onCalendarMonthChange(
     <!-- Composer -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">6. Composer Bar</span>
+        <span class="lab-section-name">{{ tt('inputs.section.composer') }}</span>
         <span class="lab-section-meta">
           GlassComposer · 底层 t-textarea / GlassDropdown / GlassButton · 角色下拉 + 发送 ·
           Surface → Stage → Composer 单层宿主 · 触发钮 = GlassButton 密度
@@ -554,7 +558,7 @@ function onCalendarMonthChange(
     <!-- DatePicker -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">7. GlassDatePicker</span>
+        <span class="lab-section-name">{{ tt('inputs.section.date') }}</span>
         <span class="lab-section-meta">
           单日 · clearable · disabled · mode=month 轻示 · 触发器 Quiet Field Chrome ·
           打开面板 = Floating Plate + 选中格 Action Blue（btn-blue）实心蓝底白字
@@ -622,7 +626,7 @@ function onCalendarMonthChange(
     <!-- DateRange / TimeRange -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">8. GlassDateRangePicker / GlassTimeRangePicker</span>
+        <span class="lab-section-name">{{ tt('inputs.section.range') }}</span>
         <span class="lab-section-meta">
           盖 t-date-range-picker / t-time-range-picker · Quiet Field Chrome + Kill Inner Rect ·
           clearable / disabled 轻示 · 端点实心蓝 + 中间带 wash
@@ -693,7 +697,7 @@ function onCalendarMonthChange(
     <!-- TimePicker -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">9. GlassTimePicker</span>
+        <span class="lab-section-name">{{ tt('inputs.section.time') }}</span>
         <span class="lab-section-meta">
           默认 format · steps 粒度 · disabled · 时间列高亮与面板视觉在 theme.css
         </span>
@@ -732,7 +736,7 @@ function onCalendarMonthChange(
     <!-- Calendar -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">10. GlassCalendar</span>
+        <span class="lab-section-name">{{ tt('inputs.section.calendar') }}</span>
         <span class="lab-section-meta">
           盖 t-calendar · theme=full（透明整幅）+ theme=card（玻璃卡片）· 选中日实心 Action Blue 白字 ·
           控制器 Quiet · multiple 经 cell-click 自行维护
@@ -791,7 +795,7 @@ function onCalendarMonthChange(
     <!-- Popup Living -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">11. Popup Living（面板微透吃底）</span>
+        <span class="lab-section-name">{{ tt('inputs.section.popup') }}</span>
         <span class="lab-section-meta">
           宿主 GlassSurface：触发器 Quiet Field Chrome；打开面板 = Floating Plate，
           选中格 Action Blue 实心蓝底白字
@@ -834,7 +838,7 @@ function onCalendarMonthChange(
     <!-- Raw contrast -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">12. 对照 · 裸 t-date-picker / t-time-picker（非导出面）</span>
+        <span class="lab-section-name">{{ tt('inputs.section.bareDate') }}</span>
         <span class="lab-section-meta">仅用于对照，不进入 components/glass 导出；演示 v-model 透传一致</span>
       </div>
       <div class="lab-controls">

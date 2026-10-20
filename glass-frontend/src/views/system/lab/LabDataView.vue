@@ -69,8 +69,12 @@ import type { GlassTableRowMoveContext } from '@/components/glass'
 import { useDocsProps } from '@/layouts/useDocsProps'
 import type { DocsDemoBlock } from '@/layouts/useDocsProps'
 
+import { useGlassScheme } from '@/scheme/useGlassScheme'
+
 import LabPageShell from './LabPageShell.vue'
 import './lab-shared.css'
+
+const { tt } = useGlassScheme()
 
 type SessionRow = TableRowData & {
   id: string
@@ -914,14 +918,14 @@ function replayStatisticAnimation() {
 
 <template>
   <LabPageShell
-    title="实验室·数据展示"
-    desc="Data Display Living Showcase：Quiet Grid · Descriptions / Card / Bubble / Progress / Comment / Collapse / Badge / Avatar · Empty / List / Skeleton / Statistic。Sample Matrix S1–S12 对照 TDesign Table 能力。"
+    :title="tt('data.page.title')"
+    :desc="tt('data.page.desc')"
     :live="lastAction"
   >
     <!-- 0. Live Props Demo -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">0. Live Props Demo</span>
+        <span class="lab-section-name">{{ tt('lab.section.liveProps') }}</span>
         <span class="lab-section-meta">
           点选下方演示区块后，右栏 Props 面板可改 tone / variant / shape / size / dot / content；画布控件即时反映。
         </span>
@@ -1028,7 +1032,7 @@ function replayStatisticAnimation() {
     <!-- S1 · 基础列 · Hover Whisper -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">S1 · 基础列 · Hover Whisper</span>
+        <span class="lab-section-name">{{ tt('data.section.s1') }}</span>
         <span class="lab-section-meta">
           TDesign：基础表格 / columns · 玻璃：Quiet Grid 可读 + t4 行体 + Header Band / Workbench Left Nav（`.hero-ico`）·
           Row Density ≈36–40px · 禁止重阴影实白 Excel 卡
@@ -1051,7 +1055,7 @@ function replayStatisticAnimation() {
     <!-- Table Host · tray | inset 并排对照 -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">Table tray vs inset · Nested Chrome</span>
+        <span class="lab-section-name">{{ tt('data.section.tray') }}</span>
         <span class="lab-section-meta">
           tray = Host Tray 独立外壳；inset = Stage 内嵌板（吃 Stage blur，无 lift 影）·
           禁双托盘 · 两列仅用短 catalog 行示范宿主差异
@@ -1098,7 +1102,7 @@ function replayStatisticAnimation() {
     <!-- S2 · 行选中 · Selected Whisper -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">S2 · 行选中 · Selected Whisper</span>
+        <span class="lab-section-name">{{ tt('data.section.s2') }}</span>
         <span class="lab-section-meta">
           TDesign：selectedRowKeys / rowSelectionType=single·multiple / selectOnRowClick ·
           玻璃：Selected Whisper 极淡紫 wash（禁高饱和块色）
@@ -1140,7 +1144,7 @@ function replayStatisticAnimation() {
     <!-- S3 · Empty / Loading -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">S3 · Empty / Loading</span>
+        <span class="lab-section-name">{{ tt('data.section.s3') }}</span>
         <span class="lab-section-meta">
           TDesign：empty / loading · 玻璃：Empty Glass（muted 字色）+ 轻 mask（勿实白盖板）
         </span>
@@ -1179,7 +1183,7 @@ function replayStatisticAnimation() {
     <!-- S4 · Pagination Quiet Chrome -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">S4 · Pagination Quiet Chrome</span>
+        <span class="lab-section-name">{{ tt('data.section.s4') }}</span>
         <span class="lab-section-meta">
           TDesign：pagination / page-change · 玻璃：t3 Quiet Ribbon 分页条（透明底 + muted 字 + 当前页 Quiet 蓝）·
           勿实白分页条
@@ -1205,7 +1209,7 @@ function replayStatisticAnimation() {
     <!-- S5 · 排序 -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">S5 · 排序 · columns sorter</span>
+        <span class="lab-section-name">{{ tt('data.section.s5') }}</span>
         <span class="lab-section-meta">
           TDesign：columns.sorter / sortType · 玻璃：Header Band 排序图标不破坏一体缎带 ·
           本地排序；sort-change / change 已由 GlassTable 透传并回写 live
@@ -1230,7 +1234,7 @@ function replayStatisticAnimation() {
     <!-- S6 · 筛选 -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">S6 · 筛选 · columns filter</span>
+        <span class="lab-section-name">{{ tt('data.section.s6') }}</span>
         <span class="lab-section-meta">
           TDesign：filter / list / showConfirmAndReset · 玻璃：筛选浮层不引入脏方框 ·
           filter-change / change 已由 GlassTable 透传并回写 live
@@ -1255,7 +1259,7 @@ function replayStatisticAnimation() {
     <!-- S7 · 固定表头 / 固定列 -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">S7 · 固定表头 / 固定列 · maxHeight + fixed</span>
+        <span class="lab-section-name">{{ tt('data.section.s7') }}</span>
         <span class="lab-section-meta">
           TDesign：maxHeight / columns.fixed=left · 玻璃：滚动时 Header Band 仍可读 ·
           左固定列保持 Quiet 分割，无竖线网格
@@ -1279,7 +1283,7 @@ function replayStatisticAnimation() {
     <!-- S8 · 可编辑列 · Quiet Field -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">S8 · 可编辑列 · Quiet Field</span>
+        <span class="lab-section-name">{{ tt('data.section.s8') }}</span>
         <span class="lab-section-meta">
           TDesign：columns.edit / editableCellState / row-edit · 玻璃：编辑入口 Quiet、编辑态复用
           Field hairline + focus ring · row-edit 写回本地 ref · 已归档行只读
@@ -1303,7 +1307,7 @@ function replayStatisticAnimation() {
     <!-- S9 · 列配置 · columnController -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">S9 · 列配置 · columnController</span>
+        <span class="lab-section-name">{{ tt('data.section.s9') }}</span>
         <span class="lab-section-meta">
           TDesign：columnController / displayColumns / column-change / display-columns-change ·
           玻璃：触发钮 Quiet Pill + 面板 Floating Plate（token 轻覆盖，禁魔法 hex）·
@@ -1334,7 +1338,7 @@ function replayStatisticAnimation() {
     <!-- S10 · 展开行 · expandedRowKeys / expand-change -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">S10 · 展开行 · expandedRowKeys / expandedRow</span>
+        <span class="lab-section-name">{{ tt('data.section.s10') }}</span>
         <span class="lab-section-meta">
           TDesign：expandedRowKeys / defaultExpandedRowKeys / expandIcon / expandOnRowClick / expandedRow ·
           玻璃：展开触发区 24px Quiet 热区，展开行沿 Quiet Ribbon 做浅 wash，不另起卡片 ·
@@ -1367,7 +1371,7 @@ function replayStatisticAnimation() {
     <!-- S11 · 树形 · tree / expandedTreeNodes -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">S11 · 树形 · tree / expandedTreeNodes</span>
+        <span class="lab-section-name">{{ tt('data.section.s11') }}</span>
         <span class="lab-section-meta">
           TDesign：tree / treeExpandAndFoldIcon / expandedTreeNodes / expanded-tree-nodes-change / tree-expand-change ·
           玻璃：父子「演示条目」层级，树图标 24px Quiet 热区，indent 18 对齐 Quiet Grid 行高 ·
@@ -1395,7 +1399,7 @@ function replayStatisticAnimation() {
     <!-- S12 · 拖拽排序 · dragSort / drag-sort + rowMove / row-move -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">S12 · 拖拽排序 · dragSort / row-move</span>
+        <span class="lab-section-name">{{ tt('data.section.s12') }}</span>
         <span class="lab-section-meta">
           TDesign：dragSort="row" / drag-sort（DragSortContext.newData）·
           玻璃：整行拖拽沿用 Quiet Grid，chosen 轻提、ghost 轻留白，禁重阴影 ·
@@ -1424,7 +1428,7 @@ function replayStatisticAnimation() {
     <!-- Badge · Status / Count -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">Badge · Status / Count</span>
+        <span class="lab-section-name">{{ tt('data.section.badge') }}</span>
         <span class="lab-section-meta">
           GlassBadge · variant=status 底层 t-tag（在线值守绿点 · --glass-wb-online-*）·
           variant=count 底层 t-badge（透传 count / dot / maxCount / shape / size / color）
@@ -1475,16 +1479,18 @@ function replayStatisticAnimation() {
       </div>
     </section>
 
-    <!-- Avatar · GlassAvatar / Group -->
+    <!-- Avatar · GlassAvatar / Group
+         宿主：L1 Host Tray（frost，暗色也要露玻璃 inset）→ L3 Focus Panel standalone；
+         禁 Stage+inset（那是 Table Nested Chrome）；禁双托盘。 -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">Avatar · GlassAvatar / Group</span>
+        <span class="lab-section-name">{{ tt('data.section.avatar') }}</span>
         <span class="lab-section-meta">
-          Compound Wrapper 盖 t-avatar；Data 数据展示归类对齐 TDesign ·
-          字面 / icon / 图片与折叠 +N 统一走 --glass-wb-avatar-fill 冷蓝语言
+          容器：GlassSurface material=frost → GlassPanel standalone → GlassAvatar ·
+          字面 / icon / 图片与折叠 +N 走 --glass-wb-avatar-fill 冷蓝 · Don't：Stage 嵌板冒充头像橱窗
         </span>
       </div>
-      <GlassSurface class="lab-surface-host">
+      <GlassSurface material="frost" class="lab-surface-host">
         <div class="lab-plate-grid">
           <GlassPanel variant="standalone"
             v-for="(source, index) in avatarSources"
@@ -1570,7 +1576,7 @@ function replayStatisticAnimation() {
     <!-- 单组件橱窗 · Card / Bubble / Progress -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">单组件橱窗 · Card / Bubble / Progress</span>
+        <span class="lab-section-name">{{ tt('data.section.showcase') }}</span>
         <span class="lab-section-meta">
           自 Layout 迁入 Data Display：引用卡、会话气泡与 Quiet Progress 各自独立橱窗；
           只消费 GlassCard / GlassBubble / GlassProgress，不替代 Panel standalone 密信息宿主
@@ -1634,7 +1640,7 @@ function replayStatisticAnimation() {
     <!-- Collapse · Borderless Glass Rail -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">Collapse · Borderless Glass Rail</span>
+        <span class="lab-section-name">{{ tt('data.section.collapse') }}</span>
         <span class="lab-section-meta">
           borderless 玻璃轨 + Quiet Header + 展开内容 Quiet 分隔 · expandMutex 样例 ·
           Action Blue 仅 icon 强调
@@ -1690,7 +1696,7 @@ function replayStatisticAnimation() {
     <!-- Comment · Quiet -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">Comment · Quiet（GlassComment）</span>
+        <span class="lab-section-name">{{ tt('data.section.comment') }}</span>
         <span class="lab-section-meta">
           TDesign：t-comment · 玻璃：Quiet 排版 + 引用槽嵌 GlassCard ·
           透传 author / avatar / content / datetime / quote / reply / actions 与对应 slots
@@ -1736,7 +1742,7 @@ function replayStatisticAnimation() {
     <!-- Soft Stage · Inset Table · Stage Nested Chrome -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">Soft Stage · Inset Table · Stage Nested Chrome</span>
+        <span class="lab-section-name">{{ tt('data.section.softStage') }}</span>
         <span class="lab-section-meta">
           Soft Stage 近白洗（--glass-wb-stage-fill）内嵌 Inset Table ·
           工作台 Stage 内嵌用 <code>variant="inset"</code>（Stage Nested Chrome 嵌板，吃 Stage blur，禁双托盘）；
@@ -1763,7 +1769,7 @@ function replayStatisticAnimation() {
     <!-- Descriptions · GlassPanel standalone 密信息聚焦面 -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">Descriptions · Quiet Label / Content · GlassPanel · standalone · bordered / column / layout</span>
+        <span class="lab-section-name">{{ tt('data.section.descriptions') }}</span>
         <span class="lab-section-meta">
           TDesign：t-descriptions（bordered / colon / column / itemLayout / layout / size / title / span）·
           玻璃：阅读焦点三档 label（secondary）/ content（primary）/ 注解（muted），13px 节奏对齐 Form Quiet ·
@@ -1854,7 +1860,7 @@ function replayStatisticAnimation() {
     <!-- Empty · Quiet Empty State · type 矩阵 + action -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">Empty · Quiet Empty State · type 矩阵 + action</span>
+        <span class="lab-section-name">{{ tt('data.section.empty') }}</span>
         <span class="lab-section-meta">
           TDesign：t-empty（type / title / description / image / size / action）·
           玻璃：Quiet 空态（透明底、无蓝染满铺、muted 描述）· action 槽用 GlassButton ·
@@ -1912,7 +1918,7 @@ function replayStatisticAnimation() {
     <!-- List · Quiet List 三件套（基础 / Meta+action / split·stripe / asyncLoading） -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">List · Quiet List 三件套 · 基础 / Meta+action / split·stripe / asyncLoading</span>
+        <span class="lab-section-name">{{ tt('data.section.list') }}</span>
         <span class="lab-section-meta">
           TDesign：t-list / t-list-item / t-list-item-meta（split / stripe / size / header / footer / asyncLoading / load-more / scroll）·
           玻璃：GlassList 组件非托盘、透明底 Quiet 列表；Lab 用
@@ -1999,7 +2005,7 @@ function replayStatisticAnimation() {
     <!-- Skeleton · 微透 · 叠压染色（T3） -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">Skeleton · 微透 · 叠压染色（html .cell-see）</span>
+        <span class="lab-section-name">{{ tt('data.section.skeleton') }}</span>
         <span class="lab-section-meta">
           TDesign：t-skeleton（theme / animation / rowCol / loading / delay）·
           玻璃：半透冷蓝骨块 + 两层低透明度蓝染区缓慢漂移叠压，对齐 html
@@ -2103,7 +2109,7 @@ function replayStatisticAnimation() {
     <!-- Statistic · Quiet Number · tone 五态 / trend / prefix·suffix·extra / loading·animation（T1） -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">Statistic · Quiet Number · tone 五态 / trend / prefix·suffix·extra / loading·animation</span>
+        <span class="lab-section-name">{{ tt('data.section.statistic') }}</span>
         <span class="lab-section-meta">
           TDesign：t-statistic（value / title / unit / prefix / suffix / extra / trend / trendPlacement / separator / decimalPlaces / loading / animation / animationStart）·
           玻璃：GlassStatistic 组件非托盘、透明底 Quiet 数字；Lab 用

@@ -7,10 +7,13 @@
  */
 import { computed } from 'vue'
 
+import { useGlassScheme } from '@/scheme/useGlassScheme'
+
 import { useDocsProps } from './useDocsProps'
 import type { DocsPropControl, DocsPropValue } from './useDocsProps'
 
 const store = useDocsProps()
+const { tt } = useGlassScheme()
 
 const blocks = computed(() => store.state.blocks)
 const activeDemo = computed(() => store.activeDemo.value)
@@ -52,14 +55,14 @@ function onTextInput(control: DocsPropControl, event: Event): void {
 <template>
   <div class="docs-props-panel">
     <div class="docs-props-head">
-      <span class="docs-props-title">Props</span>
+      <span class="docs-props-title">{{ tt('shell.props.title') }}</span>
       <button v-if="activeDemo" type="button" class="docs-props-clear" @click="selectDemo(null)">
-        返回列表
+        {{ tt('shell.props.back') }}
       </button>
     </div>
 
     <p v-if="blocks.length === 0" class="docs-props-empty">
-      当前页面无可调属性。进入各 Lab 页并点选 Live Props 演示区块后，可在此调整其 props。
+      {{ tt('shell.props.empty') }}
     </p>
 
     <template v-else-if="activeDemo">

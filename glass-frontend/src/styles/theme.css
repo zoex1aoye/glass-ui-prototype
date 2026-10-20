@@ -1,4 +1,393 @@
 /* TDesign 变量覆盖 + 壳层尺寸 / 色彩变量。视觉权威：本文件已定 --glass-wb-* / --glass-*；Lab Living 为对照面。 */
+
+/* Color scheme · dark（F2）：glass 语义映射 TD theme-mode dark；材质仅薄层 color-mix。
+   选择器同时覆盖 theme-mode / data-color-scheme / .dark，与 useGlassScheme.applyColorScheme 对齐。
+   不覆写 --td-brand-* / --td-gray-*（由 TD _dark.less 在 :root[theme-mode=dark] 注入）。
+   特异性高于 :root，light 默认不变。组件禁止另起魔法色绕过本组。 */
+html[theme-mode='dark'],
+html[data-color-scheme='dark'],
+html.dark {
+  color-scheme: dark;
+
+  /* ── 语义映射：glass ← TD ───────────────────────────────────────────── */
+  --glass-brand-blue: var(--td-brand-color);
+  --glass-brand-blue-deep: var(--td-brand-color-active);
+
+  --glass-page-bg: var(--td-bg-color-page);
+  --glass-page-bg-accent: var(--td-bg-color-container);
+  --glass-sidebar-bg: color-mix(in srgb, var(--td-brand-color-1) 42%, var(--td-bg-color-container));
+  --glass-panel-bg: color-mix(in srgb, var(--td-brand-color-1) 28%, var(--td-bg-color-container));
+  --glass-panel-shadow: var(--td-shadow-2);
+
+  --glass-text-primary: var(--td-text-color-primary);
+  --glass-text-secondary: var(--td-text-color-secondary);
+  --glass-text-muted: var(--td-text-color-placeholder);
+  --glass-text-disabled: var(--td-text-color-disabled);
+  --glass-text-submenu: var(--td-text-color-secondary);
+
+  --glass-border-soft: var(--td-component-border);
+
+  /* Field 底：TD dark specialcomponent=transparent → 用 component + brand-1 冷蓝板，禁粉笔白 */
+  --glass-wb-field-bg: color-mix(in srgb, var(--td-brand-color-1) 48%, var(--td-bg-color-component));
+  --glass-wb-picker-field-bg: var(--glass-wb-field-bg);
+  --glass-wb-outline-bg: var(--glass-wb-field-bg);
+
+  /* chroma 背景语义：TD gray/brand 冷蓝半透；色相锚 alipay/zhihu/cyan/ai 保持 */
+  --glass-chroma-poster: color-mix(in srgb, var(--td-brand-color-1) 35%, var(--td-gray-color-14));
+  --glass-chroma-ice: color-mix(in srgb, var(--td-brand-color-3) 55%, transparent);
+  --glass-chroma-frost: color-mix(in srgb, var(--td-brand-color-2) 38%, transparent);
+  --glass-chroma-paper: color-mix(in srgb, var(--td-brand-color-1) 55%, var(--td-gray-color-13));
+
+  /* L0 Page */
+  --glass-layer-l0-fill: var(--glass-chroma-poster);
+  --glass-layer-l0-wash: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--td-brand-color-1) 40%, var(--td-gray-color-14)) 0%,
+    var(--td-bg-color-page) 50%,
+    var(--td-gray-color-14) 100%
+  );
+  --glass-layer-l0-air:
+    radial-gradient(
+      ellipse 420px 260px at 6% 0%,
+      color-mix(in srgb, var(--td-brand-color-8) 16%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      circle 340px at 96% 18%,
+      color-mix(in srgb, var(--td-brand-color-6) 12%, transparent),
+      transparent 68%
+    ),
+    radial-gradient(
+      ellipse 280px 180px at 32% 78%,
+      color-mix(in srgb, var(--td-brand-color-7) 8%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      circle 200px at 82% 92%,
+      color-mix(in srgb, var(--td-brand-color-8) 10%, transparent),
+      transparent 70%
+    );
+
+  /* Surface / L1：暗色强制 frost。
+     GlassSurface--raster 组件内会再绑 --glass-layer-l1-fill-raster（浅色 PNG），
+     故 fill-raster / blur-raster 必须一并改写，否则海报技法 Living 仍露浅色托盘。 */
+  --glass-wb-surface-fill-frost: linear-gradient(
+    165deg,
+    color-mix(in srgb, var(--td-brand-color-2) 58%, var(--td-gray-color-13)) 0%,
+    color-mix(in srgb, var(--td-brand-color-1) 48%, var(--td-gray-color-13)) 55%,
+    color-mix(in srgb, var(--td-brand-color-1) 35%, var(--td-gray-color-14)) 100%
+  );
+  --glass-wb-surface-fill: var(--glass-wb-surface-fill-frost);
+  --glass-wb-surface-blur: var(--glass-wb-surface-blur-frost);
+  --glass-wb-surface-rim: inset 0 0 0 1px color-mix(in srgb, var(--td-brand-color-8) 14%, transparent);
+  --glass-wb-surface-shadow: var(--td-shadow-3), 0 6px 16px color-mix(in srgb, var(--td-gray-color-14) 55%, transparent);
+  --glass-wb-surface-air:
+    radial-gradient(
+      52% 44% at 14% 78%,
+      color-mix(in srgb, var(--td-brand-color-8) 12%, transparent),
+      transparent 68%
+    ),
+    radial-gradient(
+      46% 40% at 86% 22%,
+      color-mix(in srgb, var(--td-brand-color-7) 8%, transparent),
+      transparent 70%
+    ),
+    transparent;
+  --glass-layer-l1-fill: var(--glass-wb-surface-fill-frost);
+  --glass-layer-l1-blur: var(--glass-wb-surface-blur-frost);
+  --glass-layer-l1-fill-frost: var(--glass-wb-surface-fill-frost);
+  --glass-layer-l1-blur-frost: var(--glass-wb-surface-blur-frost);
+  /* 关键：覆盖 raster 默认浅 PNG，与 frost 同材质 */
+  --glass-layer-l1-fill-raster: var(--glass-wb-surface-fill-frost);
+  --glass-layer-l1-blur-raster: var(--glass-wb-surface-blur-frost);
+  --glass-layer-l1-rim: var(--glass-wb-surface-rim);
+  --glass-layer-l1-shadow: var(--glass-wb-surface-shadow);
+  --glass-layer-l1-air: var(--glass-wb-surface-air);
+
+  /* Rail / Stage */
+  --glass-wb-rail-wash:
+    radial-gradient(
+      70% 36% at 28% 12%,
+      color-mix(in srgb, var(--td-brand-color-8) 14%, transparent),
+      transparent 55%
+    ),
+    color-mix(in srgb, var(--td-brand-color-2) 45%, var(--td-bg-color-secondarycontainer));
+  --glass-wb-rail-wash-lilac:
+    radial-gradient(
+      70% 36% at 28% 12%,
+      color-mix(in srgb, var(--glass-chroma-ai) 14%, transparent),
+      transparent 55%
+    ),
+    color-mix(in srgb, var(--glass-chroma-ai) 10%, var(--td-bg-color-secondarycontainer));
+  --glass-wb-rail-list-item-hover-bg: color-mix(
+    in srgb,
+    var(--glass-chroma-ai) 10%,
+    var(--td-bg-color-container-hover)
+  );
+  /* Rail active：明显重于 hover 轻洗（禁再 alias hover，否则与悬停同糊） */
+  --glass-wb-rail-list-item-active-bg: color-mix(in srgb, var(--td-brand-color) 26%, transparent);
+  --glass-wb-stage-fill: linear-gradient(
+    165deg,
+    color-mix(in srgb, var(--td-brand-color-1) 42%, var(--td-bg-color-container)),
+    color-mix(in srgb, var(--td-brand-color-1) 28%, var(--td-bg-color-page))
+  );
+  --glass-wb-body-shadow: var(--td-shadow-2);
+
+  /* L2 Region / PageHeader */
+  --glass-layer-l2-fill: linear-gradient(
+    112deg,
+    color-mix(in srgb, var(--td-brand-color-2) 62%, var(--td-bg-color-container)) 0%,
+    color-mix(in srgb, var(--td-brand-color-1) 52%, var(--td-bg-color-secondarycontainer)) 42%,
+    color-mix(in srgb, var(--td-brand-color-3) 38%, var(--td-bg-color-container)) 66%,
+    color-mix(in srgb, var(--td-brand-color-4) 32%, transparent) 100%
+  );
+  --glass-layer-l2-fill-weighted: linear-gradient(
+    112deg,
+    color-mix(in srgb, var(--td-brand-color-2) 72%, var(--td-bg-color-container)) 0%,
+    color-mix(in srgb, var(--td-brand-color-1) 60%, var(--td-bg-color-secondarycontainer)) 42%,
+    color-mix(in srgb, var(--td-brand-color-3) 48%, var(--td-bg-color-container)) 66%,
+    color-mix(in srgb, var(--td-brand-color-4) 42%, var(--td-bg-color-page)) 100%
+  );
+  --glass-layer-l2-fill-solid: color-mix(in srgb, var(--td-brand-color-1) 55%, var(--td-bg-color-container));
+  --glass-layer-l2-shadow: var(--td-shadow-1);
+  --glass-layer-l2-shadow-weighted: var(--glass-layer-l2-shadow);
+
+  /* L3 Focus Panel */
+  --glass-layer-l3-fill: color-mix(in srgb, var(--td-brand-color-2) 42%, transparent);
+  --glass-layer-l3-inset-fill: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--td-brand-color-2) 40%, transparent) 0%,
+    color-mix(in srgb, var(--td-brand-color-3) 45%, transparent) 46%,
+    color-mix(in srgb, var(--td-brand-color-6) 12%, transparent) 100%
+  );
+  --glass-layer-l3-inset-shadow: var(--td-shadow-2);
+  --glass-layer-l3-standalone-fill: color-mix(in srgb, var(--td-brand-color-2) 48%, transparent);
+  --glass-layer-l3-standalone-shadow: var(--td-shadow-2);
+  --glass-layer-l3-hairline: inset 0 0 0 1px color-mix(in srgb, var(--td-brand-color-8) 16%, transparent);
+
+  /* 工作台：search / session / soft / field — TD container 阶 + brand 冷染 */
+  --glass-wb-search-bg: color-mix(in srgb, var(--td-brand-color-1) 40%, var(--td-bg-color-component));
+  --glass-wb-session-hover-bg: var(--td-bg-color-container-hover);
+  --glass-wb-session-active-bg: color-mix(in srgb, var(--td-brand-color-2) 35%, var(--td-bg-color-container-active));
+  --glass-wb-session-active-shadow: var(--td-shadow-1);
+  --glass-wb-soft-bg: color-mix(in srgb, var(--td-brand-color-1) 30%, var(--td-bg-color-secondarycomponent));
+  --glass-wb-soft-hover-bg: var(--td-bg-color-secondarycomponent-hover);
+  --glass-wb-soft-active-bg: var(--td-bg-color-secondarycomponent-active);
+  --glass-wb-icon-hover-bg: var(--td-bg-color-component-hover);
+  --glass-wb-pill-bg: color-mix(in srgb, var(--td-brand-color-1) 45%, var(--td-bg-color-component));
+  --glass-wb-pill-hover-bg: var(--td-bg-color-component-hover);
+  --glass-wb-pill-quiet-bg: color-mix(in srgb, var(--td-brand-color-1) 38%, var(--td-bg-color-secondarycontainer));
+  --glass-wb-pill-quiet-hover-bg: var(--td-bg-color-secondarycontainer-hover);
+  --glass-wb-pill-quiet-active-bg: var(--td-bg-color-secondarycontainer-active);
+  --glass-wb-pill-quiet-active-color: var(--td-brand-color-10);
+  --glass-wb-pill-quiet-color: var(--td-brand-color-9);
+  --glass-wb-pill-text: var(--td-brand-color-9);
+  --glass-wb-pill-border: color-mix(in srgb, var(--td-brand-color-8) 32%, transparent);
+  --glass-wb-pill-hover-border: color-mix(in srgb, var(--td-brand-color-8) 48%, transparent);
+  --glass-wb-btn-blue: var(--td-brand-color);
+  --glass-wb-send-bg: color-mix(in srgb, var(--td-brand-color-1) 50%, var(--td-bg-color-component));
+  --glass-wb-field-hairline: inset 0 0 0 1px color-mix(in srgb, var(--td-brand-color-8) 22%, transparent);
+  --glass-wb-field-hairline-hover: inset 0 0 0 1px color-mix(in srgb, var(--td-brand-color-8) 12%, transparent);
+  --glass-wb-field-focus-ring: 0 0 0 2px color-mix(in srgb, var(--td-brand-color) 55%, transparent);
+  --glass-wb-control-focus-ring: 0 0 0 2px color-mix(in srgb, var(--td-brand-color) 58%, transparent);
+  --glass-wb-text-cta-hover-bg: color-mix(in srgb, var(--td-brand-color-5) 28%, transparent);
+  --glass-wb-tonal-hairline: inset 0 0 0 1px color-mix(in srgb, var(--td-brand-color-8) 28%, transparent);
+  --glass-wb-tonal-hairline-hover: inset 0 0 0 1px color-mix(in srgb, var(--td-brand-color-8) 16%, transparent);
+  --glass-wb-tonal-hairline-active: inset 0 0 0 1px color-mix(in srgb, var(--td-brand-color-8) 22%, transparent);
+
+  /* Soft cite / bubble / card 阅读面 */
+  --glass-wb-card-soft-fill: color-mix(in srgb, var(--td-brand-color-1) 40%, var(--td-bg-color-container));
+  --glass-wb-card-soft-shadow: var(--td-shadow-1);
+  --glass-wb-card-soft-hairline: inset 0 0 0 1px color-mix(in srgb, var(--glass-chroma-ai) 32%, transparent);
+  --glass-wb-bubble-ai-fill: color-mix(in srgb, var(--td-brand-color-1) 45%, var(--td-bg-color-container));
+  --glass-wb-bubble-ai-shadow: var(--td-shadow-1);
+  --glass-wb-comment-reply-bg: color-mix(in srgb, var(--td-brand-color-1) 38%, var(--td-bg-color-secondarycontainer));
+  --glass-wb-card-shadow: var(--td-shadow-2);
+
+  /* Overlay / masks ← TD mask + container */
+  --glass-wb-dialog-scrim: var(--td-mask-active);
+  --glass-wb-dialog-fill: color-mix(in srgb, var(--td-brand-color-1) 35%, var(--td-bg-color-container));
+  --glass-wb-dialog-shadow: var(--td-shadow-3);
+  --glass-wb-dialog-divider-color: var(--td-component-stroke);
+  --glass-wb-popconfirm-fill: color-mix(in srgb, var(--td-brand-color-1) 30%, var(--td-bg-color-container));
+  --glass-wb-popconfirm-shadow: var(--td-shadow-2);
+  --glass-wb-dropdown-fill: color-mix(in srgb, var(--td-brand-color-1) 30%, var(--td-bg-color-container));
+  --glass-wb-dropdown-shadow: var(--td-shadow-2);
+  --glass-wb-dropdown-item-hover-bg: color-mix(in srgb, var(--td-brand-color) 14%, transparent);
+  --glass-wb-dropdown-item-active-bg: color-mix(in srgb, var(--td-brand-color) 20%, transparent);
+  --glass-wb-table-fill: color-mix(in srgb, var(--td-brand-color-1) 25%, var(--td-bg-color-container));
+  --glass-wb-table-header-fill: color-mix(in srgb, var(--td-brand-color-2) 35%, var(--td-bg-color-secondarycontainer));
+  --glass-wb-table-shadow: var(--td-shadow-2);
+  --glass-wb-table-hairline: inset 0 0 0 1px color-mix(in srgb, var(--td-brand-color-8) 18%, transparent);
+  --glass-wb-table-loading-mask: var(--td-mask-disabled);
+  --glass-wb-loading-overlay: var(--glass-wb-table-loading-mask);
+  /* inset 嵌板：light 为近白微 wash；未覆写时暗色 Stage 内仍露浅灰白板（Data tray vs inset） */
+  --glass-wb-table-inset-fill: color-mix(
+    in srgb,
+    var(--td-brand-color-1) 22%,
+    var(--td-bg-color-secondarycontainer)
+  );
+  --glass-wb-table-inset-hairline: inset 0 0 0 1px
+    color-mix(in srgb, var(--td-brand-color-8) 14%, transparent);
+  --glass-wb-table-row-hover: color-mix(in srgb, var(--td-brand-color) 12%, transparent);
+  /* Selected Whisper：冷蓝行动选中，禁 AI 紫满行（紫只做点缀） */
+  --glass-wb-table-row-selected: color-mix(in srgb, var(--td-brand-color) 18%, transparent);
+  --glass-wb-table-expanded-fill: color-mix(in srgb, var(--td-brand-color-2) 28%, transparent);
+  --glass-wb-table-fixed-header-fill: color-mix(
+    in srgb,
+    var(--td-brand-color-2) 40%,
+    var(--td-bg-color-secondarycontainer)
+  );
+  --glass-wb-table-fixed-cell-fill: color-mix(
+    in srgb,
+    var(--td-brand-color-1) 30%,
+    var(--td-bg-color-container)
+  );
+  --glass-wb-table-fixed-cell-hover-fill: color-mix(
+    in srgb,
+    var(--td-brand-color) 10%,
+    var(--glass-wb-table-fixed-cell-fill)
+  );
+  --glass-wb-table-fixed-cell-selected-fill: color-mix(
+    in srgb,
+    var(--td-brand-color) 14%,
+    var(--glass-wb-table-fixed-cell-fill)
+  );
+  --glass-wb-table-drag-chosen-fill: color-mix(
+    in srgb,
+    var(--td-brand-color-1) 35%,
+    var(--td-bg-color-container)
+  );
+  --glass-wb-table-drag-ghost-fill: color-mix(in srgb, var(--td-brand-color-2) 22%, transparent);
+
+  /* Avatar 冷蓝面：暗底上禁近白 chalk 洗；字色吃 TD primary */
+  --glass-wb-avatar-fill: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--td-brand-color-8) 26%, transparent) 0%,
+    color-mix(in srgb, var(--td-brand-color-6) 32%, transparent) 100%
+  );
+  --glass-wb-avatar-text: var(--td-text-color-primary);
+  --glass-wb-avatar-rim: inset 0 0 0 1px color-mix(in srgb, var(--td-brand-color-8) 28%, transparent);
+
+  /* List：hover 轻洗 / stripe·active 加重井 —— 两态必须可辨；禁 chalk、禁同色 alias。 */
+  --glass-wb-list-item-hover-bg: color-mix(in srgb, var(--td-brand-color) 14%, transparent);
+  --glass-wb-list-stripe-bg: color-mix(in srgb, var(--td-brand-color) 26%, transparent);
+
+  /* Collapse：header 近白微透未覆写时暗色仍 chalk；改冷蓝半透嵌板 */
+  --glass-wb-collapse-track-fill: color-mix(
+    in srgb,
+    var(--td-brand-color-1) 28%,
+    var(--td-bg-color-container)
+  );
+  --glass-wb-collapse-track-shadow: var(--td-shadow-1);
+  --glass-wb-collapse-track-hairline: inset 0 0 0 1px
+    color-mix(in srgb, var(--td-brand-color-8) 16%, transparent);
+  --glass-wb-collapse-header-fill: color-mix(
+    in srgb,
+    var(--td-brand-color-2) 32%,
+    var(--td-bg-color-secondarycontainer)
+  );
+  --glass-wb-collapse-header-hover-fill: color-mix(in srgb, var(--td-brand-color) 14%, transparent);
+  --glass-wb-collapse-header-active-fill: color-mix(in srgb, var(--td-brand-color) 18%, transparent);
+  --glass-wb-collapse-header-color: var(--td-text-color-primary);
+  --glass-wb-collapse-content-color: var(--td-text-color-secondary);
+  --glass-wb-collapse-content-divider: color-mix(in srgb, var(--td-brand-color-8) 22%, transparent);
+  --glass-wb-collapse-icon-color: var(--td-text-color-secondary);
+  --glass-wb-collapse-icon-hover-bg: color-mix(in srgb, var(--td-brand-color) 14%, transparent);
+  --glass-wb-collapse-disabled-color: var(--td-text-color-disabled);
+  --glass-wb-descriptions-hairline: var(--td-border-level-1-color);
+  --glass-wb-descriptions-bordered-fill: color-mix(in srgb, var(--td-brand-color) 6%, transparent);
+  --glass-wb-descriptions-row-stripe: color-mix(in srgb, var(--td-brand-color) 8%, transparent);
+  --glass-wb-descriptions-label-fill: color-mix(in srgb, var(--td-brand-color) 14%, transparent);
+
+  /* PosterWash：wash + air + petals 全套暗色；multiply 在深底会吞亮瓣 → screen */
+  --glass-poster-wash: var(--glass-layer-l0-wash);
+  --glass-poster-air-radial-a: radial-gradient(
+    36% 42% at 78% 18%,
+    color-mix(in srgb, var(--td-brand-color-8) 28%, transparent),
+    transparent 62%
+  );
+  --glass-poster-air-radial-b: radial-gradient(
+    30% 36% at 92% 72%,
+    color-mix(in srgb, var(--td-brand-color-7) 22%, transparent),
+    transparent 60%
+  );
+  --glass-poster-air-radial-c: radial-gradient(
+    40% 48% at 18% 88%,
+    color-mix(in srgb, var(--td-brand-color-6) 18%, transparent),
+    transparent 65%
+  );
+  --glass-poster-air-radial-d: radial-gradient(
+    28% 30% at 42% 12%,
+    color-mix(in srgb, var(--td-brand-color-3) 35%, transparent),
+    transparent 70%
+  );
+  --glass-poster-air-linear: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--td-brand-color-1) 45%, var(--td-gray-color-13)),
+    var(--glass-chroma-poster) 55%,
+    var(--td-bg-color-page)
+  );
+  --glass-poster-air-bg:
+    var(--glass-poster-air-radial-a),
+    var(--glass-poster-air-radial-b),
+    var(--glass-poster-air-radial-c),
+    var(--glass-poster-air-radial-d),
+    var(--glass-poster-air-linear);
+  --glass-poster-air-before-bg: linear-gradient(
+    100deg,
+    color-mix(in srgb, var(--td-brand-color-3) 40%, transparent),
+    color-mix(in srgb, var(--td-brand-color-8) 28%, transparent) 40%,
+    color-mix(in srgb, var(--td-brand-color-6) 14%, transparent)
+  );
+  --glass-poster-air-after-bg: linear-gradient(
+    150deg,
+    color-mix(in srgb, var(--td-brand-color-3) 36%, transparent),
+    color-mix(in srgb, var(--td-brand-color-7) 22%, transparent),
+    color-mix(in srgb, var(--td-brand-color-6) 12%, transparent)
+  );
+  --glass-poster-petal-blend: screen;
+  --glass-poster-petal-a-bg: linear-gradient(
+    155deg,
+    color-mix(in srgb, var(--td-brand-color-3) 22%, transparent),
+    color-mix(in srgb, var(--td-brand-color-8) 32%, transparent) 35%,
+    color-mix(in srgb, var(--td-brand-color-7) 28%, transparent) 65%,
+    color-mix(in srgb, var(--td-brand-color-5) 12%, transparent)
+  );
+  --glass-poster-petal-b-bg: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--td-brand-color-3) 18%, transparent),
+    color-mix(in srgb, var(--td-brand-color-7) 28%, transparent) 50%,
+    color-mix(in srgb, var(--td-brand-color-6) 14%, transparent)
+  );
+  --glass-poster-petal-c-bg: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--td-brand-color-8) 20%, transparent),
+    color-mix(in srgb, var(--td-brand-color-6) 18%, transparent),
+    transparent
+  );
+  --glass-poster-page-air-a-bg: radial-gradient(
+    ellipse,
+    color-mix(in srgb, var(--td-brand-color-8) 22%, transparent),
+    transparent 70%
+  );
+  --glass-poster-page-air-b-bg: radial-gradient(
+    ellipse,
+    color-mix(in srgb, var(--td-brand-color-7) 18%, transparent),
+    transparent 70%
+  );
+  --glass-poster-page-air-c-bg: radial-gradient(
+    ellipse,
+    color-mix(in srgb, var(--td-brand-color-6) 16%, transparent),
+    transparent 70%
+  );
+  --glass-poster-page-air-d-bg: radial-gradient(
+    ellipse,
+    color-mix(in srgb, var(--td-brand-color-3) 20%, transparent),
+    transparent 70%
+  );
+}
+
 :root {
   /* 品牌 / 强调 */
   --glass-brand-blue: #4d7cfe;
@@ -89,8 +478,10 @@
     color-mix(in srgb, var(--glass-chroma-ai) 14%, rgba(248, 246, 252, 0.72));
   --glass-wb-rail-blur-lilac: blur(20px) saturate(1.12);
   --glass-wb-rail-list-item-hover-bg: color-mix(in srgb, var(--glass-chroma-ai) 8%, rgba(255, 255, 255, 0.72));
-  /* Quiet List active：近白微透（走默认 list 圆角；无 tip） */
-  --glass-wb-rail-list-item-active-bg: rgba(252, 254, 255, 0.72);
+  /* Quiet List / stripe active：对齐 DocsShell nav `.is-active`
+     （--glass-wb-session-active-bg 白板 + session-active-shadow 轻抬升；禁无影纯白糊进 Panel） */
+  --glass-wb-rail-list-item-active-bg: var(--glass-wb-session-active-bg);
+  --glass-wb-list-item-active-shadow: var(--glass-wb-session-active-shadow);
 
   /* z3b Stage：z4 近白微透焦点面（html .chat）
      比 Surface 露边更亮更暖；抬升影交给整板，Stage 自身不得成第二张浮卡 */
@@ -287,6 +678,8 @@
   --glass-wb-text-cta-radius: 8px;
   --glass-wb-text-cta-font-size: 13px;
   --glass-wb-white: #ffffff;
+  /* Field 底板：light = 白；dark 由 html[theme-mode=dark] 映射 TD component（禁粉笔白） */
+  --glass-wb-field-bg: var(--glass-wb-white);
 
   /* Glass Tabs — Action Blue Accent / Quiet Ink / Soft Segment / Capsule / Soft Card
      hover / active 字、line bar 与 soft / card 选中字统一对齐「按钮与行动」
@@ -476,7 +869,7 @@
   --glass-wb-picker-field-height: var(--glass-wb-field-height);
   --glass-wb-picker-field-radius: var(--glass-wb-field-radius);
   --glass-wb-picker-field-pad-x: 12px;
-  --glass-wb-picker-field-bg: var(--glass-wb-white);
+  --glass-wb-picker-field-bg: var(--glass-wb-field-bg);
   --glass-wb-picker-field-hairline: var(--glass-wb-field-hairline);
   --glass-wb-picker-field-hairline-hover: var(--glass-wb-field-hairline-hover);
   --glass-wb-picker-field-focus-ring: var(--glass-wb-field-focus-ring);
@@ -689,8 +1082,8 @@
   --glass-wb-ghost-ripple: var(--glass-wb-soft-ripple);
   --glass-wb-ghost-hover-shadow: var(--glass-wb-pill-quiet-hover-shadow);
   --glass-wb-ghost-active-shadow: var(--glass-wb-pill-quiet-active-shadow);
-  /* outline / dashed 保留近白玻璃底；ghost 仍 transparent（透底） */
-  --glass-wb-outline-bg: var(--glass-wb-white);
+  /* outline / dashed 保留近白玻璃底；ghost 仍 transparent（透底）；暗色吃 field-bg */
+  --glass-wb-outline-bg: var(--glass-wb-field-bg);
 
   /* Quiet Chrome — Hairline Border（Tonal soft/icon；非 Field）
      取消实线 border，轮廓只走 inset hairline；hover Fade（更淡）不靠描边箍边。
@@ -782,7 +1175,8 @@
   /* Workbench Left Nav / Frost Rail / Header Band ← html .hero-ico — 磨砂冰蓝平铺，整行只画一次 */
   --glass-wb-table-header-fill: rgba(198, 222, 250, 0.44);
   --glass-wb-table-row-hover: var(--glass-wb-session-hover-bg); /* Hover Whisper */
-  --glass-wb-table-row-selected: rgba(123, 108, 240, 0.08); /* Selected Whisper 极淡紫 */
+  /* Selected Whisper：冷蓝微 wash（行动选中）；AI 紫仅点缀，禁满行脏紫 */
+  --glass-wb-table-row-selected: color-mix(in srgb, var(--glass-chroma-alipay) 12%, transparent);
   --glass-wb-table-expanded-fill: rgba(198, 222, 250, 0.22); /* 展开行 Quiet wash，不另起卡片 */
   --glass-wb-table-loading-mask: rgba(255, 255, 255, 0.28); /* t4 轻 mask */
   /* 固定列：取代 TD 2px 灰硬边；横向滚动时才由 TD 状态类触发。
@@ -825,10 +1219,14 @@
   --glass-wb-list-item-pad-s: 8px 12px;
   --glass-wb-list-item-pad-l: 14px 16px;
   --glass-wb-list-item-radius: 12px;
-  --glass-wb-list-item-hover-bg: var(--glass-wb-table-row-hover); /* Hover Whisper 复用 session-hover 族 */
-  --glass-wb-list-item-transition: background-color 0.15s ease;
+  /* Hover Whisper：对齐 DocsShell nav hover（--glass-wb-text-cta-hover-bg 极淡冷雾）；
+     禁 alipay 实色块洗。与 active（session 白板+抬升影）同族：hover 雾 / active 板。 */
+  --glass-wb-list-item-hover-bg: var(--glass-wb-text-cta-hover-bg);
+  --glass-wb-list-item-transition: background-color 0.15s ease, box-shadow 0.15s ease;
   --glass-wb-list-split-color: var(--glass-border-soft);
-  --glass-wb-list-stripe-bg: rgba(246, 249, 253, 0.72); /* 近白微透，对齐 comment reply 族 */
+  /* stripe / rail active：同 nav `.is-active` session 白板 + 抬升影 */
+  --glass-wb-list-stripe-bg: var(--glass-wb-session-active-bg);
+  --glass-wb-list-item-active-shadow: var(--glass-wb-session-active-shadow);
   --glass-wb-list-title-color: var(--glass-text-primary);
   --glass-wb-list-description-color: var(--glass-text-secondary);
   --glass-wb-list-meta-avatar-size: 40px;
@@ -4058,15 +4456,32 @@ body {
   background: var(--glass-wb-list-item-hover-bg);
 }
 
-/* Rail 列表 active：近白微透；沿用 Quiet List 圆角与 padding，无 tip / 无贴边横条。 */
+/* Rail 列表 active：对齐 DocsShell nav（白板/暗色井 + 轻抬升影 + 蓝字）；无 tip / 无贴边横条。 */
 .glass-rail .glass-list.t-list .t-list__inner .glass-list-item.t-list-item.is-active,
 .glass-rail .glass-list.t-list .t-list__inner .glass-list-item.t-list-item[data-active='true'] {
   background: var(--glass-wb-rail-list-item-active-bg);
+  box-shadow: var(--glass-wb-list-item-active-shadow);
+  color: var(--glass-wb-btn-blue);
+  font-weight: 500;
 }
 
 .glass-rail .glass-list.t-list .t-list__inner .glass-list-item.t-list-item.is-active:hover,
 .glass-rail .glass-list.t-list .t-list__inner .glass-list-item.t-list-item[data-active='true']:hover {
   background: var(--glass-wb-rail-list-item-active-bg);
+  box-shadow: var(--glass-wb-list-item-active-shadow);
+}
+
+.glass-rail
+  .glass-list.t-list
+  .t-list__inner
+  .glass-list-item.t-list-item.is-active
+  .t-list-item__meta-title,
+.glass-rail
+  .glass-list.t-list
+  .t-list__inner
+  .glass-list-item.t-list-item[data-active='true']
+  .t-list-item__meta-title {
+  color: var(--glass-wb-btn-blue);
 }
 
 /* split：软分隔线（去 TD 灰），只画非末行 */
@@ -4074,9 +4489,15 @@ body {
   background: var(--glass-wb-list-split-color);
 }
 
-/* stripe：偶数行近白微洗（非粉笔白实色）；hover 态由更高特异性覆盖 */
+/* stripe：偶数行对齐 nav active 材质（bg + 轻抬升影）；悬停仍保 stripe，不掉回 hover */
 .glass-list.t-list--stripe .glass-list-item.t-list-item:nth-child(even) {
   background: var(--glass-wb-list-stripe-bg);
+  box-shadow: var(--glass-wb-list-item-active-shadow);
+}
+
+.glass-list.t-list--stripe .t-list__inner .glass-list-item.t-list-item:nth-child(even):hover {
+  background: var(--glass-wb-list-stripe-bg);
+  box-shadow: var(--glass-wb-list-item-active-shadow);
 }
 
 /* Meta：头像圆角对齐 Comment；title primary / description secondary */

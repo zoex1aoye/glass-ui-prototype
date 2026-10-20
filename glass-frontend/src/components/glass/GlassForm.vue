@@ -246,7 +246,7 @@ defineExpose({
 .glass-form__form :deep(.t-textarea__inner) {
   border: none;
   border-radius: var(--glass-wb-field-radius);
-  background: var(--glass-wb-white);
+  background: var(--glass-wb-field-bg);
   box-shadow: var(--glass-wb-field-hairline);
   transition: box-shadow 0.15s ease;
 }
@@ -619,7 +619,7 @@ defineExpose({
 .glass-form__form :deep(.t-checkbox__input),
 .glass-form__form :deep(.t-radio__input) {
   border-color: var(--glass-border-soft);
-  background-color: var(--glass-wb-white);
+  background-color: var(--glass-wb-field-bg);
 }
 
 /* 选中：Checkbox / Radio / Switch 三者统一 Action Blue（对齐按钮与行动），禁止脏方框加深 */

@@ -597,6 +597,373 @@
   line-height: 1.7;
 }
 
+/* Overview · 七色分工 / 深度五档（自 Poster §2 迁入） */
+.lab-palette-panel {
+  min-width: 0;
+}
+
+.lab-palette-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.lab-palette-lead {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.65;
+  color: var(--glass-text-secondary);
+}
+
+.lab-palette-lead b,
+.lab-rule-note b {
+  color: var(--glass-text-primary);
+}
+
+.lab-swatch-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lab-swatch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 6px 11px 6px 7px;
+  border-radius: 999px;
+  background: var(--glass-wb-pill-quiet-bg);
+  -webkit-backdrop-filter: var(--glass-wb-pill-quiet-blur);
+  backdrop-filter: var(--glass-wb-pill-quiet-blur);
+  box-shadow: var(--glass-wb-pill-quiet-shadow);
+}
+
+.lab-swatch-dot {
+  width: 15px;
+  height: 15px;
+  flex: none;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px var(--glass-border-soft);
+}
+
+.lab-swatch-dot--alipay {
+  background: var(--glass-chroma-alipay);
+}
+
+.lab-swatch-dot--zhihu {
+  background: var(--glass-chroma-zhihu);
+}
+
+.lab-swatch-dot--cyan {
+  background: var(--glass-chroma-cyan);
+}
+
+.lab-swatch-dot--poster {
+  background: var(--glass-chroma-poster);
+}
+
+.lab-swatch-dot--ice {
+  background: var(--glass-chroma-ice);
+}
+
+.lab-swatch-dot--frost {
+  background: var(--glass-chroma-frost);
+}
+
+.lab-swatch-dot--paper {
+  background: var(--glass-chroma-paper);
+}
+
+.lab-swatch-dot--ai {
+  background: var(--glass-chroma-ai);
+}
+
+.lab-swatch-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  font-size: 11px;
+  line-height: 1.35;
+  color: var(--glass-text-secondary);
+}
+
+.lab-swatch-copy b {
+  font-size: 12px;
+  color: var(--glass-text-primary);
+}
+
+.lab-depth-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 14px;
+  box-shadow: 0 -1px 0 var(--glass-border-soft);
+}
+
+.lab-depth-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--glass-text-primary);
+}
+
+.lab-depth-list {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lab-depth-item {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.lab-depth-tile {
+  height: 38px;
+  border-radius: 12px;
+  box-shadow: inset 0 0 0 1px var(--glass-border-soft);
+}
+
+.lab-depth-tile--z0 {
+  background: var(--glass-chroma-poster);
+}
+
+.lab-depth-tile--z1 {
+  background: var(--glass-chroma-ice);
+}
+
+.lab-depth-tile--z2 {
+  background: var(--glass-chroma-frost);
+}
+
+.lab-depth-tile--z3 {
+  background: var(--glass-chroma-paper);
+}
+
+.lab-depth-tile--z4 {
+  background: var(--glass-wb-stage-fill);
+}
+
+.lab-depth-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--glass-text-primary);
+}
+
+.lab-depth-role {
+  overflow: hidden;
+  font-size: 10.5px;
+  line-height: 1.4;
+  color: var(--glass-text-muted);
+  text-overflow: ellipsis;
+}
+
+/* Overview · 海报主技法摘录（过渡 · 花瓣 / 微透 / 悬浮） */
+.lab-tech-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.lab-tech-grid--trio {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.lab-tech-card {
+  min-width: 0;
+}
+
+.lab-tech-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lab-tech-visual {
+  position: relative;
+  min-height: 132px;
+  overflow: hidden;
+  border-radius: 14px;
+  background: var(--glass-chroma-frost);
+}
+
+.lab-tech-visual--transition {
+  background: var(--glass-chroma-frost);
+}
+
+.lab-petal-orb {
+  position: absolute;
+  top: 14%;
+  left: 14%;
+  width: 116px;
+  height: 96px;
+  border-radius: 58% 42% 48% 52% / 42% 58% 42% 58%;
+  background: linear-gradient(
+    150deg,
+    color-mix(in srgb, var(--glass-chroma-ice) 18%, transparent),
+    color-mix(in srgb, var(--glass-chroma-cyan) 38%, transparent) 34%,
+    color-mix(in srgb, var(--glass-chroma-alipay) 48%, transparent) 68%,
+    color-mix(in srgb, var(--glass-chroma-zhihu) 18%, transparent)
+  );
+  box-shadow: var(--glass-wb-pill-quiet-shadow);
+  filter: blur(0.4px);
+  opacity: 0.9;
+  transform: rotate(-24deg);
+}
+
+.lab-petal-orb::after {
+  position: absolute;
+  inset: 18% -10% -10% 28%;
+  border-radius: inherit;
+  background: linear-gradient(
+    155deg,
+    color-mix(in srgb, var(--glass-chroma-cyan) 22%, transparent),
+    color-mix(in srgb, var(--glass-chroma-zhihu) 30%, transparent) 58%,
+    transparent
+  );
+  content: '';
+  filter: blur(1px);
+  opacity: 0.78;
+  transform: rotate(18deg);
+}
+
+.lab-rule-note {
+  padding: 12px 15px;
+  border-radius: 14px;
+  background: var(--glass-chroma-frost);
+  -webkit-backdrop-filter: var(--glass-wb-pill-quiet-blur);
+  backdrop-filter: var(--glass-wb-pill-quiet-blur);
+  box-shadow: var(--glass-wb-pill-quiet-shadow);
+  font-size: 12px;
+  line-height: 1.65;
+  color: var(--glass-text-secondary);
+}
+
+.lab-tech-copy {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.65;
+  color: var(--glass-text-secondary);
+}
+
+.lab-tech-visual--see {
+  -webkit-backdrop-filter: var(--glass-wb-surface-blur);
+  backdrop-filter: var(--glass-wb-surface-blur);
+}
+
+.lab-tech-vitreous-layer,
+.lab-tech-vitreous-cover {
+  position: absolute;
+  border-radius: 16px;
+}
+
+.lab-tech-vitreous-layer--a {
+  top: 18%;
+  left: 11%;
+  width: 58%;
+  height: 64%;
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--glass-chroma-cyan) 38%, transparent),
+    color-mix(in srgb, var(--glass-chroma-alipay) 22%, transparent)
+  );
+  filter: blur(7px);
+  opacity: 0.72;
+  transform: rotate(-10deg);
+}
+
+.lab-tech-vitreous-layer--b {
+  right: 10%;
+  bottom: 12%;
+  width: 48%;
+  height: 55%;
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--glass-chroma-zhihu) 30%, transparent),
+    color-mix(in srgb, var(--glass-chroma-ice) 46%, transparent)
+  );
+  filter: blur(9px);
+  opacity: 0.66;
+  transform: rotate(8deg);
+}
+
+.lab-tech-vitreous-cover {
+  inset: 24% 16%;
+  background: var(--glass-wb-surface-fill);
+  -webkit-backdrop-filter: var(--glass-wb-surface-blur);
+  backdrop-filter: var(--glass-wb-surface-blur);
+  box-shadow: var(--glass-wb-pill-quiet-shadow);
+}
+
+.lab-tech-visual--float {
+  background:
+    radial-gradient(
+      60% 55% at 30% 28%,
+      color-mix(in srgb, var(--glass-chroma-ice) 42%, transparent),
+      transparent
+    ),
+    var(--glass-chroma-frost);
+}
+
+.lab-tech-float-disc {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--glass-chroma-paper);
+  -webkit-backdrop-filter: var(--glass-wb-surface-blur);
+  backdrop-filter: var(--glass-wb-surface-blur);
+  box-shadow: var(--glass-wb-pill-quiet-shadow);
+}
+
+.lab-tech-float-disc--far {
+  top: 12%;
+  right: 10%;
+  width: 54px;
+  height: 54px;
+  opacity: 0.42;
+  filter: blur(2px);
+}
+
+.lab-tech-float-disc--mid {
+  top: 28%;
+  left: 16%;
+  width: 68px;
+  height: 68px;
+  opacity: 0.66;
+  filter: blur(1px);
+}
+
+.lab-tech-float-disc--near {
+  right: 22%;
+  bottom: 10%;
+  width: 78px;
+  height: 78px;
+  background: var(--glass-chroma-ice);
+}
+
+@media (max-width: 980px) {
+  .lab-tech-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .lab-depth-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .lab-depth-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 /* Live Props Demo 选中区块：透明边 → hover 描边 → 选中 focus-ring（对齐 Actions 页模式，
    供各 Lab 页复用；色值一律走 glass token） */
 .docs-demo-block {

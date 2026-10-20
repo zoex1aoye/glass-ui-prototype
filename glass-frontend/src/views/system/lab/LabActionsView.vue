@@ -18,8 +18,12 @@ import {
 import { useDocsProps } from '@/layouts/useDocsProps'
 import type { DocsDemoBlock } from '@/layouts/useDocsProps'
 
+import { useGlassScheme } from '@/scheme/useGlassScheme'
+
 import LabPageShell from './LabPageShell.vue'
 import './lab-shared.css'
+
+const { tt } = useGlassScheme()
 
 const lastAction = ref('（尚未交互）')
 const pillLoading = ref(false)
@@ -211,14 +215,14 @@ function togglePillLoading() {
 
 <template>
   <LabPageShell
-    title="实验室·按钮与行动"
-    desc="Primary Pill / Quiet Chrome / Icon-only 预设 / TD Ghost 镂空 / Outline / Dashed / Soft 角色胶囊 / Action Pair（左 Quiet 右 Primary）/ Dropdown 触发钮（= GlassButton 密度）/ Affordant Orb FAB 52 / Status Themes（Semantic Filled）· Hover Lift · Color Shift · Active Press · Shadow Bloom · State Matrix。"
+    :title="tt('actions.page.title')"
+    :desc="tt('actions.page.desc')"
     :live="lastAction"
   >
     <!-- Live Props Demo（Lab 多页已扩面；全局选中机制仍未做） -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">0. Live Props Demo</span>
+        <span class="lab-section-name">{{ tt('lab.section.liveProps') }}</span>
         <span class="lab-section-meta">
           点选下方演示区块后，右栏 Props 面板可改 variant / shape / disabled / loading / 文案 / triggerVariant；画布控件即时反映。
         </span>
@@ -321,7 +325,7 @@ function togglePillLoading() {
     <!-- Button variants -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">1. GlassButton Variants</span>
+        <span class="lab-section-name">{{ tt('actions.section.variants') }}</span>
         <span class="lab-section-meta">
           primary（块级 42 / radius 12）· primary-round（Pill 38 / radius 999）· quiet · icon（TD icon-only 预设）·
           ghost（TD 镂空带文案）· outline · dashed · text · soft（32）· send ·
@@ -371,7 +375,7 @@ function togglePillLoading() {
     <!-- Action Pair -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">2. Header Actions / Action Pair</span>
+        <span class="lab-section-name">{{ tt('actions.section.pair') }}</span>
         <span class="lab-section-meta">
           GlassToolbarActions · Quiet「分享」+ Primary pill「新会话」· Compound Wrapper 盖 t-button（shape=round）
         </span>
@@ -405,7 +409,7 @@ function togglePillLoading() {
     <!-- Dropdown 触发钮 -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">3. Dropdown 触发钮</span>
+        <span class="lab-section-name">{{ tt('actions.section.dropdown') }}</span>
         <span class="lab-section-meta">
           GlassDropdown · Compound Wrapper 盖 t-dropdown · 触发钮 = GlassButton 密度（soft 32 / quiet Pill 38 /
           primary 块级 42）· 菜单面板玻璃 Quiet Chrome（近白微透 + 主题蓝 hover/active whisper · 禁脏灰描边）
@@ -459,7 +463,7 @@ function togglePillLoading() {
     <!-- FAB -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">4. StickyTool / Affordant Orb</span>
+        <span class="lab-section-name">{{ tt('actions.section.fab') }}</span>
         <span class="lab-section-meta">
           GlassStickyTool · FAB 52 · 底层 t-button shape=circle · absolute within Surface · Safe Offset 28px ·
           Affordant Orb 最大幅度 Hover Lift -3px → Active Press +1px / scale(--glass-wb-fab-active-scale)
@@ -476,7 +480,7 @@ function togglePillLoading() {
     <!-- Glass State Matrix -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">5. Glass State Matrix</span>
+        <span class="lab-section-name">{{ tt('actions.section.matrix') }}</span>
         <span class="lab-section-meta">
           语义变体 × default / disabled / loading · Hover Lift / Active Press 需实际悬停 / 按住 · Focus Ring 用键盘
           Tab · disabled / loading 无抬升 · reduced-motion 取消位移只留颜色
@@ -580,7 +584,7 @@ function togglePillLoading() {
     <!-- Status Themes -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">6. Status Themes（Semantic Filled）</span>
+        <span class="lab-section-name">{{ tt('actions.section.status') }}</span>
         <span class="lab-section-meta">
           danger=京东红同源分档（品牌锚 #E1251B / btn·confirm #D91F18，冻结勿改）·
           warning=中石油宝石花辅色（CNPC / Pantone 137C）锚 #FFA300 / btn #9E6400 ·
@@ -631,7 +635,7 @@ function togglePillLoading() {
     <!-- TDesign State Matrix（裸 t-button 对照） -->
     <section class="lab-section">
       <div class="lab-section-label">
-        <span class="lab-section-name">7. TDesign State Matrix（裸 t-button 对照）</span>
+        <span class="lab-section-name">{{ tt('actions.section.tdMatrix') }}</span>
         <span class="lab-section-meta">
           theme / variant / shape / size / ghost / loading / disabled · 仅 Lab 对照，不进入 Glass 导出面
         </span>
