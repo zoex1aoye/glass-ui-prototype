@@ -273,6 +273,31 @@ html.dark {
   --glass-wb-list-item-hover-bg: color-mix(in srgb, var(--td-brand-color) 14%, transparent);
   --glass-wb-list-stripe-bg: color-mix(in srgb, var(--td-brand-color) 26%, transparent);
 
+  /* Tabs soft/capsule/card：暗色禁 chalk 微光与近白轨；冷蓝实井 + 克制 hairline */
+  --glass-wb-tabs-accent-color: var(--td-brand-color);
+  --glass-wb-tabs-soft-item-active-bg: color-mix(
+    in srgb,
+    var(--td-brand-color-2) 40%,
+    var(--td-bg-color-container-active)
+  );
+  --glass-wb-tabs-soft-item-active-color: var(--td-brand-color);
+  --glass-wb-tabs-soft-item-active-shadow: inset 0 0 0 1px
+    color-mix(in srgb, var(--td-brand-color-8) 18%, transparent);
+  --glass-wb-tabs-card-nav-bg: color-mix(
+    in srgb,
+    var(--td-brand-color-1) 38%,
+    var(--td-bg-color-secondarycontainer)
+  );
+  --glass-wb-tabs-card-item-active-bg: color-mix(
+    in srgb,
+    var(--td-brand-color-2) 36%,
+    var(--td-bg-color-container-active)
+  );
+  --glass-wb-tabs-card-item-active-color: var(--td-brand-color);
+  --glass-wb-tabs-card-item-active-hairline: inset 0 0 0 1px
+    color-mix(in srgb, var(--td-brand-color-8) 16%, transparent);
+  --glass-wb-tabs-card-item-active-shadow: var(--td-shadow-1);
+
   /* Collapse：header 近白微透未覆写时暗色仍 chalk；改冷蓝半透嵌板 */
   --glass-wb-collapse-track-fill: color-mix(
     in srgb,
@@ -722,6 +747,8 @@ html.dark {
   --glass-wb-tabs-soft-item-radius: 8px;
   --glass-wb-tabs-soft-item-active-bg: var(--glass-wb-soft-active-bg);
   --glass-wb-tabs-soft-item-active-color: var(--glass-wb-tabs-accent-color);
+  /* soft active 轮廓：浅色走 tonal hairline；暗色覆写为克制冷 rim（禁 chalk 微光） */
+  --glass-wb-tabs-soft-item-active-shadow: var(--glass-wb-tonal-hairline);
   /* capsule 专属形状 token：镜像 Radio capsule 的 pill 写法，材质 / 选中 / 交互复用 soft */
   --glass-wb-tabs-capsule-track-radius-pill: 999px;
   --glass-wb-tabs-capsule-item-radius-pill: calc(var(--glass-wb-tabs-soft-item-height) / 2);
@@ -2006,7 +2033,7 @@ body {
   .t-tabs__nav-item-wrapper {
   background-color: var(--glass-wb-tabs-soft-item-active-bg);
   color: var(--glass-wb-tabs-soft-item-active-color);
-  box-shadow: var(--glass-wb-tonal-hairline);
+  box-shadow: var(--glass-wb-tabs-soft-item-active-shadow);
 }
 
 :is(.glass-tabs--soft, .glass-tabs--capsule) .t-tabs__bar {
