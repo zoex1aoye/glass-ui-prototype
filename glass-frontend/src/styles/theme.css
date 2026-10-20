@@ -219,8 +219,12 @@ html.dark {
   --glass-wb-table-header-fill: color-mix(in srgb, var(--td-brand-color-2) 35%, var(--td-bg-color-secondarycontainer));
   --glass-wb-table-shadow: var(--td-shadow-2);
   --glass-wb-table-hairline: inset 0 0 0 1px color-mix(in srgb, var(--td-brand-color-8) 18%, transparent);
-  --glass-wb-table-loading-mask: var(--td-mask-disabled);
+  /* 轻 mask：浅色=白 28% 提亮霜。暗色=近白 18% + 轻 blur 磨砂（禁 td-mask 0.6 实黑、
+     禁纯黑半透炭洞、禁高 alpha 白粉笔板）。loading 文案 primary。 */
+  --glass-wb-table-loading-mask: rgba(255, 255, 255, 0.18);
   --glass-wb-loading-overlay: var(--glass-wb-table-loading-mask);
+  --glass-wb-loading-overlay-blur: blur(8px) saturate(1.08);
+  --glass-wb-loading-text-color: var(--td-text-color-primary);
   /* inset 嵌板：light 为近白微 wash；未覆写时暗色 Stage 内仍露浅灰白板（Data tray vs inset） */
   --glass-wb-table-inset-fill: color-mix(
     in srgb,
@@ -411,6 +415,30 @@ html.dark {
     color-mix(in srgb, var(--td-brand-color-3) 20%, transparent),
     transparent 70%
   );
+
+  /* Feedback · Status Semantic Solid
+     Light / Dark 均为语义实色：Dark 深井、Light 浅洗，无 Fan Tip 半透渐变。
+     实色板 + 轻 blur（一点点 frosted edge）+ 外阴影。
+     Message / Notification 的 blur / fill / icon 继续走 Alert 别名链。 */
+  --glass-wb-alert-blur: blur(8px) saturate(1.08);
+  --glass-wb-alert-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+  --glass-wb-alert-success-fill: #1b3f36;
+  --glass-wb-alert-info-fill: #1b3252;
+  --glass-wb-alert-warning-fill: #433724;
+  --glass-wb-alert-error-fill: #48222c;
+  --glass-wb-alert-success-icon: #53d695;
+  --glass-wb-alert-info-icon: #79a8ff;
+  --glass-wb-alert-warning-icon: #f2c05f;
+  --glass-wb-alert-error-icon: #ff7f76;
+}
+
+/* Feedback 全局：统一吃 alert blur token（轻 frosted edge；fill 仍为实色）。 */
+body .t-alert,
+body .glass-alert,
+body .t-message,
+body .t-notification {
+  -webkit-backdrop-filter: var(--glass-wb-alert-blur);
+  backdrop-filter: var(--glass-wb-alert-blur);
 }
 
 :root {
@@ -1206,6 +1234,7 @@ html.dark {
   --glass-wb-table-row-selected: color-mix(in srgb, var(--glass-chroma-alipay) 12%, transparent);
   --glass-wb-table-expanded-fill: rgba(198, 222, 250, 0.22); /* 展开行 Quiet wash，不另起卡片 */
   --glass-wb-table-loading-mask: rgba(255, 255, 255, 0.28); /* t4 轻 mask */
+  --glass-wb-loading-overlay-blur: none; /* 浅色轻霜不额外 blur；暗色覆写磨砂 */
   /* 固定列：取代 TD 2px 灰硬边；横向滚动时才由 TD 状态类触发。
      P2-D：再收一档 —— 淡线负责分层，侧影只留方向感，避免脏边 / 硬切口。 */
   --glass-wb-table-fixed-shadow-line: rgba(120, 160, 210, 0.14);
@@ -1338,47 +1367,27 @@ html.dark {
   --glass-wb-statistic-extra-font-size: 12px;
   --glass-wb-statistic-value-font-weight: 600;
 
-  /* Inline Banner / Status Alert · Status Soft Plate（Fan Tip + Light Frost + Whisper Lift）
-     html 技法锚：`.t1 .bph`（115deg 扇形软过渡 + blur(16) + 单层 lift 0 10px 28px / .07）。
-     中尺度状态条：边界 = 材质差 + Whisper Lift；无左侧 Tone Rail 色带；语义靠 icon + Fan Tip。
+  /* Inline Banner / Status Alert · Semantic Solid
+     Light 浅洗实色 / Dark 深井实色；无 Fan Tip 半透渐变；轻 blur(8) + Whisper Lift 外阴影。
+     中尺度状态条：边界 = 色面差 + 轻 frosted + Whisper Lift；无左侧 Tone Rail；语义靠 icon。
      Tone Spectrum 色相冻结：*-icon 品牌锚不变。 */
   --glass-wb-alert-radius: var(--glass-wb-field-radius);
   --glass-wb-alert-padding-y: 12px;
   --glass-wb-alert-padding-x: 16px;
-  --glass-wb-alert-blur: blur(16px) saturate(1.15); /* ← .bph */
+  --glass-wb-alert-blur: blur(8px) saturate(1.08); /* 一点点；原 Soft Plate 为 16 */
   --glass-wb-alert-shadow: 0 10px 28px rgba(0, 80, 180, 0.07); /* ← .bph；四态统一低噪蓝影 */
-  /* Fan Tip：首停略降 alpha 让 Light Frost 透叠；中段 wash 略提 chroma，tip 提至 0.16 */
-  --glass-wb-alert-success-fill: linear-gradient(
-    115deg,
-    rgba(255, 255, 255, 0.55) 0%,
-    rgba(220, 246, 230, 0.56) 42%,
-    rgba(24, 180, 88, 0.16) 100%
-  );
+  /* Light 四态从 mid-wash 收成不透明语义实色；无首停近白与 tip alpha。 */
+  --glass-wb-alert-success-fill: #dcf6e6;
   --glass-wb-alert-success-icon: var(--glass-wb-online-text);
-  --glass-wb-alert-info-fill: linear-gradient(
-    115deg,
-    rgba(255, 255, 255, 0.55) 0%,
-    rgba(214, 235, 255, 0.53) 42%,
-    rgba(47, 107, 246, 0.16) 100%
-  );
+  --glass-wb-alert-info-fill: #d6ebff;
   --glass-wb-alert-info-icon: var(--glass-wb-btn-blue);
-  --glass-wb-alert-warning-fill: linear-gradient(
-    115deg,
-    rgba(255, 255, 255, 0.55) 0%,
-    rgba(255, 239, 211, 0.56) 42%,
-    rgba(158, 100, 0, 0.16) 100%
-  );
+  --glass-wb-alert-warning-fill: #ffefd3;
   --glass-wb-alert-warning-icon: #9e6400;
-  --glass-wb-alert-error-fill: linear-gradient(
-    115deg,
-    rgba(255, 255, 255, 0.55) 0%,
-    rgba(255, 229, 229, 0.56) 42%,
-    rgba(225, 37, 27, 0.16) 100%
-  );
+  --glass-wb-alert-error-fill: #ffe5e5;
   --glass-wb-alert-error-icon: #e1251b;
 
-  /* Message / Soft Toast · Status Soft Plate（别名 Alert，密度略收）
-     同一 Fan Tip / Light Frost / Whisper Lift；无左侧色带。
+  /* Message / Soft Toast · Semantic Solid（别名 Alert，密度略收）
+     同一语义实色 / 无 frost / Whisper Lift；无左侧色带。
      question / loading 归 info 面，icon 走行动蓝。 */
   --glass-wb-message-radius: var(--glass-wb-alert-radius);
   --glass-wb-message-blur: var(--glass-wb-alert-blur);
@@ -1398,8 +1407,8 @@ html.dark {
   --glass-wb-message-question-icon: var(--glass-wb-btn-blue);
   --glass-wb-message-loading-icon: var(--glass-wb-btn-blue);
 
-  /* Notification / Soft Notice · Status Soft Plate（别名 Message，密度略松）
-     同一 Fan Tip / Light Frost / Whisper Lift；无左侧色带。
+  /* Notification / Soft Notice · Semantic Solid（别名 Message，密度略松）
+     同一语义实色 / 无 frost / Whisper Lift；无左侧色带。
      Theme 态类挂在图标而非根节点，全局 fill 走 :has + --theme 双保险。 */
   --glass-wb-notification-radius: var(--glass-wb-alert-radius);
   --glass-wb-notification-blur: var(--glass-wb-message-blur);
@@ -1772,7 +1781,7 @@ body {
 
 /* ── Message / Soft Toast（全局主题层）──────────────────────────────────
    MessagePlugin 会 teleport 到 body，因此不得依赖组件 scoped 样式。
-   复用 Alert Status Soft Plate；覆盖 TD 多层 inset 阴影与默认白卡。 */
+   复用 Alert semantic solid；覆盖 TD 多层 inset 阴影与默认白卡。 */
 .t-message {
   border: none;
   border-radius: var(--glass-wb-message-radius);
@@ -2438,7 +2447,7 @@ body {
 
 /* ── Notification / Soft Notice（全局主题层）────────────────────────────
    NotificationPlugin 会 teleport 到 body，因此不得依赖组件 scoped 样式。
-   复用 Message Status Soft Plate；密度略松以容纳 title + content + footer。
+   复用 Message semantic solid；密度略松以容纳 title + content + footer。
    盖掉 TD 默认白卡与多层 inset 阴影；无左侧色带、无 Surface blur36。 */
 .t-notification {
   border: none;
@@ -4570,8 +4579,10 @@ body {
   color: var(--glass-wb-loading-color);
 }
 
-/* 文本 Quiet secondary：不抢三条竖向音浪 */
-.glass-loading .t-loading__text {
+/* 文本：浅色 Quiet secondary；暗色抬 primary（见 dark token）。覆盖 overlay 根与父挂 glass-loading 两种 DOM */
+.glass-loading .t-loading__text,
+.glass-loading.t-loading .t-loading__text,
+.glass-loading.t-loading__overlay .t-loading__text {
   color: var(--glass-wb-loading-text-color);
 }
 
@@ -4634,10 +4645,12 @@ body {
   }
 }
 
-/* 包裹态 / fullscreen 轻 mask：覆盖 TD --td-mask-disabled（0.6 实白），勿实白盖板 */
+/* 包裹态 / fullscreen 轻 mask：覆盖 TD --td-mask-disabled；勿实白/实黑盖板 */
 .glass-loading.t-loading__overlay,
 .glass-loading .t-loading__overlay {
   background-color: var(--glass-wb-loading-overlay);
+  -webkit-backdrop-filter: var(--glass-wb-loading-overlay-blur);
+  backdrop-filter: var(--glass-wb-loading-overlay-blur);
 }
 
 /* ── 微透 · 叠压染色 Skeleton · GlassSkeleton（全局主题层）───────────────

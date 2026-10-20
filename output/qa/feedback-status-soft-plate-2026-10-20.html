@@ -1,0 +1,1125 @@
+<!doctype html>
+<html lang="zh-CN" data-color-scheme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Status Semantic Solid · Alert / Message / Notification 沙盒</title>
+  <script>
+    (function () {
+      try {
+        if (localStorage.getItem("feedback-status-soft-plate-scheme") === "dark") {
+          document.documentElement.setAttribute("theme-mode", "dark");
+          document.documentElement.setAttribute("data-color-scheme", "dark");
+          document.documentElement.classList.add("dark");
+        }
+      } catch (error) {}
+    })();
+  </script>
+  <style>
+    /*
+     * Status Semantic Solid sandbox · 2026-10-20
+     * ─────────────────────────────────────────────────────────────
+     * Light / Dark 均为语义实色定稿：四态 opaque semantic fill，无 Fan Tip / frost blur。
+     * Light 是 glass-frontend/src/styles/theme.css 的 QA 内联快照：
+     * radius 12 / pad 12×16 · blur none
+     * shadow 0 10px 28px rgba(0, 80, 180, 0.07)
+     * Message / Notification 按 theme 别名链复用 Alert 面，只改密度与 DOM 形态。
+     *
+     * Dark 为定稿深井实色：四态 opaque semantic fill，无 Fan Tip / frost blur；
+     * 仅保留外阴影，无白色 rim / 强 brand inset。语义 icon 色相冻结并提亮。
+     * 等值 token 已迁 glass-frontend/src/styles/theme.css 暗色选择器组。
+     */
+    :root {
+      --font-ui: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+      --font-mono: "SF Mono", "Menlo", "Consolas", monospace;
+
+      --page-bg: #ffffff;
+      --stage-bg: #edf2f8;
+      --stage-border: rgba(28, 62, 120, 0.12);
+      --stage-shadow: 0 18px 44px rgba(23, 55, 110, 0.06);
+      --chrome-bg: rgba(255, 255, 255, 0.86);
+      --panel-bg: rgba(255, 255, 255, 0.7);
+      --ink: #1a2332;                 /* theme: --glass-text-primary */
+      --ink-2: #4a5568;               /* theme: --glass-text-secondary */
+      --ink-3: #58697d;               /* theme: --glass-text-muted */
+      --hairline: rgba(28, 62, 120, 0.12);
+      --code-ink: #32445f;
+      --brand: #2f6bf6;               /* theme: --glass-wb-btn-blue */
+      --brand-ink: #ffffff;
+      --text-action-ink: #0052cc;     /* theme: --glass-wb-text-cta-color */
+      --text-action-active-ink: #0047b3; /* theme: --glass-wb-text-cta-active-color */
+      --text-action-hover-bg: rgba(240, 245, 255, 0.62);
+      --text-action-active-bg: rgba(220, 230, 248, 0.78);
+      --focus-ring: 0 0 0 3px rgba(47, 107, 246, 0.3);
+
+      /* theme: --glass-wb-alert-radius / padding-y / padding-x / blur / shadow */
+      --status-radius: 12px;
+      --alert-pad-y: 12px;
+      --alert-pad-x: 16px;
+      --status-blur: blur(8px) saturate(1.08);
+      --status-shadow: 0 10px 28px rgba(0, 80, 180, 0.07);
+
+      /* theme: --glass-wb-alert-*-fill，浅冷语义实色 */
+      --status-success-fill: #dcf6e6;
+      --status-info-fill: #d6ebff;
+      --status-warning-fill: #ffefd3;
+      --status-error-fill: #ffe5e5;
+
+      /* theme: alert / message / notification icon 别名链 */
+      --status-success-icon: #0e783b; /* --glass-wb-online-text */
+      --status-info-icon: #2f6bf6;    /* --glass-wb-btn-blue */
+      --status-warning-icon: #9e6400;
+      --status-error-icon: #e1251b;
+      --status-question-icon: #2f6bf6;
+      --status-loading-icon: #2f6bf6;
+
+      /* theme: message 10×14；notification 14×16 / width 360 */
+      --message-pad-y: 10px;
+      --message-pad-x: 14px;
+      --notification-pad-y: 14px;
+      --notification-pad-x: 16px;
+      --notification-width: 360px;
+
+      --control-hover-bg: rgba(255, 255, 255, 0.44);
+      --control-active-bg: rgba(255, 255, 255, 0.28);
+      --quiet-button-bg: rgba(255, 255, 255, 0.48);
+      --quiet-button-hover-bg: rgba(255, 255, 255, 0.7);
+      --quiet-button-ink: #245fc7;
+    }
+
+    /* Dark 定稿 · 同步 theme-mode / data-color-scheme / .dark 三种惯例。
+       四态为不透明语义实色，无 Fan Tip、无 frost blur、无左侧 Tone Rail。 */
+    html[theme-mode="dark"],
+    html[data-color-scheme="dark"],
+    html.dark {
+      color-scheme: dark;
+
+      --page-bg: #181818;             /* ≈ TD gray-14 */
+      --stage-bg: #1f2734;            /* 略抬的深冷板，非纯黑 */
+      --stage-border: rgba(71, 135, 240, 0.16);
+      --stage-shadow: 0 20px 52px rgba(0, 0, 0, 0.34);
+      --chrome-bg: rgba(24, 30, 40, 0.88);
+      --panel-bg: rgba(30, 39, 54, 0.88);
+      --ink: #eef4fc;                 /* ≈ TD white-1 */
+      --ink-2: #c4d0df;               /* ≈ TD white-2 */
+      --ink-3: #91a0b5;
+      --hairline: rgba(71, 135, 240, 0.22); /* ≈ TD brand-8 hairline */
+      --code-ink: #9ebbe8;
+      --brand: #266fe8;               /* 白字 CTA 保 4.5:1；rim / hairline 另用 brand-8 */
+      --brand-ink: #ffffff;
+      --text-action-ink: #a8c8ff;
+      --text-action-active-ink: #d2e2ff;
+      --text-action-hover-bg: rgba(71, 135, 240, 0.16);
+      --text-action-active-bg: rgba(71, 135, 240, 0.24);
+      --focus-ring: 0 0 0 3px rgba(71, 135, 240, 0.34);
+
+      --status-blur: blur(8px) saturate(1.08);
+      --status-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+
+      --status-success-fill: #1b3f36;
+      --status-info-fill: #1b3252;
+      --status-warning-fill: #433724;
+      --status-error-fill: #48222c;
+
+      /* 色相冻结，仅提亮保证暗底识别；不换紫。 */
+      --status-success-icon: #53d695;
+      --status-info-icon: #79a8ff;
+      --status-warning-icon: #f2c05f;
+      --status-error-icon: #ff7f76;
+      --status-question-icon: #79a8ff;
+      --status-loading-icon: #79a8ff;
+
+      --control-hover-bg: rgba(71, 135, 240, 0.14);
+      --control-active-bg: rgba(71, 135, 240, 0.2);
+      --quiet-button-bg: rgba(71, 135, 240, 0.12);
+      --quiet-button-hover-bg: rgba(71, 135, 240, 0.2);
+      --quiet-button-ink: #a8c8ff;
+    }
+
+    .copy-dark {
+      display: none;
+    }
+
+    html[theme-mode="dark"] .copy-light,
+    html[data-color-scheme="dark"] .copy-light,
+    html.dark .copy-light {
+      display: none;
+    }
+
+    html[theme-mode="dark"] .copy-dark,
+    html[data-color-scheme="dark"] .copy-dark,
+    html.dark .copy-dark {
+      display: inline;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      background: var(--page-bg);
+    }
+
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      margin: 0;
+      color: var(--ink);
+      background: var(--page-bg);
+      font-family: var(--font-ui);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .scheme-bar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 12px 28px;
+      border-bottom: 1px solid var(--hairline);
+      background: var(--chrome-bg);
+      -webkit-backdrop-filter: blur(16px) saturate(1.1);
+      backdrop-filter: blur(16px) saturate(1.1);
+    }
+
+    .scheme-copy {
+      min-width: 0;
+    }
+
+    .scheme-title {
+      margin: 0;
+      color: var(--ink);
+      font-size: 18px;
+      font-weight: 680;
+      line-height: 1.35;
+      letter-spacing: -0.01em;
+    }
+
+    .scheme-desc {
+      margin: 3px 0 0;
+      color: var(--ink-2);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .scheme-desc code {
+      color: var(--code-ink);
+      font-family: var(--font-mono);
+      font-size: 11px;
+    }
+
+    .scheme-toggle {
+      display: inline-flex;
+      flex: none;
+      align-items: center;
+      padding: 3px;
+      border: 1px solid var(--hairline);
+      border-radius: 999px;
+      background: var(--panel-bg);
+    }
+
+    .scheme-toggle button {
+      height: 30px;
+      padding: 0 14px;
+      border: 0;
+      border-radius: 999px;
+      color: var(--ink-2);
+      background: transparent;
+      font-size: 12px;
+      font-weight: 650;
+      line-height: 1;
+      cursor: pointer;
+      transition:
+        color 140ms ease,
+        background-color 140ms ease,
+        box-shadow 140ms ease,
+        transform 140ms ease;
+    }
+
+    .scheme-toggle button:hover {
+      color: var(--ink);
+      background: var(--control-hover-bg);
+    }
+
+    .scheme-toggle button:active {
+      transform: scale(0.97);
+    }
+
+    .scheme-toggle button[aria-pressed="true"] {
+      color: var(--brand-ink);
+      background: var(--brand);
+      box-shadow: 0 6px 14px rgba(47, 107, 246, 0.24);
+    }
+
+    .scheme-toggle button:focus-visible,
+    .icon-button:focus-visible,
+    .text-action:focus-visible,
+    .notice-button:focus-visible {
+      outline: none;
+      box-shadow: var(--focus-ring);
+    }
+
+    .shell {
+      width: min(1280px, 100%);
+      margin: 0 auto;
+      padding: 34px 28px 44px;
+    }
+
+    .intro {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 24px;
+      padding: 18px 20px;
+      border: 1px solid var(--stage-border);
+      border-radius: 16px;
+      background: var(--panel-bg);
+    }
+
+    .intro h2 {
+      margin: 0;
+      color: var(--ink);
+      font-size: 15px;
+      font-weight: 650;
+      line-height: 1.45;
+    }
+
+    .intro p {
+      max-width: 760px;
+      margin: 5px 0 0;
+      color: var(--ink-2);
+      font-size: 12.5px;
+      line-height: 1.65;
+    }
+
+    .scheme-status {
+      flex: none;
+      margin: 0;
+      color: var(--ink-3);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      line-height: 1.5;
+      text-align: right;
+    }
+
+    .specimen-section {
+      scroll-margin-top: 96px;
+      margin-top: 28px;
+    }
+
+    .specimen-section:first-of-type {
+      margin-top: 0;
+    }
+
+    .part-label {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 12px;
+    }
+
+    .part-name {
+      margin: 0;
+      color: var(--ink);
+      font-size: 15px;
+      font-weight: 680;
+      line-height: 1.45;
+    }
+
+    .part-meta {
+      margin: 0;
+      color: var(--ink-3);
+      font-size: 12px;
+      line-height: 1.55;
+      text-align: right;
+    }
+
+    .stage {
+      position: relative;
+      padding: clamp(18px, 3vw, 30px);
+      overflow: hidden;
+      border: 1px solid var(--stage-border);
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at 18% 20%, rgba(47, 107, 246, 0.05), transparent 34%),
+        linear-gradient(145deg, rgba(255, 255, 255, 0.32), transparent 52%),
+        var(--stage-bg);
+      box-shadow: var(--stage-shadow);
+    }
+
+    html[theme-mode="dark"] .stage,
+    html[data-color-scheme="dark"] .stage,
+    html.dark .stage {
+      background:
+        radial-gradient(circle at 20% 12%, rgba(71, 135, 240, 0.08), transparent 36%),
+        linear-gradient(145deg, rgba(55, 75, 106, 0.22), transparent 54%),
+        var(--stage-bg);
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .grid--alert,
+    .grid--notice {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .grid--message {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .status-plate {
+      position: relative;
+      min-width: 0;
+      color: var(--ink-2);
+      background: var(--plate-fill);
+      box-shadow: var(--status-shadow);
+      -webkit-backdrop-filter: var(--status-blur);
+      backdrop-filter: var(--status-blur);
+      isolation: isolate;
+    }
+
+    .plate--success {
+      --plate-fill: var(--status-success-fill);
+      --plate-icon: var(--status-success-icon);
+    }
+
+    .plate--info {
+      --plate-fill: var(--status-info-fill);
+      --plate-icon: var(--status-info-icon);
+    }
+
+    .plate--warning {
+      --plate-fill: var(--status-warning-fill);
+      --plate-icon: var(--status-warning-icon);
+    }
+
+    .plate--error {
+      --plate-fill: var(--status-error-fill);
+      --plate-icon: var(--status-error-icon);
+    }
+
+    .plate--question {
+      --plate-fill: var(--status-info-fill);
+      --plate-icon: var(--status-question-icon);
+    }
+
+    .plate--loading {
+      --plate-fill: var(--status-info-fill);
+      --plate-icon: var(--status-loading-icon);
+    }
+
+    .alert-plate {
+      display: grid;
+      grid-template-columns: 24px minmax(0, 1fr) auto;
+      align-items: start;
+      gap: 10px;
+      min-height: 66px;
+      padding: var(--alert-pad-y) var(--alert-pad-x);
+      border-radius: var(--status-radius);
+    }
+
+    .status-icon {
+      display: inline-flex;
+      width: 24px;
+      height: 24px;
+      align-items: center;
+      justify-content: center;
+      color: var(--plate-icon);
+    }
+
+    .status-icon svg {
+      display: block;
+      width: 20px;
+      height: 20px;
+      fill: none;
+      stroke: currentColor;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 1.8;
+    }
+
+    .plate-content {
+      min-width: 0;
+    }
+
+    .plate-title {
+      margin: 0;
+      color: var(--ink);
+      font-size: 13.5px;
+      font-weight: 650;
+      line-height: 1.5;
+    }
+
+    .plate-message {
+      margin: 2px 0 0;
+      color: var(--ink-2);
+      font-size: 12.5px;
+      line-height: 1.55;
+      overflow-wrap: anywhere;
+    }
+
+    .icon-button {
+      display: inline-flex;
+      width: 28px;
+      height: 28px;
+      align-items: center;
+      justify-content: center;
+      margin: -2px -4px 0 0;
+      padding: 0;
+      border: 0;
+      border-radius: 8px;
+      color: var(--ink-3);
+      background: transparent;
+      cursor: pointer;
+      transition:
+        color 140ms ease,
+        background-color 140ms ease,
+        transform 140ms ease;
+    }
+
+    .icon-button svg {
+      width: 15px;
+      height: 15px;
+      fill: none;
+      stroke: currentColor;
+      stroke-linecap: round;
+      stroke-width: 1.8;
+    }
+
+    .icon-button:hover {
+      color: var(--ink);
+      background: var(--control-hover-bg);
+    }
+
+    .icon-button:active {
+      background: var(--control-active-bg);
+      transform: scale(0.94);
+    }
+
+    .alert-actions {
+      display: flex;
+      align-items: center;
+      align-self: center;
+      gap: 2px;
+    }
+
+    .text-action {
+      height: 28px;
+      padding: 0 8px;
+      border: 0;
+      border-radius: 8px;
+      color: var(--text-action-ink);
+      background: transparent;
+      font-size: 12px;
+      font-weight: 650;
+      white-space: nowrap;
+      cursor: pointer;
+      transition:
+        color 140ms ease,
+        background-color 140ms ease,
+        transform 140ms ease;
+    }
+
+    .text-action:hover {
+      color: var(--text-action-ink);
+      background: var(--text-action-hover-bg);
+    }
+
+    .text-action:active {
+      color: var(--text-action-active-ink);
+      background: var(--text-action-active-bg);
+      transform: scale(0.97);
+    }
+
+    .message-plate {
+      display: grid;
+      grid-template-columns: 22px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: var(--message-pad-y) var(--message-pad-x);
+      border-radius: var(--status-radius);
+    }
+
+    .message-plate .status-icon {
+      width: 22px;
+      height: 22px;
+    }
+
+    .message-plate .status-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .message-copy {
+      margin: 0;
+      color: var(--ink);
+      font-size: 12.5px;
+      font-weight: 540;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    .message-state {
+      color: var(--ink);
+      font-weight: 680;
+    }
+
+    .message-plate .icon-button {
+      margin-right: -6px;
+    }
+
+    .loading-wave {
+      display: flex;
+      width: 18px;
+      height: 18px;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      color: var(--plate-icon);
+    }
+
+    .loading-wave span {
+      width: 3px;
+      height: 7px;
+      border-radius: 99px;
+      background: currentColor;
+      animation: wave 0.9s ease-in-out infinite;
+    }
+
+    .loading-wave span:nth-child(2) {
+      height: 12px;
+      animation-delay: 0.12s;
+    }
+
+    .loading-wave span:nth-child(3) {
+      height: 9px;
+      animation-delay: 0.24s;
+    }
+
+    @keyframes wave {
+      0%,
+      100% {
+        transform: scaleY(0.58);
+        opacity: 0.72;
+      }
+      50% {
+        transform: scaleY(1);
+        opacity: 1;
+      }
+    }
+
+    .notice-plate {
+      display: grid;
+      grid-template-columns: 24px minmax(0, 1fr) auto;
+      align-items: start;
+      gap: 10px;
+      width: min(var(--notification-width), 100%);
+      padding: var(--notification-pad-y) var(--notification-pad-x);
+      border-radius: var(--status-radius);
+    }
+
+    .notice-title {
+      margin: 0;
+      color: var(--ink);
+      font-size: 13.5px;
+      font-weight: 650;
+      line-height: 1.5;
+    }
+
+    .notice-content {
+      margin: 4px 0 0;
+      color: var(--ink-2);
+      font-size: 12.5px;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    .notice-footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 16px; /* theme: --glass-wb-notification-footer-margin-top */
+    }
+
+    .notice-footer-wrap {
+      grid-column: 2 / -1;
+    }
+
+    .notice-button {
+      height: 30px;
+      padding: 0 12px;
+      border: 0;
+      border-radius: 9px;
+      font-size: 12px;
+      font-weight: 650;
+      white-space: nowrap;
+      cursor: pointer;
+      transition:
+        color 140ms ease,
+        background-color 140ms ease,
+        box-shadow 140ms ease,
+        transform 140ms ease;
+    }
+
+    .notice-button--quiet {
+      color: var(--quiet-button-ink);
+      background: var(--quiet-button-bg);
+    }
+
+    .notice-button--quiet:hover {
+      background: var(--quiet-button-hover-bg);
+    }
+
+    .notice-button--primary {
+      color: var(--brand-ink);
+      background: var(--brand);
+      box-shadow: 0 5px 12px rgba(47, 107, 246, 0.18);
+    }
+
+    .notice-button--primary:hover {
+      filter: brightness(1.04);
+    }
+
+    .notice-button:active {
+      transform: scale(0.97);
+    }
+
+    .foot {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 28px 34px;
+      color: var(--ink-3);
+      font-size: 11.5px;
+      line-height: 1.6;
+    }
+
+    .foot code {
+      color: var(--code-ink);
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+    }
+
+    @media (max-width: 980px) {
+      .grid--alert,
+      .grid--message,
+      .grid--notice {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .intro {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .scheme-status {
+        text-align: left;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .scheme-bar {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+        padding: 12px 16px;
+      }
+
+      .scheme-toggle {
+        align-self: flex-end;
+      }
+
+      .shell {
+        padding: 20px 16px 34px;
+      }
+
+      .intro {
+        padding: 15px 16px;
+      }
+
+      .part-label {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 3px;
+      }
+
+      .part-meta {
+        text-align: left;
+      }
+
+      .stage {
+        padding: 14px;
+      }
+
+      .alert-plate {
+        grid-template-columns: 24px minmax(0, 1fr);
+      }
+
+      .alert-actions {
+        grid-column: 2;
+      }
+
+      .notice-footer {
+        flex-wrap: wrap;
+      }
+
+      .foot {
+        padding-inline: 16px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .scheme-toggle button,
+      .icon-button,
+      .text-action,
+      .notice-button {
+        transition:
+          color 0.01ms,
+          background-color 0.01ms,
+          box-shadow 0.01ms;
+      }
+
+      .scheme-toggle button:active,
+      .icon-button:active,
+      .text-action:active,
+      .notice-button:active {
+        transform: none;
+      }
+
+      .loading-wave span {
+        animation: none;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <svg class="sr-only" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="icon-success" viewBox="0 0 20 20">
+        <circle cx="10" cy="10" r="7.8"></circle>
+        <path d="m6.3 10.1 2.35 2.35 5.2-5.2"></path>
+      </symbol>
+      <symbol id="icon-info" viewBox="0 0 20 20">
+        <circle cx="10" cy="10" r="7.8"></circle>
+        <path d="M10 8.7v5"></path>
+        <path d="M10 6.1h.01"></path>
+      </symbol>
+      <symbol id="icon-warning" viewBox="0 0 20 20">
+        <path d="M10 2.7 17 16H3L10 2.7Z"></path>
+        <path d="M10 7.5v3.8"></path>
+        <path d="M10 14h.01"></path>
+      </symbol>
+      <symbol id="icon-error" viewBox="0 0 20 20">
+        <circle cx="10" cy="10" r="7.8"></circle>
+        <path d="m7.5 7.5 5 5M12.5 7.5l-5 5"></path>
+      </symbol>
+      <symbol id="icon-question" viewBox="0 0 20 20">
+        <circle cx="10" cy="10" r="7.8"></circle>
+        <path d="M7.8 7.5a2.25 2.25 0 1 1 3.1 2.08c-.65.28-.9.7-.9 1.42"></path>
+        <path d="M10 14h.01"></path>
+      </symbol>
+      <symbol id="icon-close" viewBox="0 0 20 20">
+        <path d="m6 6 8 8M14 6l-8 8"></path>
+      </symbol>
+    </defs>
+  </svg>
+
+  <header class="scheme-bar">
+    <div class="scheme-copy">
+      <h1 class="scheme-title">Status Plate · Alert / Message / Notification 沙盒</h1>
+      <p class="scheme-desc">
+        <span class="copy-light">Light · 浅冷实板 · 语义实色 · 无半透 frost</span>
+        <span class="copy-dark">Dark · 语义实色 · 无半透 frost · 已入 theme.css</span>
+      </p>
+    </div>
+    <div class="scheme-toggle" role="group" aria-label="颜色模式">
+      <button id="scheme-light" type="button" aria-pressed="true">Light</button>
+      <button id="scheme-dark" type="button" aria-pressed="false">Dark</button>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="intro" aria-labelledby="intro-title">
+      <div>
+        <h2 id="intro-title">三件独立看：语义色调、透明度与字色分开核对</h2>
+        <p>
+          <span class="copy-light">浅色橱窗用于核对浅冷实板；Light 使用语义实色、无半透 frost、无 Fan Tip，仅保留 Whisper Lift 外阴影。按钮仅用于视觉、悬停、按下与焦点态示意。</span>
+          <span class="copy-dark">深色橱窗核对不透明语义实色板；Dark 去掉半透 frost 与侧边 Tone Rail，仅保留外阴影。按钮仅用于视觉、悬停、按下与焦点态示意。</span>
+        </p>
+      </div>
+      <p class="scheme-status" id="scheme-status" aria-live="polite">scheme: light</p>
+    </section>
+
+    <section class="specimen-section" aria-labelledby="alert-heading">
+      <div class="part-label">
+        <h2 class="part-name" id="alert-heading">Alert · Inline Banner</h2>
+        <p class="part-meta">
+          <span class="copy-light">语义实色 · 无半透 frost · 无 Fan Tip · 仅外阴影 · 无左侧 Tone Rail</span>
+          <span class="copy-dark">语义实色 · 无半透 frost · 无左侧 Tone Rail</span>
+        </p>
+      </div>
+      <div class="stage">
+        <div class="grid grid--alert">
+          <article class="status-plate alert-plate plate--success" data-component="alert" data-tone="success">
+            <span class="status-icon" aria-hidden="true">
+              <svg><use href="#icon-success"></use></svg>
+            </span>
+            <div class="plate-content">
+              <h3 class="plate-title">同步完成</h3>
+              <p class="plate-message">示范数据已全部同步完成，可以开始查看。</p>
+            </div>
+            <button class="icon-button" type="button" aria-label="关闭成功提示（视觉示意）" title="关闭（视觉示意）">
+              <svg aria-hidden="true"><use href="#icon-close"></use></svg>
+            </button>
+          </article>
+
+          <article class="status-plate alert-plate plate--info" data-component="alert" data-tone="info">
+            <span class="status-icon" aria-hidden="true">
+              <svg><use href="#icon-info"></use></svg>
+            </span>
+            <div class="plate-content">
+              <h3 class="plate-title">同步策略已更新</h3>
+              <p class="plate-message">演示上下文将保留 7 天，过期后自动清理。</p>
+            </div>
+          </article>
+
+          <article class="status-plate alert-plate plate--warning" data-component="alert" data-tone="warning">
+            <span class="status-icon" aria-hidden="true">
+              <svg><use href="#icon-warning"></use></svg>
+            </span>
+            <div class="plate-content">
+              <h3 class="plate-title">建议复核口径</h3>
+              <p class="plate-message">示范数据「演示项 A」波动较大，确认口径后再更新快照。</p>
+            </div>
+            <div class="alert-actions">
+              <button class="text-action" type="button">查看详情</button>
+            </div>
+          </article>
+
+          <article class="status-plate alert-plate plate--error" data-component="alert" data-tone="error">
+            <span class="status-icon" aria-hidden="true">
+              <svg><use href="#icon-error"></use></svg>
+            </span>
+            <div class="plate-content">
+              <h3 class="plate-title">导出失败</h3>
+              <p class="plate-message">当前账号权限不足，请联系管理员后重试。</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen-section" aria-labelledby="message-heading">
+      <div class="part-label">
+        <h2 class="part-name" id="message-heading">Message · Soft Toast</h2>
+        <p class="part-meta">
+          <span class="copy-light">语义实色 · 无半透 frost · 无 Fan Tip · 仅外阴影 · 无左侧 Tone Rail</span>
+          <span class="copy-dark">语义实色 · 无半透 frost · 无左侧 Tone Rail</span>
+        </p>
+      </div>
+      <div class="stage">
+        <div class="grid grid--message">
+          <article class="status-plate message-plate plate--success" data-component="message" data-tone="success">
+            <span class="status-icon" aria-hidden="true">
+              <svg><use href="#icon-success"></use></svg>
+            </span>
+            <p class="message-copy"><span class="message-state">success</span> · 已保存：示范数据已更新。</p>
+            <button class="icon-button" type="button" aria-label="关闭成功消息（视觉示意）" title="关闭（视觉示意）">
+              <svg aria-hidden="true"><use href="#icon-close"></use></svg>
+            </button>
+          </article>
+
+          <article class="status-plate message-plate plate--info" data-component="message" data-tone="info">
+            <span class="status-icon" aria-hidden="true">
+              <svg><use href="#icon-info"></use></svg>
+            </span>
+            <p class="message-copy"><span class="message-state">info</span> · 同步任务已入队，预计 2 分钟内完成。</p>
+          </article>
+
+          <article class="status-plate message-plate plate--warning" data-component="message" data-tone="warning">
+            <span class="status-icon" aria-hidden="true">
+              <svg><use href="#icon-warning"></use></svg>
+            </span>
+            <p class="message-copy"><span class="message-state">warning</span> · 示范数据波动较大，请复核口径。</p>
+          </article>
+
+          <article class="status-plate message-plate plate--error" data-component="message" data-tone="error">
+            <span class="status-icon" aria-hidden="true">
+              <svg><use href="#icon-error"></use></svg>
+            </span>
+            <p class="message-copy"><span class="message-state">error</span> · 导出失败：当前账号权限不足。</p>
+          </article>
+
+          <article class="status-plate message-plate plate--question" data-component="message" data-tone="question">
+            <span class="status-icon" aria-hidden="true">
+              <svg><use href="#icon-question"></use></svg>
+            </span>
+            <p class="message-copy"><span class="message-state">question</span> · 是否保留当前演示上下文？</p>
+          </article>
+
+          <article class="status-plate message-plate plate--loading" data-component="message" data-tone="loading">
+            <span class="status-icon" aria-hidden="true">
+              <span class="loading-wave"><span></span><span></span><span></span></span>
+            </span>
+            <p class="message-copy"><span class="message-state">loading</span> · 正在同步示范数据…</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen-section" aria-labelledby="notification-heading">
+      <div class="part-label">
+        <h2 class="part-name" id="notification-heading">Notification · Soft Notice</h2>
+        <p class="part-meta">
+          <span class="copy-light">语义实色 · 无半透 frost · 无 Fan Tip · 仅外阴影 · 无左侧 Tone Rail</span>
+          <span class="copy-dark">语义实色 · 无半透 frost · 无左侧 Tone Rail</span>
+        </p>
+      </div>
+      <div class="stage">
+        <div class="grid grid--notice">
+          <article class="status-plate notice-plate plate--success" data-component="notification" data-tone="success">
+            <span class="status-icon" aria-hidden="true">
+              <svg><use href="#icon-success"></use></svg>
+            </span>
+            <div>
+              <h3 class="notice-title">快照生成完成</h3>
+              <p class="notice-content">本周示范数据的快照已经生成，可以进入明细页查看。</p>
+            </div>
+            <button class="icon-button" type="button" aria-label="关闭快照完成通知（视觉示意）" title="关闭（视觉示意）">
+              <svg aria-hidden="true"><use href="#icon-close"></use></svg>
+            </button>
+          </article>
+
+          <article class="status-plate notice-plate plate--info" data-component="notification" data-tone="info">
+            <span class="status-icon" aria-hidden="true">
+              <svg><use href="#icon-info"></use></svg>
+            </span>
+            <div>
+              <h3 class="notice-title">演示上下文即将清理</h3>
+              <p class="notice-content">当前上下文将在 7 天后过期，如需继续核对，请先保留。</p>
+            </div>
+            <button class="icon-button" type="button" aria-label="关闭上下文通知（视觉示意）" title="关闭（视觉示意）">
+              <svg aria-hidden="true"><use href="#icon-close"></use></svg>
+            </button>
+          </article>
+
+          <article class="status-plate notice-plate plate--warning" data-component="notification" data-tone="warning">
+            <span class="status-icon" aria-hidden="true">
+              <svg><use href="#icon-warning"></use></svg>
+            </span>
+            <div>
+              <h3 class="notice-title">需要人工复核</h3>
+              <p class="notice-content">「演示项 A」的波动超过当前阈值，请在更新快照前确认口径。</p>
+            </div>
+            <button class="icon-button" type="button" aria-label="关闭复核通知（视觉示意）" title="关闭（视觉示意）">
+              <svg aria-hidden="true"><use href="#icon-close"></use></svg>
+            </button>
+            <div class="notice-footer-wrap">
+              <div class="notice-footer">
+                <button class="notice-button notice-button--quiet" type="button">稍后处理</button>
+                <button class="notice-button notice-button--primary" type="button">查看详情</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="status-plate notice-plate plate--error" data-component="notification" data-tone="error">
+            <span class="status-icon" aria-hidden="true">
+              <svg><use href="#icon-error"></use></svg>
+            </span>
+            <div>
+              <h3 class="notice-title">导出任务失败</h3>
+              <p class="notice-content">当前账号没有导出权限，请联系管理员开通后重试。</p>
+            </div>
+            <button class="icon-button" type="button" aria-label="关闭导出失败通知（视觉示意）" title="关闭（视觉示意）">
+              <svg aria-hidden="true"><use href="#icon-close"></use></svg>
+            </button>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span class="copy-light">Light / Dark 均为语义实色；Light 仅留浅蓝 Whisper Lift 外阴影，二者均已入 theme.css。</span>
+    <span class="copy-dark">Dark 使用不透明语义实色、无 frost blur；对应 token 已写入 theme.css 暗色组。</span>
+    静态按钮只检查材质、字色、焦点与按压反馈。
+  </footer>
+
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var storageKey = "feedback-status-soft-plate-scheme";
+      var lightButton = document.getElementById("scheme-light");
+      var darkButton = document.getElementById("scheme-dark");
+      var status = document.getElementById("scheme-status");
+
+      function applyScheme(scheme, persist) {
+        var isDark = scheme === "dark";
+        if (isDark) {
+          root.setAttribute("theme-mode", "dark");
+          root.setAttribute("data-color-scheme", "dark");
+          root.classList.add("dark");
+        } else {
+          root.removeAttribute("theme-mode");
+          root.setAttribute("data-color-scheme", "light");
+          root.classList.remove("dark");
+        }
+
+        lightButton.setAttribute("aria-pressed", String(!isDark));
+        darkButton.setAttribute("aria-pressed", String(isDark));
+        status.textContent = "scheme: " + (isDark ? "dark" : "light");
+
+        if (persist) {
+          try {
+            localStorage.setItem(storageKey, isDark ? "dark" : "light");
+          } catch (error) {}
+        }
+      }
+
+      lightButton.addEventListener("click", function () {
+        applyScheme("light", true);
+      });
+
+      darkButton.addEventListener("click", function () {
+        applyScheme("dark", true);
+      });
+
+      var saved = null;
+      try {
+        saved = localStorage.getItem(storageKey);
+      } catch (error) {}
+
+      applyScheme(saved === "dark" ? "dark" : "light", false);
+    })();
+  </script>
+</body>
+</html>
