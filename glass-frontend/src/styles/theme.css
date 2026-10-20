@@ -477,10 +477,10 @@ html.dark {
     ),
     color-mix(in srgb, var(--glass-chroma-ai) 14%, rgba(248, 246, 252, 0.72));
   --glass-wb-rail-blur-lilac: blur(20px) saturate(1.12);
+  /* 轨内 List hover（lilac）：低 alpha 淡紫洗；ice 在 .glass-rail--ice  remap 到 session-hover */
   --glass-wb-rail-list-item-hover-bg: color-mix(in srgb, var(--glass-chroma-ai) 8%, rgba(255, 255, 255, 0.72));
-  /* Quiet List / stripe active：对齐 DocsShell nav `.is-active`
-     （--glass-wb-session-active-bg 白板 + session-active-shadow 轻抬升；禁无影纯白糊进 Panel） */
-  --glass-wb-rail-list-item-active-bg: var(--glass-wb-session-active-bg);
+  /* 轨内 List active：近白微透（禁深紫板 / 禁反白字）；抬升影可与 session-active 共用 */
+  --glass-wb-rail-list-item-active-bg: rgba(252, 254, 255, 0.72);
   --glass-wb-list-item-active-shadow: var(--glass-wb-session-active-shadow);
 
   /* z3b Stage：z4 近白微透焦点面（html .chat）
@@ -4456,7 +4456,16 @@ body {
   background: var(--glass-wb-list-item-hover-bg);
 }
 
-/* Rail 列表 active：对齐 DocsShell nav（白板/暗色井 + 轻抬升影 + 蓝字）；无 tip / 无贴边横条。 */
+/* Rail tone → 轨内 Quiet List hover 重映射（与 GlassRail scoped 双保险；禁漏 ice） */
+.glass-rail--ice {
+  --glass-wb-list-item-hover-bg: var(--glass-wb-session-hover-bg);
+}
+
+.glass-rail--lilac {
+  --glass-wb-list-item-hover-bg: var(--glass-wb-rail-list-item-hover-bg);
+}
+
+/* Rail 列表 active：近白微透井 + 轻抬升影 + 蓝字；无 tip / 无贴边横条。 */
 .glass-rail .glass-list.t-list .t-list__inner .glass-list-item.t-list-item.is-active,
 .glass-rail .glass-list.t-list .t-list__inner .glass-list-item.t-list-item[data-active='true'] {
   background: var(--glass-wb-rail-list-item-active-bg);

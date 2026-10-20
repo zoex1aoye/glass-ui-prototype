@@ -41,14 +41,16 @@ withDefaults(
   min-height: 0;
 }
 
-/* 默认冰蓝轨：保持既有 wash / blur，不改默认观感。 */
+/* 默认冰蓝轨：wash / blur；轨内 List hover 近白微洗（与 active 近白板同族）。
+   必须在此 remap —— 否则会吃到 Quiet List 的 text-cta 冷雾，轨上像「没生效」。 */
 .glass-rail--ice {
   background: var(--glass-wb-rail-wash);
   -webkit-backdrop-filter: var(--glass-wb-rail-blur);
   backdrop-filter: var(--glass-wb-rail-blur);
+  --glass-wb-list-item-hover-bg: var(--glass-wb-session-hover-bg);
 }
 
-/* lilac 轨：紫只做 wash；列表 hover 换淡紫洗，active 近白微透。 */
+/* lilac 轨：紫只做 wash；轨内 hover=淡紫洗 token；active 近白微透由 theme.css 收口。 */
 .glass-rail--lilac {
   background: var(--glass-wb-rail-wash-lilac);
   -webkit-backdrop-filter: var(--glass-wb-rail-blur-lilac);
