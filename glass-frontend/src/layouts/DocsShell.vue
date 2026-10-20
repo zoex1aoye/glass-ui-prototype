@@ -2,13 +2,11 @@
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ChevronRightIcon, SearchIcon } from 'tdesign-icons-vue-next'
+import type { RadioValue } from 'tdesign-vue-next'
 
+import { GlassRadioGroup } from '@/components/glass'
 import { messageTextMatches } from '@/scheme/messages'
-import {
-  provideGlassScheme,
-  type GlassColorScheme,
-  type GlassLocale,
-} from '@/scheme/useGlassScheme'
+import { provideGlassScheme } from '@/scheme/useGlassScheme'
 
 import DocsPropsPanel from './DocsPropsPanel.vue'
 import { docsNavGroups, findDocsEntry } from './docs-nav'
@@ -22,6 +20,16 @@ provideDocsProps()
 
 const scheme = provideGlassScheme()
 const { locale, colorScheme, setLocale, setColorScheme, tt } = scheme
+
+const localeOptions = computed(() => [
+  { label: tt('shell.locale.zh'), value: 'zh' },
+  { label: tt('shell.locale.en'), value: 'en' },
+])
+
+const colorSchemeOptions = computed(() => [
+  { label: tt('shell.color.light'), value: 'light' },
+  { label: tt('shell.color.dark'), value: 'dark' },
+])
 
 const query = ref('')
 
@@ -58,12 +66,16 @@ function navigate(path: string): void {
   }
 }
 
-function onLocale(next: GlassLocale): void {
-  setLocale(next)
+function onLocale(next: RadioValue): void {
+  if (next === 'zh' || next === 'en') {
+    setLocale(next)
+  }
 }
 
-function onColorScheme(next: GlassColorScheme): void {
-  setColorScheme(next)
+function onColorScheme(next: RadioValue): void {
+  if (next === 'light' || next === 'dark') {
+    setColorScheme(next)
+  }
 }
 </script>
 
@@ -137,58 +149,22 @@ function onColorScheme(next: GlassColorScheme): void {
         </div>
 
         <div class="docs-scheme-toggles">
-          <div
-            class="docs-scheme-group"
-            role="group"
+          <GlassRadioGroup
+            variant="capsule"
+            appearance="filled"
+            :value="locale"
+            :options="localeOptions"
             :aria-label="tt('shell.locale.aria')"
-          >
-            <button
-              type="button"
-              class="docs-scheme-btn"
-              :class="{ 'is-pressed': locale === 'zh' }"
-              :aria-pressed="locale === 'zh'"
-              :aria-label="tt('shell.locale.zh')"
-              @click="onLocale('zh')"
-            >
-              {{ tt('shell.locale.zh') }}
-            </button>
-            <button
-              type="button"
-              class="docs-scheme-btn"
-              :class="{ 'is-pressed': locale === 'en' }"
-              :aria-pressed="locale === 'en'"
-              :aria-label="tt('shell.locale.en')"
-              @click="onLocale('en')"
-            >
-              {{ tt('shell.locale.en') }}
-            </button>
-          </div>
-          <div
-            class="docs-scheme-group"
-            role="group"
+            @change="onLocale"
+          />
+          <GlassRadioGroup
+            variant="capsule"
+            appearance="filled"
+            :value="colorScheme"
+            :options="colorSchemeOptions"
             :aria-label="tt('shell.color.aria')"
-          >
-            <button
-              type="button"
-              class="docs-scheme-btn"
-              :class="{ 'is-pressed': colorScheme === 'light' }"
-              :aria-pressed="colorScheme === 'light'"
-              :aria-label="tt('shell.color.light')"
-              @click="onColorScheme('light')"
-            >
-              {{ tt('shell.color.light') }}
-            </button>
-            <button
-              type="button"
-              class="docs-scheme-btn"
-              :class="{ 'is-pressed': colorScheme === 'dark' }"
-              :aria-pressed="colorScheme === 'dark'"
-              :aria-label="tt('shell.color.dark')"
-              @click="onColorScheme('dark')"
-            >
-              {{ tt('shell.color.dark') }}
-            </button>
-          </div>
+            @change="onColorScheme"
+          />
         </div>
       </header>
 
@@ -419,69 +395,12 @@ function onColorScheme(next: GlassColorScheme): void {
   color: var(--glass-text-muted);
 }
 
-/* Quiet scheme toggles：locale / color-scheme；色值走 token */
+/* Scheme toggles：locale / color-scheme；controls 由 GlassRadioGroup 提供 token 视觉 */
 .docs-scheme-toggles {
   display: flex;
   align-items: center;
   gap: 8px;
   flex-shrink: 0;
-}
-
-.docs-scheme-group {
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-  padding: 2px;
-  border-radius: var(--glass-wb-radio-segment-track-radius-pill);
-  background: var(--glass-wb-soft-bg);
-  box-shadow: var(--glass-wb-tonal-hairline);
-}
-
-.docs-scheme-btn {
-  appearance: none;
-  border: none;
-  margin: 0;
-  cursor: pointer;
-  padding: 4px 10px;
-  border-radius: var(--glass-wb-radio-segment-item-radius-pill);
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 1.2;
-  color: var(--glass-wb-radio-segment-item-color);
-  background: transparent;
-  transition:
-    background-color 120ms ease,
-    color 120ms ease,
-    transform 120ms ease;
-}
-
-.docs-scheme-btn:hover {
-  background: var(--glass-wb-soft-hover-bg);
-  color: var(--glass-wb-pill-quiet-color);
-}
-
-.docs-scheme-btn:active {
-  transform: scale(0.97);
-}
-
-.docs-scheme-btn:focus-visible {
-  outline: none;
-  box-shadow: var(--glass-wb-control-focus-ring);
-}
-
-.docs-scheme-btn.is-pressed {
-  background: var(--glass-wb-soft-active-bg);
-  color: var(--glass-wb-soft-active-color);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .docs-scheme-btn {
-    transition: none;
-  }
-
-  .docs-scheme-btn:active {
-    transform: none;
-  }
 }
 
 .docs-breadcrumb-root {

@@ -20,10 +20,11 @@
  * ghost 是 TD 镂空语义（带文案的普通矩形/可 round，透底 + 实线描边），二者禁止混用。
  * outline / dashed / ghost 共用 Quiet Outline Track token；hover / active 只做 Tonal wash 与描边加深，
  * 禁止 Press Invert（字色反转浅/白）。
- * Interaction：Liquid Lift Press — hover = Hover Lift + Shadow Bloom + Color Shift；
+ * Interaction：Liquid Lift Press — Filled hover = Hover Lift + Shadow Bloom（无内部 Color Shift）；
  * active = Active Press（translateY 回落/微下沉 + scale）+ 颜色反馈。
  * Separate Tracks：Tonal（quiet/soft/icon/ghost/outline/dashed/text）active = Quiet Active Wash；
- * Filled（primary/send/danger/warning/success）active = 满浓 Press，filter 回落不削弱按压。
+ * Filled（primary/send/danger/warning/success）hover 只保留 Lift + Shadow Bloom；
+ * active = 满浓 Press，不削弱按压。
  * Contrast-Safe Press：Tonal active 禁止 Press Invert（字色反转浅/白）— 否决见
  * .agents/tmp-quiet-active-invert-eval.md；勿在 active 把字改成白/浅。
  * Tonal Quiet Chrome：soft/icon 无实线 border，轮廓走 inset hairline（--glass-wb-tonal-hairline*）；
@@ -210,7 +211,7 @@ function onClick(e: MouseEvent) {
 }
 
 /* —— Liquid Lift Press ——
-   hover = Hover Lift（translateY）+ Shadow Bloom + Color Shift
+   Filled hover = Hover Lift（translateY）+ Shadow Bloom，无内部 Color Shift
    active = Active Press（位移回落/微下沉 + scale）+ 颜色反馈
    Separate Tracks：Tonal = Quiet Active Wash；Filled = 满浓 Press
    幅度：Quiet < Primary（send 同 Primary） */
@@ -291,7 +292,6 @@ function onClick(e: MouseEvent) {
 .glass-button--primary:not(.glass-button--locked):hover {
   background: var(--glass-wb-btn-blue);
   color: var(--glass-wb-white);
-  filter: var(--glass-wb-control-hover-bright);
   box-shadow: var(--glass-wb-btn-blue-hover-shadow);
 }
 
@@ -738,7 +738,6 @@ function onClick(e: MouseEvent) {
 .glass-button--send:not(.glass-button--locked):hover {
   background: var(--glass-wb-btn-blue);
   color: var(--glass-wb-white);
-  filter: var(--glass-wb-control-hover-bright);
   box-shadow: var(--glass-wb-btn-blue-hover-shadow);
 }
 
@@ -775,7 +774,7 @@ function onClick(e: MouseEvent) {
 
 /* —— Status Themes：Semantic Filled（danger / warning / success） ——
    色相同源 Alert（danger↔error）；白字 + 满浓底；几何同 primary（42/12）。
-   交互挂 Primary 轨（lift-primary / bright 1.04 / Filled Press）；
+   交互挂 Primary 轨（lift-primary / Shadow Bloom / Filled Press，无内部 brightness）；
    禁止 Quiet Active Wash / inset hairline / 白核渐变。 */
 .glass-button--danger,
 .glass-button--warning,
@@ -794,7 +793,6 @@ function onClick(e: MouseEvent) {
 .glass-button--danger:not(.glass-button--locked):hover {
   background: var(--glass-wb-btn-danger);
   color: var(--glass-wb-btn-danger-text);
-  filter: var(--glass-wb-control-hover-bright);
   box-shadow: var(--glass-wb-btn-danger-hover-shadow);
 }
 
@@ -820,7 +818,6 @@ function onClick(e: MouseEvent) {
 .glass-button--warning:not(.glass-button--locked):hover {
   background: var(--glass-wb-btn-warning);
   color: var(--glass-wb-btn-warning-text);
-  filter: var(--glass-wb-control-hover-bright);
   box-shadow: var(--glass-wb-btn-warning-hover-shadow);
 }
 
@@ -846,7 +843,6 @@ function onClick(e: MouseEvent) {
 .glass-button--success:not(.glass-button--locked):hover {
   background: var(--glass-wb-btn-success);
   color: var(--glass-wb-btn-success-text);
-  filter: var(--glass-wb-control-hover-bright);
   box-shadow: var(--glass-wb-btn-success-hover-shadow);
 }
 

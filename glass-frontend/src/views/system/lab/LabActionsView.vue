@@ -2,7 +2,7 @@
 /**
  * 实验室·按钮与行动 — Button variants + Action Pair + Dropdown 触发钮 + Affordant Orb + Status Themes + State Matrix
  * Tone：Quiet Chrome vs Primary Pill vs Status Semantic Filled；小物件满浓。
- * Interaction：Liquid Lift Press — Hover Lift / Color Shift / Active Press / Shadow Bloom 对照标注。
+ * Interaction：Liquid Lift Press — Hover Lift / Active Press / Shadow Bloom 对照标注。
  */
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { ChevronDownIcon, StarIcon } from 'tdesign-icons-vue-next'
@@ -359,10 +359,10 @@ function togglePillLoading() {
           <span class="lab-control-label">Interaction 术语（悬停 / 按住观察下沉 / 键盘 Tab）</span>
           <div class="lab-control-row-items">
             <span class="lab-control-note">
-              Hover Lift = translateY 抬升（quiet -1px / primary -2px / FAB -3px）+ Shadow Bloom + Color Shift ·
+              Hover Lift = translateY 抬升（quiet -1px / primary -2px / FAB -3px）+ Shadow Bloom；Filled 不做内部色散 ·
               Active Press = 位移回落 + 微下沉 + scale(0.98/0.96) + 颜色反馈 · Focus Ring = :focus-visible ·
               disabled / loading 无抬升 · reduced-motion 只留颜色 ·
-              Color Shift 分轨（Separate Tracks）：Tonal（quiet/soft/icon/ghost/outline/dashed/text）= Quiet Active Wash 略深同色 + 深字可读，**不反转字**；Filled（primary/send/FAB）= 满浓 Press，按压不削弱 ·
+              色态分轨（Separate Tracks）：Tonal（quiet/soft/icon/ghost/outline/dashed/text）= Quiet Active Wash 略深同色 + 深字可读，**不反转字**；Filled（primary/send/FAB）= 满浓 Press，按压不削弱 ·
               Tonal ripple = 品牌冷色 whisper（quiet ≥ soft ≥ icon；盖掉 TDesign 灰 #a6a6a6）·
               Tonal Quiet Chrome：soft/icon inset hairline；hover Fade。ghost/outline/dashed 走 Quiet Outline 实线描边 token，不套 inset hairline ·
               Press Invert（字色反转）已评估否决（见 .agents/tmp-quiet-active-invert-eval.md）
