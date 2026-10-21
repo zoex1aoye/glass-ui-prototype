@@ -1180,21 +1180,22 @@ body .t-notification {
   --glass-wb-icon-active-bg: #e6eef8;
   --glass-wb-icon-active-color: var(--glass-wb-pill-quiet-active-color);
 
-  /* Quiet Outline Track — 新 ghost（TD ghost=true 镂空）/ outline / dashed
-     透明或近白底 + 品牌蓝描边；与 icon-only 32 圆钮完全分离。
-     hover / active 只走同色相 wash 与描边加深，禁止 Press Invert。 */
+  /* Quiet Outline Track — ghost / outline / dashed 共用同一套 hover
+     （WinUI Subtle：透底无板 + 描边加深 + 外影 none；禁止 chalk Quiet 板）。
+     rest：ghost transparent；outline / dashed 近白玻璃底（--glass-wb-outline-bg）。
+     active 保持 Quiet Active Wash；禁止 Press Invert。 */
   --glass-wb-ghost-border-color: var(--glass-wb-pill-border);
   --glass-wb-ghost-color: var(--glass-wb-pill-quiet-color);
-  --glass-wb-ghost-hover-bg: var(--glass-wb-pill-quiet-hover-bg);
+  --glass-wb-ghost-hover-bg: transparent;
   --glass-wb-ghost-hover-border-color: var(--glass-wb-pill-hover-border);
   --glass-wb-ghost-hover-color: var(--glass-wb-pill-quiet-color);
   --glass-wb-ghost-active-bg: var(--glass-wb-pill-quiet-active-bg);
   --glass-wb-ghost-active-border-color: var(--glass-wb-pill-hover-border);
   --glass-wb-ghost-active-color: var(--glass-wb-pill-quiet-active-color);
   --glass-wb-ghost-ripple: var(--glass-wb-soft-ripple);
-  --glass-wb-ghost-hover-shadow: var(--glass-wb-pill-quiet-hover-shadow);
+  --glass-wb-ghost-hover-shadow: none;
   --glass-wb-ghost-active-shadow: var(--glass-wb-pill-quiet-active-shadow);
-  /* outline / dashed 保留近白玻璃底；ghost 仍 transparent（透底）；暗色吃 field-bg */
+  /* outline / dashed rest 近白玻璃底；hover 与 ghost 共用 ghost-hover-*（透底无影） */
   --glass-wb-outline-bg: var(--glass-wb-field-bg);
 
   /* Quiet Chrome — Hairline Border（Tonal soft/icon；非 Field）

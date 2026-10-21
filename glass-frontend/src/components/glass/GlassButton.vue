@@ -18,7 +18,8 @@
  *
  * icon vs ghost：icon 是 Glass 的 icon-only 密度预设（circle 32 + Quiet 蓝 icon + inset hairline）；
  * ghost 是 TD 镂空语义（带文案的普通矩形/可 round，透底 + 实线描边），二者禁止混用。
- * outline / dashed / ghost 共用 Quiet Outline Track token；hover / active 只做 Tonal wash 与描边加深，
+ * outline / dashed / ghost 共用 Quiet Outline Track：hover 同一套 WinUI Subtle
+ * （透底无板 · 外影 none · 描边加深 · Quiet Lift）；active 保持 Quiet Active Wash；
  * 禁止 Press Invert（字色反转浅/白）。
  * Interaction：Liquid Lift Press — Filled hover = Hover Lift + Shadow Bloom（无内部 Color Shift）；
  * active = Active Press（translateY 回落/微下沉 + scale）+ 颜色反馈。
@@ -472,8 +473,9 @@ function onClick(e: MouseEvent) {
 }
 
 /* ghost / outline / dashed —— TD 镂空与描边族（带文案，普通矩形 / 可 round）：
-   ghost 透底；outline / dashed 近白玻璃底。三者共用 Quiet Outline token，
-   hover / active 只加深同色相 wash 与描边，禁止 Press Invert。 */
+   rest：ghost 透底；outline / dashed 近白玻璃底。
+   hover：三者共用同一套 WinUI Subtle（透底无板 · 外影 none · 描边加深）；
+   active 保持 Quiet Active Wash，禁止 Press Invert。 */
 .t-button.glass-button.glass-button--ghost,
 .t-button.glass-button.glass-button--outline,
 .t-button.glass-button.glass-button--dashed {

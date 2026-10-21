@@ -328,7 +328,7 @@ function togglePillLoading() {
         <span class="lab-section-name">{{ tt('actions.section.variants') }}</span>
         <span class="lab-section-meta">
           primary（块级 42 / radius 12）· primary-round（Pill 38 / radius 999）· quiet · icon（TD icon-only 预设）·
-          ghost（TD 镂空带文案）· outline · dashed · text · soft（32）· send ·
+          ghost（TD 镂空带文案）· outline · dashed（三者 hover 共用：透底无板 · 外影 none）· text · soft（32）· send ·
           底层 t-button · 每变体 Hover Lift + Active Press（Quiet &lt; Primary）
         </span>
       </div>
