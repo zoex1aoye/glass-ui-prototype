@@ -5,6 +5,7 @@
  * 透传 action / content + 默认槽 / content / action 槽；class 钩子
  * `glass-list-item` 挂在 t-list-item（li）根上，不得包 div
  * （t-list 的 ul 只接受 li 子节点，包 div 会破坏 split/stripe 的 :last-child/:nth-child）。
+ * 选中态接受 `is-active` / `data-active="true"`，视觉统一由 theme.css 收口。
  *
  * 视觉由 theme.css 的 .glass-list-item* 选择器收口；组件内零魔法 hex/rgba。
  */

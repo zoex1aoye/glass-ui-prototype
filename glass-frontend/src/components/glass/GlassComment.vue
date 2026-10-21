@@ -4,8 +4,9 @@
  *
  * 会话流内评论与「引用」槽：透传 author / avatar / content / datetime /
  * quote / reply / actions 及其对应 slots；class 钩子 `glass-comment`
- * 挂在 t-comment 根上，Quiet 排版（头像 40 · 无硬描边 · 引用槽嵌 GlassCard
- * 自带 hairline）全部由 styles/theme.css 的 `--glass-wb-comment-*` token 承载，
+ * 挂在 t-comment 根上：根评论 Quiet 透底（无 fill / hairline / blur），
+ * reply 使用 Soft/Inset 实板；头像 40、引用槽嵌 GlassCard 自带 hairline。
+ * 视觉全部由 styles/theme.css 的 `--glass-wb-comment-*` token 承载，
  * 组件内零魔法 hex/rgba。
  *
  * 定位：评论 / 引用叙事位，非 Host Tray / Surface / Panel，不占 L1–L3 层语义；

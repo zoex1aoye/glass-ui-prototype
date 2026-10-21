@@ -892,9 +892,9 @@ function onListLoadMore() {
   lastAction.value = 'list load-more → 点击「加载更多」'
 }
 
-/* ---------- Skeleton · 微透 · 叠压染色 ----------
+/* ---------- Skeleton · Neutral Soft bone · Contour-free ----------
  * theme 矩阵（text / avatar / paragraph / avatar-text）+ loading 开关切换真实内容；
- * animation 矩阵（gradient 默认 / flashed / none）固定 loading=true 展示骨块动效。
+ * animation 矩阵（gradient 默认 / flashed / none）保留双层呼吸，骨块无冷蓝。
  */
 const skeletonLoading = ref(true)
 
@@ -903,7 +903,7 @@ function toggleSkeletonLoading() {
   lastAction.value = `skeleton loading → ${skeletonLoading.value}`
 }
 
-/* ---------- Statistic · Quiet Number（T1） ----------
+/* ---------- Statistic · Quiet Number · semantic tone · Neutral loading bone（T1） ----------
  * tone 五态 / trend 图标语义色 / prefix·suffix·extra / loading·animation。
  * 数值动画用实例方法 start() 从 valueFrom 重播；loading 走 TD 内建 skeleton。
  */
@@ -1698,14 +1698,14 @@ function replayStatisticAnimation() {
       <div class="lab-section-label">
         <span class="lab-section-name">{{ tt('data.section.comment') }}</span>
         <span class="lab-section-meta">
-          TDesign：t-comment · 玻璃：Quiet 排版 + 引用槽嵌 GlassCard ·
-          透传 author / avatar / content / datetime / quote / reply / actions 与对应 slots
+          TDesign：t-comment · 玻璃：Quiet 根 + Soft Inset reply + 引用槽嵌 GlassCard ·
+          GlassAvatar / Quiet text actions · 透传完整 slots
         </span>
       </div>
       <div class="lab-comment-host">
         <GlassComment author="王倩" datetime="今天 16:46">
           <template #avatar>
-            <span class="lab-comment-avatar" aria-hidden="true">王</span>
+            <GlassAvatar shape="circle" size="medium" aria-hidden="true">王</GlassAvatar>
           </template>
           <template #content>
             <p class="lab-comment-copy">
@@ -1718,13 +1718,13 @@ function replayStatisticAnimation() {
             </GlassCard>
           </template>
           <template #actions>
-            <span>回复</span>
-            <span>点赞</span>
+            <GlassButton variant="text">回复</GlassButton>
+            <GlassButton variant="text">点赞</GlassButton>
           </template>
           <template #reply>
             <GlassComment author="陈浩" datetime="今天 17:02">
               <template #avatar>
-                <span class="lab-comment-avatar lab-comment-avatar--alt" aria-hidden="true">陈</span>
+                <GlassAvatar shape="circle" size="medium" aria-hidden="true">陈</GlassAvatar>
               </template>
               <template #content>
                 <p class="lab-comment-copy">已同步演示分组，结论今晚回写。</p>
@@ -1734,8 +1734,9 @@ function replayStatisticAnimation() {
         </GlassComment>
       </div>
       <div class="lab-control-note">
-        验收：头像 40 / circle（50%）/ 紫 Fan Tip（无白核）；作者名 primary、时间 muted；正文 secondary；引用槽用 GlassCard；
-        actions 走 Quiet text 钮；reply 微透近白底、左缩进对齐头像。
+        验收：根评论 Quiet 透底、无托盘；GlassAvatar 40 / circle；作者名 primary、时间 muted、正文 secondary；
+        引用槽仅承 GlassCard hairline；Soft Inset reply 实板 12px、左缩进对齐头像，
+        无 blur / 外抬影；Quiet text actions；dark reply 无蓝染。
       </div>
     </section>
 
@@ -1776,7 +1777,7 @@ function replayStatisticAnimation() {
           容器：<code>GlassSurface → GlassPanel variant="standalone" → GlassDescriptions</code>（D1–D4 各一块；Focus Panel L3）·
           Do：<code>Surface → Panel(standalone) → Descriptions</code>（L1 Host Tray 上密信息聚焦面）·
           Do：密信息详情用 Panel standalone · Don't：GlassStage / FormPane / GlassCard 当宿主 ·
-          Don't：用容器外轮廓 hairline 补层次；bordered=Tone Grid + soft hairline（底色差 + 组件网格细线）·
+          Don't：用容器外轮廓 hairline 补层次；bordered=Neutral Grid + Contour（中性底色差 + label 更深一档 + 组件中性网线）·
           Stage 只承担 html <code>.chat</code> 会话画布，不扛密 KV
         </span>
       </div>
@@ -1800,11 +1801,11 @@ function replayStatisticAnimation() {
             </div>
           </GlassPanel>
 
-          <!-- D2 · 边框 · 水平 · column=2 · Tone Grid + soft hairline（底 wash + 偶数行 content 条纹 + label 淡染 + soft 网格） -->
+          <!-- D2 · 边框 · 水平 · column=2 · Neutral Grid + Contour（中性底 wash + 偶数行 content 条纹 + 更深 label + 中性网格） -->
           <GlassPanel variant="standalone" title="D2 · 组织与阶段" class="lab-plate">
             <div class="lab-descriptions-demo">
               <div class="lab-descriptions-demo-note">
-                边框 · 水平 · column=2 · size=small · bordered=Tone Grid + soft hairline（底 wash + 偶数行仅 content 条纹，label 带始终更深，soft 网格）
+                边框 · 水平 · column=2 · size=small · bordered=Neutral Grid + Contour（中性底 wash + 偶数行仅 content 条纹，label 带更深一档，中性网格）
               </div>
               <GlassDescriptions bordered size="small" :column="2">
                 <GlassDescriptionsItem label="条目名称">演示条目 01</GlassDescriptionsItem>
@@ -1857,14 +1858,14 @@ function replayStatisticAnimation() {
       </GlassSurface>
     </section>
 
-    <!-- Empty · Quiet Empty State · type 矩阵 + action -->
+    <!-- Empty · Quiet TeachingTip / 列表空态 · type 矩阵 + action -->
     <section class="lab-section">
       <div class="lab-section-label">
         <span class="lab-section-name">{{ tt('data.section.empty') }}</span>
         <span class="lab-section-meta">
           TDesign：t-empty（type / title / description / image / size / action）·
-          玻璃：Quiet 空态（透明底、无蓝染满铺、muted 描述）· action 槽用 GlassButton ·
-          empty/network-error/maintenance 走 muted 灰图，success/fail 走语义色，非脏蓝满铺 ·
+          玻璃：Quiet Empty · Neutral illustration（透明底、无蓝染满铺、muted 描述、默认插图不加品牌滤镜）·
+          action 槽用 GlassButton · empty/network-error/maintenance 走中性灰图，success/fail 保留语义色 ·
           容器：<code>GlassSurface → GlassPanel variant="standalone" → GlassEmpty</code>（E1–E7 各一块）·
           E1–E5 为类型矩阵（无 action），业务空态须带下一步（见 E6 / E7）
         </span>
@@ -1923,7 +1924,9 @@ function replayStatisticAnimation() {
           TDesign：t-list / t-list-item / t-list-item-meta（split / stripe / size / header / footer / asyncLoading / load-more / scroll）·
           玻璃：GlassList 组件非托盘、透明底 Quiet 列表；Lab 用
           <code>GlassSurface → GlassPanel variant="standalone" → GlassList</code> 展示真实宿主（L1–L4b 各一块；禁双托盘）·
-          行 Hover Whisper 复用 table/session hover token · Meta 头像圆角对齐 Comment（--glass-wb-comment-avatar-radius 近义）
+          Light hover = 提亮 Soft 洗（可辨、不偏暗）· active = Soft Active Wash 原样 · stripe = Soft 中性斑马微洗、无 lift ·
+          stripe hover ≠ active · Dark active .12 / stripe hover .09 / hover .05 ·
+          rail active 仍走 rail-* · Meta 头像圆角对齐 Comment
         </span>
       </div>
 
@@ -1938,7 +1941,7 @@ function replayStatisticAnimation() {
                 </GlassListItem>
               </GlassList>
               <div class="lab-control-note">
-                透明底 Quiet 列表 · 悬停近白微洗（--glass-wb-list-item-hover-bg 复用 --glass-wb-table-row-hover）
+                透明底 Quiet 列表 · Light hover = Soft 一档可辨（--glass-wb-list-item-hover-bg）
               </div>
             </div>
           </GlassPanel>
@@ -1972,9 +1975,13 @@ function replayStatisticAnimation() {
               </GlassListItem>
             </GlassList>
           </GlassPanel>
-          <GlassPanel variant="standalone" title="L3b · stripe（偶数行近白微洗）" class="lab-plate">
+          <GlassPanel variant="standalone" title="L3b · stripe + active（Soft Active Wash）" class="lab-plate">
             <GlassList stripe>
-              <GlassListItem v-for="row in listRows" :key="row.id">
+              <GlassListItem
+                v-for="(row, index) in listRows"
+                :key="row.id"
+                :data-active="index === 1 ? 'true' : undefined"
+              >
                 <GlassListItemMeta :title="row.title" :description="row.desc" />
               </GlassListItem>
             </GlassList>
@@ -2002,15 +2009,14 @@ function replayStatisticAnimation() {
       </GlassSurface>
     </section>
 
-    <!-- Skeleton · 微透 · 叠压染色（T3） -->
+    <!-- Skeleton · Neutral Soft bone · Contour-free（T3） -->
     <section class="lab-section">
       <div class="lab-section-label">
         <span class="lab-section-name">{{ tt('data.section.skeleton') }}</span>
         <span class="lab-section-meta">
           TDesign：t-skeleton（theme / animation / rowCol / loading / delay）·
-          玻璃：半透冷蓝骨块 + 两层低透明度蓝染区缓慢漂移叠压，对齐 html
-          <code>.cell-see</code> / <code>.lay.l1</code> / <code>.lay.l2</code>；
-          无近白高光带 / 无扫光；flashed 为染层透明度呼吸，reduced-motion 关闭动画·
+          玻璃：Neutral Soft bone · Contour-free（中性 soft 骨块 + 两层中性灰白染层呼吸，无冷蓝）·
+          gradient / flashed 保留双层结构；无扫光，flashed 为染层透明度呼吸，reduced-motion 关闭动画·
           loading=false 时默认槽渲染真实内容 ·
           容器：<code>GlassSurface → GlassPanel variant="standalone" → GlassSkeleton</code>（theme / animation 两块；
           plate 内只保留排版 grid，不再套 soft hairline 小卡）
@@ -2042,7 +2048,7 @@ function replayStatisticAnimation() {
                   <div class="lab-table-caption">avatar</div>
                   <GlassSkeleton theme="avatar" :loading="skeletonLoading">
                     <div class="lab-skeleton-avatar-row">
-                      <span class="lab-skeleton-avatar">陈</span>
+                      <GlassAvatar shape="circle" size="medium" aria-hidden="true">陈</GlassAvatar>
                       <div class="lab-skeleton-stack">
                         <p class="lab-skeleton-title">陈浩 · 角色 B</p>
                         <p class="lab-skeleton-sub">今天 16:46</p>
@@ -2068,7 +2074,7 @@ function replayStatisticAnimation() {
                   <div class="lab-table-caption">avatar-text</div>
                   <GlassSkeleton theme="avatar-text" :loading="skeletonLoading">
                     <div class="lab-skeleton-avatar-row">
-                      <span class="lab-skeleton-avatar">王</span>
+                      <GlassAvatar shape="circle" size="medium" aria-hidden="true">王</GlassAvatar>
                       <div class="lab-skeleton-stack">
                         <p class="lab-skeleton-title">王倩 · 角色 A</p>
                         <p class="lab-skeleton-text">演示备注 1</p>
@@ -2097,8 +2103,8 @@ function replayStatisticAnimation() {
                 </div>
               </div>
               <div class="lab-control-note">
-                gradient = 微透底 + 双层蓝染漂移叠压（非扫光）·
-                flashed = 染层深浅交替呼吸 · none = 静态微透冷蓝骨块
+                gradient = Neutral soft 底 + 双层中性灰白染层漂移叠压（非扫光）·
+                flashed = 染层深浅交替呼吸 · none = 静态 Neutral Soft 骨块
               </div>
             </div>
           </GlassPanel>
@@ -2106,15 +2112,15 @@ function replayStatisticAnimation() {
       </GlassSurface>
     </section>
 
-    <!-- Statistic · Quiet Number · tone 五态 / trend / prefix·suffix·extra / loading·animation（T1） -->
+    <!-- Statistic · Quiet Number · semantic tone · Neutral loading bone（T1） -->
     <section class="lab-section">
       <div class="lab-section-label">
         <span class="lab-section-name">{{ tt('data.section.statistic') }}</span>
         <span class="lab-section-meta">
           TDesign：t-statistic（value / title / unit / prefix / suffix / extra / trend / trendPlacement / separator / decimalPlaces / loading / animation / animationStart）·
-          玻璃：GlassStatistic 组件非托盘、透明底 Quiet 数字；Lab 用
+          玻璃：Quiet Number · semantic tone · Neutral loading bone（非托盘、透明底）；Lab 用
           <code>GlassSurface → GlassPanel variant="standalone" → GlassStatistic</code> 展示真实宿主（St1–St5 各一块；禁双托盘）·
-          数值 tone 五态走 token；trend 图标色跟语义（increase 酷安绿 / decrease 危险红）；loading 用 TD 内建 skeleton
+          数值 tone 五态走 token；trend 图标色跟语义（increase 酷安绿 / decrease 危险红）；loading 复用 Neutral Skeleton
         </span>
       </div>
 
@@ -2476,25 +2482,6 @@ function replayStatisticAnimation() {
     var(--glass-layer-l0-wash);
 }
 
-/* Comment stub：circle + 紫系三停 Fan Tip；alternate 只切换同族紫 token。 */
-.lab-comment-avatar {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--glass-wb-comment-avatar-size);
-  height: var(--glass-wb-comment-avatar-size);
-  border-radius: var(--glass-wb-comment-avatar-radius);
-  background: var(--glass-wb-avatar-gradient);
-  box-shadow: var(--glass-wb-avatar-shadow);
-  color: var(--glass-wb-white);
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.lab-comment-avatar--alt {
-  background: var(--glass-wb-avatar-gradient-alt);
-}
-
 .lab-comment-copy {
   margin: 0;
   font-size: 13px;
@@ -2568,20 +2555,6 @@ function replayStatisticAnimation() {
   display: flex;
   align-items: center;
   gap: 12px;
-}
-
-.lab-skeleton-avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: var(--glass-wb-avatar-gradient);
-  color: var(--glass-wb-white);
-  font-size: 15px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
 }
 
 .lab-skeleton-title {

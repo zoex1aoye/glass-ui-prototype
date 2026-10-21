@@ -202,7 +202,6 @@ html.dark {
   --glass-wb-bubble-ai-fill: #2c2c2c;
   --glass-wb-bubble-ai-blur: none;
   --glass-wb-bubble-ai-shadow: var(--td-shadow-1);
-  --glass-wb-comment-reply-bg: #292929;
   --glass-wb-card-shadow: var(--td-shadow-2);
 
   /* Overlay / masks ← WinUI ContentDialog · Floating Solid
@@ -281,9 +280,12 @@ html.dark {
     0 0 0 14px rgba(255, 255, 255, 0.025),
     0 12px 28px rgba(0, 0, 0, 0.24);
 
-  /* List：hover 轻洗 / stripe·active 加重井 —— 两态必须可辨；禁 chalk、禁同色 alias。 */
+  /* List：hover 轻洗 / active 选中洗 / stripe 中性微洗 —— 三态必须可辨；禁 chalk。 */
   --glass-wb-list-item-hover-bg: rgba(255, 255, 255, 0.05);
+  --glass-wb-list-item-active-bg: rgba(255, 255, 255, 0.12);
+  --glass-wb-list-item-active-hover-bg: rgba(255, 255, 255, 0.14);
   --glass-wb-list-stripe-bg: rgba(255, 255, 255, 0.08);
+  --glass-wb-list-stripe-hover-bg: rgba(255, 255, 255, 0.09);
 
   /* Tabs soft/capsule/card：暗色禁 chalk 微光与近白轨；选中文字保留 accent，板面走中性提亮。 */
   --glass-wb-tabs-accent-color: var(--td-brand-color);
@@ -326,6 +328,23 @@ html.dark {
   --glass-wb-descriptions-bordered-fill: rgba(255, 255, 255, 0.03);
   --glass-wb-descriptions-row-stripe: rgba(255, 255, 255, 0.04);
   --glass-wb-descriptions-label-fill: rgba(255, 255, 255, 0.06);
+  --glass-wb-descriptions-label-fill-hover: rgba(255, 255, 255, 0.09);
+
+  /* Skeleton · Neutral Soft bone · Contour-free
+     中性白 alpha 骨块与染层，dark 下显式防冷蓝泄漏。 */
+  --glass-wb-skeleton-fill: rgba(255, 255, 255, 0.08);
+  --glass-wb-skeleton-dye-cyan: radial-gradient(
+    ellipse 82% 150% at 20% 46%,
+    color-mix(in srgb, #ffffff 10%, transparent) 0%,
+    color-mix(in srgb, #ffffff 5%, transparent) 44%,
+    transparent 72%
+  );
+  --glass-wb-skeleton-dye-blue: linear-gradient(
+    122deg,
+    color-mix(in srgb, #ffffff 8%, transparent) 0%,
+    color-mix(in srgb, #ffffff 4%, transparent) 46%,
+    color-mix(in srgb, #ffffff 7%, transparent) 100%
+  );
 
   /* PosterWash：中性炭黑底 + 极淡白空气感；不复用品牌冷蓝做大面积装饰。 */
   --glass-poster-wash: var(--glass-layer-l0-wash);
@@ -670,9 +689,10 @@ body .t-notification {
   --glass-wb-bubble-user-radius: 14px 14px 5px 14px;
 
   /* Comment · GlassComment（Quiet 排版 · 盖 t-comment）
-     会话流引用槽同级 Quiet：avatar 40 / circle 50%；无硬描边；
+     根评论 Quiet 透底：无 fill / hairline / blur；avatar 40 / circle 50%；
      quote 区嵌 GlassCard 时靠卡自带 hairline，不重复左描边。
-     reply 微透近白底，左缩进对齐头像。视觉规则见 `.glass-comment`。 */
+     reply = Soft/Inset 实板（soft alias · radius 12 · 无 blur / 外抬影），
+     左缩进对齐头像。视觉规则见 `.glass-comment`。 */
   --glass-wb-comment-avatar-size: 40px;
   --glass-wb-comment-avatar-radius: 50%;
   --glass-wb-comment-avatar-gap: 12px;
@@ -681,8 +701,8 @@ body .t-notification {
   --glass-wb-comment-time-color: var(--glass-text-muted);
   --glass-wb-comment-detail-color: var(--glass-text-secondary);
   --glass-wb-comment-action-color: var(--glass-text-muted);
-  --glass-wb-comment-reply-bg: rgba(246, 249, 253, 0.72);
-  --glass-wb-comment-reply-radius: 14px;
+  --glass-wb-comment-reply-bg: var(--glass-wb-soft-bg);
+  --glass-wb-comment-reply-radius: var(--glass-wb-list-item-radius);
   --glass-wb-comment-reply-pad: 12px 14px;
   --glass-wb-comment-reply-offset: calc(var(--glass-wb-comment-avatar-size) + var(--glass-wb-comment-avatar-gap));
 
@@ -1064,8 +1084,9 @@ body .t-notification {
   /* Glass Descriptions · GlassDescriptions（盖 t-descriptions）
      阅读焦点三档：label = secondary（键可扫读）/ content = primary（值仍是焦点）/
      content-secondary = muted（注解退到第三档）；复用 --glass-text-*，不另起色板。
-     bordered 用 Tone Grid + soft hairline：极淡矩阵 wash + 偶数行 content 条纹 +
-     label 淡染 + 柔和 1px 网格线；13px 节奏对齐 Form Quiet；host-first，content 吃宿主。
+     bordered 用 Neutral Grid + Contour：中性矩阵 wash + 偶数行 content 条纹 +
+     更深一档的 label 中性面 + 1px 中性网线；13px 节奏对齐 Form Quiet；
+     host-first，content 吃宿主。
      容器外轮廓（Panel standalone / Surface）仍不加 hairline。 */
   --glass-wb-descriptions-label-color: var(--glass-text-secondary);
   --glass-wb-descriptions-content-color: var(--glass-text-primary);
@@ -1073,17 +1094,22 @@ body .t-notification {
   --glass-wb-descriptions-header-color: var(--glass-text-primary);
   --glass-wb-descriptions-label-font-size: 13px;
   --glass-wb-descriptions-content-font-size: 13px;
-  --glass-wb-descriptions-hairline: rgba(120, 160, 210, 0.14); /* bordered 组件网格唯一描边色；柔和蓝灰细线，勿用于容器外轮廓 */
-  --glass-wb-descriptions-bordered-fill: rgba(22, 119, 255, 0.018); /* bordered 矩阵底 wash；非粉笔白实底 */
-  --glass-wb-descriptions-row-stripe: rgba(22, 119, 255, 0.03); /* 对齐 html table 偶数行底色差；仅 content */
-  --glass-wb-descriptions-label-fill: rgba(22, 119, 255, 0.08); /* bordered label 淡蓝染，始终深于 content 条纹 */
-  --glass-wb-descriptions-label-fill-hover: rgba(22, 119, 255, 0.11);
+  --glass-wb-descriptions-hairline: var(--td-component-stroke); /* Neutral Contour；只用于 bordered 组件网格 */
+  --glass-wb-descriptions-bordered-fill: var(--glass-wb-soft-bg); /* Neutral Grid 底；复用 Soft 中性体系 */
+  --glass-wb-descriptions-row-stripe: var(--glass-wb-soft-hover-bg); /* 偶数行 content 的中性一档差 */
+  --glass-wb-descriptions-label-fill: var(--glass-wb-soft-active-bg); /* label 始终深于 content 条纹 */
+  --glass-wb-descriptions-label-fill-hover: color-mix(
+    in srgb,
+    var(--glass-text-primary) 4%,
+    var(--glass-wb-soft-active-bg)
+  );
   --glass-wb-descriptions-content-fill: transparent; /* bordered content 吃宿主，禁粉笔白实底 */
   --glass-wb-descriptions-radius: var(--glass-wb-table-inset-radius); /* 与 Stage 内嵌板同圆角语言 */
 
-  /* Empty / Quiet Empty State · GlassEmpty（盖 t-empty）
-     Quiet 空态：透明底、无蓝染满铺；title primary、description muted；
-     image 走 TDesign 默认态；action 间距收紧（勿沿用 --td-comp-margin-xxl 大空隙）。 */
+  /* Empty / Quiet TeachingTip · 列表空态 · GlassEmpty（盖 t-empty）
+     Quiet Empty：透明底、无蓝染满铺；title primary、description muted；
+     Neutral illustration 走 TDesign 默认态（不给默认插图加品牌滤镜）；
+     action 间距收紧（勿沿用 --td-comp-margin-xxl 大空隙）。 */
   --glass-wb-empty-title-color: var(--glass-text-primary);
   --glass-wb-empty-title-font-size: 14px;
   --glass-wb-empty-title-font-weight: 600;
@@ -1342,14 +1368,25 @@ body .t-notification {
   --glass-wb-list-description-line-height: 18px;
   --glass-wb-list-item-font-size: 14px;
   --glass-wb-list-item-line-height: 22px;
-  /* Hover Whisper：对齐 DocsShell nav hover（--glass-wb-text-cta-hover-bg 极淡冷雾）；
-     禁 alipay 实色块洗。与 active（session 白板+抬升影）同族：hover 雾 / active 板。 */
-  --glass-wb-list-item-hover-bg: var(--glass-wb-text-cta-hover-bg);
+  /* Hover Whisper：Light 提亮 Soft 洗（禁回退 text-cta 半透雾；禁压成偏暗灰板）。
+     相对 soft-hover 掺白提亮，近白 Panel 上仍可辨且不发闷。 */
+  --glass-wb-list-item-hover-bg: color-mix(
+    in srgb,
+    var(--glass-wb-soft-hover-bg) 48%,
+    #ffffff
+  );
+  /* Active 选中：维持 Soft Active Wash 原样（--glass-wb-soft-active-bg）；无抬升影。 */
+  --glass-wb-list-item-active-bg: var(--glass-wb-soft-active-bg);
+  --glass-wb-list-item-active-hover-bg: color-mix(
+    in srgb,
+    var(--glass-text-primary) 4%,
+    var(--glass-wb-soft-active-bg)
+  );
   --glass-wb-list-item-transition: background-color 0.15s ease, box-shadow 0.15s ease;
   --glass-wb-list-split-color: var(--glass-border-soft);
-  /* stripe：沿用 session 白板 + 抬升影；轨内 active 另行覆盖为低透 wash + pill */
-  --glass-wb-list-stripe-bg: var(--glass-wb-session-active-bg);
-  --glass-wb-list-item-active-shadow: var(--glass-wb-session-active-shadow);
+  /* stripe：Soft 中性斑马微洗，无 lift；偶数行 hover 与普通 hover 同档 */
+  --glass-wb-list-stripe-bg: var(--glass-wb-soft-bg);
+  --glass-wb-list-stripe-hover-bg: var(--glass-wb-list-item-hover-bg);
   --glass-wb-list-title-color: var(--glass-text-primary);
   --glass-wb-list-description-color: var(--glass-text-secondary);
   --glass-wb-list-meta-avatar-size: 40px;
@@ -1388,35 +1425,35 @@ body .t-notification {
   --glass-wb-loading-wave-delay-2: -0.14s;
   --glass-wb-loading-wave-delay-3: 0s;
 
-  /* 微透 · 叠压染色 Skeleton · GlassSkeleton（盖 t-skeleton）
-     骨块对齐 html `.cell-see`：半透冷蓝底 + 两层蓝染强呼吸叠压（opacity 摆幅加大），
-     靠交叠深浅出层次；gradient 不再是扫光，flashed 染层深浅对呼吸，
-     reduced-motion 下保持静态微透染色；
-     圆角对齐 Field 12 的 Quiet 骨块。视觉规则见 `.glass-skeleton`。 */
-  --glass-wb-skeleton-fill: rgba(210, 232, 255, 0.4); /* 微透冷蓝叠压底（html .cell-see） */
-  --glass-wb-skeleton-radius: 8px; /* 骨块圆角 */
+  /* Skeleton · Neutral Soft bone · Contour-free（GlassSkeleton 盖 t-skeleton）
+     Soft 中性骨块 + 两层中性黑 / 白 alpha 缓慢呼吸叠压；
+     无冷蓝色染、无扫光；gradient / flashed 保留双层呼吸结构，
+     reduced-motion 下染层静止；圆角复用 List Item 12。 */
+  --glass-wb-skeleton-fill: var(--glass-wb-soft-hover-bg); /* Soft 中性骨块底 */
+  --glass-wb-skeleton-radius: var(--glass-wb-list-item-radius);
   --glass-wb-skeleton-dye-cyan: radial-gradient(
     ellipse 82% 150% at 20% 46%,
-    color-mix(in srgb, var(--glass-chroma-cyan) 38%, transparent) 0%,
-    color-mix(in srgb, var(--glass-chroma-alipay) 22%, transparent) 44%,
+    color-mix(in srgb, var(--glass-text-primary) 8%, transparent) 0%,
+    color-mix(in srgb, var(--glass-text-primary) 4%, transparent) 44%,
     transparent 72%
-  ); /* 对齐 html .lay.l1：Cyan → 支付宝蓝软染，无近白端；峰值略加深便于呼吸可感 */
+  ); /* 中性黑 alpha 径向软染，无品牌色相 */
   --glass-wb-skeleton-dye-blue: linear-gradient(
     122deg,
-    color-mix(in srgb, var(--glass-chroma-zhihu) 20%, transparent) 0%,
-    color-mix(in srgb, var(--glass-chroma-alipay) 14%, transparent) 46%,
-    color-mix(in srgb, var(--glass-chroma-cyan) 16%, transparent) 100%
-  ); /* 对齐 html .lay.l2 并去掉近白端：Zhihu → 软蓝叠压，非扫光高亮 */
+    color-mix(in srgb, var(--glass-text-primary) 4%, transparent) 0%,
+    color-mix(in srgb, var(--glass-wb-white) 18%, transparent) 46%,
+    color-mix(in srgb, var(--glass-text-primary) 3%, transparent) 100%
+  ); /* 中性黑 / 白 alpha 线性软染，非扫光高亮 */
   --glass-wb-skeleton-dye-duration: 2.2s;
   --glass-wb-skeleton-breath-duration: 1.2s;
   --glass-wb-skeleton-dye-opacity: 0.72;
   --glass-wb-skeleton-dye-breath-opacity: 0.56;
 
   /* Glass Statistic · GlassStatistic（盖 t-statistic）
-     Quiet 数字气质：透明底、非 Host Tray / Surface / Soft Cite Card（禁双托盘）。
+     Quiet Number · semantic tone · Neutral loading bone：
+     透明底、非 Host Tray / Surface / Soft Cite Card（禁双托盘）。
      标题 / 单位 Quiet secondary、extra muted；数值 tone 五态走 token；
      trend 图标色跟语义（increase 酷安绿 / decrease 危险红）；
-     loading 用 TD 内建 skeleton（轻骨块，勿实白盖板）。
+     loading 复用 .glass-statistic 内的 Neutral Skeleton 骨块。
      danger / warning 复用 Alert 同源品牌锚（JD Red #E1251B / warning 钮 #A15C07）。 */
   --glass-wb-statistic-title-color: var(--glass-text-secondary);
   --glass-wb-statistic-unit-color: var(--glass-text-secondary);
@@ -4395,12 +4432,18 @@ body {
 }
 
 /* ── Comment · GlassComment（Quiet 排版 · 盖 t-comment）────────────────
-   会话流评论 / 引用槽：avatar 40 circle 50% · 无硬描边 · quote 嵌 GlassCard
-   自带 hairline（不重复左描边）· reply 微透近白底左缩进对齐头像。 */
+   根评论 Quiet 透底（无 fill / hairline / blur）· avatar 40 circle 50% ·
+   quote 嵌 GlassCard 自带 hairline（不重复左描边）·
+   reply = Soft/Inset 实板（soft alias · 12px · 无 blur / 外抬影）· 左缩进对齐头像。 */
 .glass-comment.t-comment {
   font-size: 13px;
   line-height: 1.6;
   color: var(--glass-wb-comment-detail-color);
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
 }
 
 .glass-comment .t-comment__avatar {
@@ -4452,6 +4495,22 @@ body {
   color: var(--glass-wb-comment-action-color);
 }
 
+.glass-comment .t-comment__actions .t-button--variant-text:not(.t-is-disabled):hover {
+  background: var(--glass-wb-text-cta-hover-bg);
+  color: var(--glass-text-secondary);
+}
+
+.glass-comment .t-comment__actions .t-button--variant-text:not(.t-is-disabled):active {
+  background: var(--glass-wb-soft-hover-bg);
+  color: var(--glass-wb-comment-action-color);
+}
+
+.glass-comment .t-comment__actions .t-button--variant-text:focus-visible {
+  background: transparent;
+  color: var(--glass-wb-comment-action-color);
+  box-shadow: var(--glass-wb-control-focus-ring);
+}
+
 .glass-comment .t-comment__reply {
   margin-top: var(--glass-wb-comment-gap);
   margin-left: var(--glass-wb-comment-reply-offset);
@@ -4459,6 +4518,10 @@ body {
   padding: var(--glass-wb-comment-reply-pad);
   background: var(--glass-wb-comment-reply-bg);
   color: var(--glass-wb-comment-detail-color);
+  border: none;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
 }
 
 /* ── Glass Badge · GlassBadge（全局主题层）───────────────────────────
@@ -4624,8 +4687,9 @@ body {
    Compound Wrapper 盖 t-descriptions；组件只挂 .glass-descriptions
    + __core，本段是唯一视觉出处。
    阅读焦点三档：label（secondary）/ content（primary）/ secondary 内容（muted）；
-   bordered 用 Tone Grid + soft hairline：矩阵 wash + 偶数行底色差 +
-   label 淡染 + 柔和 1px 网格线；13px 节奏对齐 Form Quiet；host-first，content 透明。
+   bordered 用 Neutral Grid + Contour：中性矩阵 wash + 偶数行底色差 +
+   label 更深一档中性面 + 1px 中性网线；13px 节奏对齐 Form Quiet；
+   host-first，content 透明。
    容器外轮廓（Panel standalone / Surface）仍不加 hairline。 */
 
 .glass-descriptions {
@@ -4655,10 +4719,10 @@ body {
   color: var(--glass-wb-descriptions-content-color);
 }
 
-/* bordered：Tone Grid + soft hairline。外框与格线只属于 Descriptions
+/* bordered：Neutral Grid + Contour。外框与格线只属于 Descriptions
    组件网格；Panel standalone / Surface 等容器外轮廓仍不加 hairline。
-   层次由底 wash、偶数行 content 条纹（html table zebra）、label 淡染
-   与柔和 1px 网格共同承担。 */
+   层次由中性底 wash、偶数行 content 条纹（html table zebra）、
+   label 更深一档中性面与 1px 中性网格共同承担。 */
 .glass-descriptions .t-descriptions__body--border {
   border: 1px solid var(--glass-wb-descriptions-hairline);
   border-radius: var(--glass-wb-descriptions-radius);
@@ -4714,10 +4778,11 @@ body {
 
 /* ── Glass Empty · GlassEmpty（全局主题层）──────────────────────────────
    Compound Wrapper 盖 t-empty；组件只挂 .glass-empty，本段是唯一视觉出处。
-   Quiet 空态：透明底、无蓝染满铺；title primary、description muted；
-   action 间距走 token，不干预 TDesign 布局与 a11y。 */
+   Quiet TeachingTip / 列表空态：透明底、无蓝染满铺；默认 Neutral illustration；
+   title primary、description muted；action 间距走 token，不干预 TD 布局与 a11y。 */
 .glass-empty {
   display: block;
+  background: transparent;
 }
 
 .glass-empty .t-empty__title {
@@ -4743,7 +4808,8 @@ body {
 /* ── Quiet List · GlassList / GlassListItem / GlassListItemMeta ─────
    Compound Wrapper 盖 t-list / t-list-item / t-list-item-meta。
    通用 Quiet 列表：透明底、无托盘满铺（非 Host Tray / Surface，禁双托盘）。
-   Item 行高 Quiet + Hover Whisper（复用 table/session hover token，勿另造脏蓝）；
+   Item 行高 Quiet + Hover Whisper / Active Wash / Stripe；
+   三态各自走专用 token，rail active 仍由下方 rail-* 重映射收口。
    Meta 头像圆角对齐 Comment。组件只挂 class 钩子，本段是唯一视觉出处。 */
 
 /* List 壳：透明底，去 TD 容器白底；滚动容器语义保留 */
@@ -4856,15 +4922,28 @@ body {
   background: var(--glass-wb-list-split-color);
 }
 
-/* stripe：偶数行对齐 nav active 材质（bg + 轻抬升影）；悬停仍保 stripe，不掉回 hover */
+/* stripe：Soft 中性斑马微洗，无 lift；hover 加深一档并保留中性可辨 */
 .glass-list.t-list--stripe .glass-list-item.t-list-item:nth-child(even) {
   background: var(--glass-wb-list-stripe-bg);
-  box-shadow: var(--glass-wb-list-item-active-shadow);
+  box-shadow: none;
 }
 
 .glass-list.t-list--stripe .t-list__inner .glass-list-item.t-list-item:nth-child(even):hover {
-  background: var(--glass-wb-list-stripe-bg);
-  box-shadow: var(--glass-wb-list-item-active-shadow);
+  background: var(--glass-wb-list-stripe-hover-bg);
+  box-shadow: none;
+}
+
+/* active：Soft Active Wash 选中态，优先于 stripe；无抬升影。 */
+.glass-list.t-list .t-list__inner .glass-list-item.t-list-item.is-active,
+.glass-list.t-list .t-list__inner .glass-list-item.t-list-item[data-active='true'] {
+  background: var(--glass-wb-list-item-active-bg);
+  box-shadow: none;
+}
+
+.glass-list.t-list .t-list__inner .glass-list-item.t-list-item.is-active:hover,
+.glass-list.t-list .t-list__inner .glass-list-item.t-list-item[data-active='true']:hover {
+  background: var(--glass-wb-list-item-active-hover-bg);
+  box-shadow: none;
 }
 
 /* Meta：头像圆角对齐 Comment；title primary / description secondary */
@@ -4980,26 +5059,26 @@ body {
   backdrop-filter: var(--glass-wb-loading-overlay-blur);
 }
 
-/* ── 微透 · 叠压染色 Skeleton · GlassSkeleton（全局主题层）───────────────
+/* ── Neutral Soft bone Skeleton · GlassSkeleton（全局主题层）────────────
    Compound Wrapper 盖 t-skeleton；组件只挂 .glass-skeleton，本段是唯一视觉出处。
-   Quiet 骨块对齐 html `.cell-see`：半透冷蓝底 + 两层低透明度蓝染区缓慢漂移，
-   交叠处自然加深；无近白高光带、无 chalk / 冰白扫光。flashed 只呼吸染层透明度。 */
+   Neutral Soft bone · Contour-free：中性 soft 底 + 两层低透明度中性染区缓慢漂移，
+   交叠处只产生灰白层次；无冷蓝色相、无 chalk / 冰白扫光。 */
 
-/* 骨块底：覆盖 TD --td-bg-color-secondarycontainer 软灰；Statistic 内嵌骨架同源 */
+/* Neutral 骨块底：覆盖 TD 默认灰；Statistic 内嵌 loading 同源 */
 :is(.glass-skeleton, .glass-statistic) .t-skeleton__col {
   position: relative;
   overflow: hidden;
   background-color: var(--glass-wb-skeleton-fill);
 }
 
-/* 骨块圆角：text/rect 对齐 Quiet 骨块（circle 沿用 TD 圆形） */
+/* 骨块圆角：text/rect 复用 List Item 12（circle 沿用 TD 圆形） */
 .glass-skeleton .t-skeleton--type-text,
 .glass-skeleton .t-skeleton--type-rect {
   border-radius: var(--glass-wb-skeleton-radius);
 }
 
-/* 两层软染：::before = Cyan→支付宝蓝团，::after = Zhihu→软蓝染带；
-   各自慢移 + 透明度呼吸，交叠处染色加深，全程无锐白 / 高光核。 */
+/* 两层 Neutral 软染：::before = 黑 alpha 径向团，::after = 黑 / 白 alpha 线性带；
+   各自慢移 + 透明度呼吸，交叠处只产生中性灰白层次。 */
 :is(.glass-skeleton, .glass-statistic) .t-skeleton--animation-gradient::before,
 :is(.glass-skeleton, .glass-statistic) .t-skeleton--animation-gradient::after,
 :is(.glass-skeleton, .glass-statistic) .t-skeleton--animation-flashed::before,
@@ -5168,4 +5247,4 @@ body {
   color: var(--glass-wb-statistic-decrease);
 }
 
-/* loading：TD 内建 skeleton（theme=text）复用同源微透叠压染色 token，勿实白盖板 */
+/* loading：TD 内建 skeleton（theme=text）复用 Neutral Soft bone token，勿实白盖板 */

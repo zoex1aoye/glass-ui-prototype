@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * GlassStatistic — Compound Wrapper 盖 t-statistic（Quiet 数字气质）
+ * GlassStatistic — Compound Wrapper 盖 t-statistic（Quiet Number）
  *
  * 透传：value / title / unit / prefix / suffix / extra / trend（increase|decrease）/
  * trendPlacement / separator / decimalPlaces / loading / animation / animationStart
@@ -11,6 +11,7 @@
  * 挂 .glass-statistic--tone-*；trend 图标色跟语义走 --trend-increase / --trend-decrease。
  * 禁止对外透传 TD 原始 color 字符串。
  *
+ * Quiet Number · semantic tone · Neutral loading bone。
  * 视觉由 theme.css 的 .glass-statistic* 收口；组件只挂 class 钩子，禁止魔法 hex/rgba。
  * 透明底、非 Host Tray / Surface / Soft Cite Card（禁双托盘）。
  */

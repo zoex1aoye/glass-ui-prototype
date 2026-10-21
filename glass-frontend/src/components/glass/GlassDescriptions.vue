@@ -6,14 +6,14 @@
  * - Quiet Label / Content：阅读焦点三档——label 走 secondary（--glass-wb-descriptions-label-color），
  *   content 走 primary（--glass-wb-descriptions-content-color），次级内容走 muted
  *   （--glass-wb-descriptions-content-secondary）；13px 节奏对齐 Form Quiet。
- * - Tone Grid + soft hairline：bordered 以矩阵底 wash
- *   （--glass-wb-descriptions-bordered-fill）、偶数行 content 底色差
- *   （--glass-wb-descriptions-row-stripe）、label 淡染
- *   （--glass-wb-descriptions-label-fill）建立层次，并用柔和 1px 网格线
- *   （--glass-wb-descriptions-hairline）恢复可读的 bordered 外框与格线。
+ * - Neutral Grid + Contour：bordered 以中性矩阵底
+ *   （--glass-wb-descriptions-bordered-fill）、偶数行 content 中性差
+ *   （--glass-wb-descriptions-row-stripe）、更深一档的 label 中性面
+ *   （--glass-wb-descriptions-label-fill / -hover）建立层次，并用 1px
+ *   中性 contour（--glass-wb-descriptions-hairline）恢复 bordered 外框与格线。
  *   content 格透明吃宿主（--glass-wb-descriptions-content-fill）；
  *   禁止粉笔白实色格与硬白网格。
- * - Hairline 边界：soft hairline 只属于 Descriptions bordered 组件网格；
+ * - Contour 边界：中性网格 contour 只属于 Descriptions bordered 组件；
  *   GlassPanel standalone / Surface 等容器外轮廓仍不加 hairline。
  * - Host-first：自身不自带实心底卡；外轮廓圆角走 --glass-wb-descriptions-radius。
  * - 推荐宿主：GlassPanel variant="standalone"（Focus Panel L3；页内 / 浮层内通用）。

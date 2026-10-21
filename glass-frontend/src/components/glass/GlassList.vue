@@ -5,6 +5,8 @@
  * 通用 Quiet 列表：透明底、无托盘满铺（非 Host Tray / Surface，禁双托盘）。
  * 透传最小集：split（默认 false）/ stripe / size / header / footer /
  * asyncLoading（'loading' | 'load-more'）+ load-more / scroll 事件 + 默认槽。
+ * active = Soft Active Wash，无 lift 且优先于 stripe；rail active 仍走 rail-*。
+ * stripe = Soft 中性斑马微洗，无 lift；与 session active 解耦。
  *
  * 视觉由 theme.css 的 .glass-list* 选择器收口；组件只挂 class 钩子，
  * 禁止魔法 hex/rgba。

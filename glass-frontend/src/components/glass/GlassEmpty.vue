@@ -1,14 +1,15 @@
 <script setup lang="ts">
 /**
- * GlassEmpty — Compound Wrapper 盖 t-empty（Quiet 空态）
+ * GlassEmpty — Compound Wrapper 盖 t-empty（Quiet TeachingTip / 列表空态）
  *
  * 透传最小集：type（empty/success/fail/network-error/maintenance）/ title /
  * description / image / imageStyle / size + action 槽。
  * 视觉由 theme.css 的 .glass-empty* 收口；组件只挂结构钩子。
  *
- * Quiet 空态：透明底、无蓝染满铺；title primary、description muted；
- * image 走 TDesign 默认态（empty/network/maintenance 为 muted 灰，
- * success/fail 为语义色，非脏蓝满铺）。action 用 GlassButton。
+ * Quiet Empty：透明底、无蓝染满铺；title primary、description muted；
+ * Neutral illustration 保持 TDesign 默认态（empty/network/maintenance 为
+ * 中性灰，success/fail 保留语义色），默认插图不加品牌滤镜。
+ * action 用 GlassButton；不自造插画，也不升级为 Card / Dialog 实板。
  */
 import type { ImageProps, SizeEnum, Styles } from 'tdesign-vue-next'
 
