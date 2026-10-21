@@ -4,10 +4,9 @@
  *
  * 术语：
  * - Modal Scrim：遮罩降对比，不抢托盘材质
- * - Floating Solid：独立 teleport 的对话框面板，圆角对齐 Surface radius 体系
- * - WinUI ContentDialog Material：高遮罩近实 fill + blur none；
- *   Light 复用 L3 standalone 近白容器，Dark 用同源深冷实板，均不靠 backdrop-filter 透背后；
- *   历史曾对齐 t1 .bchat，当前材质权威改为 ContentDialog；
+ * - Floating Acrylic：独立 teleport 的对话框面板，圆角对齐 Surface radius 体系；
+ *   Light / Dark 均为 ice 色相高遮罩微透 + 轻 blur，Dark 不再回退中性实板；
+ *   历史曾对齐 t1 .bchat / WinUI Floating Solid，当前材质权威为 ice Acrylic；
  * - Floating Shadow (Dialog)：单层 Whisper Lift；浮层体量由 Modal Scrim 承载，不加 Ambient；
  * - 禁区：禁用整装背景技法（PosterWash / hero-air / petals / 多重 radial bloom）
  * - 消费边界（兄弟项目）：Dialog = Confirm Sheet（短确认 / 危险确认），
@@ -16,7 +15,9 @@
  *   整装会话窗（头 + 气泡 + 输入）见 Composer / Workbench 原语，不在 Dialog；
  *   映射与红线见方案 §1（.agents/tmp-glass-dialog-t1-session-align-plan.md）。
  * - Header-Footer Rhythm：纯间距分区，无 hairline；
- *   用 12px 垂直留白建立分区节奏，不额外抬 lift 影
+ *   用 12px 垂直留白建立分区节奏，不额外抬 lift 影；
+ *   body 的 L3 inset tray hairline 只界定内容面，不承担 header / footer 分区
+ * - Header / Body：圆形 #icon 徽标 + 文字列；default / #body 默认进入 L3 inset tray
  * - Destructive vs Neutral Confirm：theme=danger 走红系 token；default 走 Primary Quiet（品牌蓝）
  *
  * 脚钮对齐「按钮与行动」：默认 footer 自制 GlassButton
@@ -43,8 +44,18 @@
  * 色值一律走 --glass-wb-*，禁止魔法色。面板 / 遮罩由 t-dialog teleport 至 body，
  * 故材质写在非 scoped 样式并以 .glass-dialog 为锚，避免污染全局。
  */
-import { computed, h, nextTick, onBeforeUnmount, useId, useSlots, watch } from 'vue'
+import {
+  computed,
+  h,
+  nextTick,
+  onBeforeUnmount,
+  useId,
+  useSlots,
+  watch,
+  type VNodeChild,
+} from 'vue'
 
+import { ErrorCircleIcon } from 'tdesign-icons-vue-next'
 import type { TdDialogProps } from 'tdesign-vue-next'
 
 import GlassButton from './GlassButton.vue'
@@ -74,6 +85,8 @@ const props = withDefaults(
     /** header 槽未自定义时，在 title 下方渲染的小字副标 */
     subtitle?: string
     body?: DialogBody
+    /** default / #body 使用 L3 inset tray；false 时直接渲染正文 */
+    bodyTray?: boolean
     /** Neutral=default（确认 primary）；Destructive=danger（确认 danger） */
     theme?: DialogTheme
     /** Confirm Sheet 默认居中 */
@@ -95,6 +108,7 @@ const props = withDefaults(
     header: undefined,
     subtitle: undefined,
     body: undefined,
+    bodyTray: true,
     theme: 'default',
     placement: 'center',
     width: undefined,
@@ -123,16 +137,74 @@ const slots = useSlots()
 const overlayId = useId().replace(/[^a-zA-Z0-9_-]/g, '')
 const a11yClassName = `glass-overlay-${overlayId}`
 
-/** header 槽未自定义且 subtitle 有值时，用内置 header 渲染 title + subtitle */
-const hasSubtitleHeader = computed(() => Boolean(props.subtitle && !slots.header))
+function resolveTNode(node: DialogHeader | DialogBody): VNodeChild {
+  return typeof node === 'function' ? node(h) : (node as VNodeChild)
+}
 
-const SubtitleHeader = () => {
-  const header = props.header
-  const title = typeof header === 'function' ? header(h) : header
-  return h('div', { class: 'glass-dialog__header' }, [
-    h('span', { class: 'glass-dialog__title' }, [title]),
-    h('p', { class: 'glass-dialog__subtitle' }, props.subtitle),
+const hasHeaderContent = computed(() => {
+  const hasTitle = props.header !== undefined && props.header !== null && props.header !== false
+  return Boolean(hasTitle || props.subtitle)
+})
+
+/** danger 且未给 #icon 时，用 Glass 实色圆标替代 TD 原生 header icon。 */
+const hasDangerDefaultIcon = computed(() => props.theme === 'danger' && !slots.icon)
+const hasDefaultIcon = computed(() => Boolean(slots.icon || hasDangerDefaultIcon.value))
+
+const hasDefaultHeader = computed(
+  () => Boolean(!slots.header && (hasDefaultIcon.value || hasHeaderContent.value)),
+)
+
+const hasHeader = computed(() => Boolean(slots.header || hasDefaultHeader.value))
+
+/** 默认 header：徽标可选；无 #icon 时只渲染文字列。 */
+const OverlayHeader = () => {
+  const title = resolveTNode(props.header)
+  const hasTitle = title !== undefined && title !== null && title !== false && title !== true
+  const icon = slots.icon
+    ? slots.icon()
+    : hasDangerDefaultIcon.value
+      ? h(ErrorCircleIcon)
+      : null
+  const iconClass = [
+    'glass-overlay-header__icon',
+    props.theme === 'danger' ? 'glass-overlay-header__icon--danger' : null,
+  ]
+    .filter(Boolean)
+    .join(' ')
+
+  return h('div', { class: 'glass-overlay-header' }, [
+    icon
+      ? h(
+          'span',
+          {
+            class: iconClass,
+            'aria-hidden': 'true',
+          },
+          icon,
+        )
+      : null,
+    hasTitle || props.subtitle
+      ? h('div', { class: 'glass-overlay-header__text' }, [
+          hasTitle
+            ? h('span', { class: 'glass-overlay-header__title' }, [title])
+            : null,
+          props.subtitle
+            ? h('p', { class: 'glass-overlay-header__subtitle' }, props.subtitle)
+            : null,
+        ])
+      : null,
   ])
+}
+
+/** 保持 TDesign default → body → body prop 的正文优先级，再按需包 tray。 */
+const OverlayBody = () => {
+  const content =
+    slots.default?.() ?? slots.body?.() ?? resolveTNode(props.body)
+  const bodyContent = content as VNodeChild
+
+  return props.bodyTray === false
+    ? bodyContent
+    : h('div', { class: 'glass-overlay-body-tray' }, [bodyContent])
 }
 
 const resolvedClass = computed(() =>
@@ -159,12 +231,13 @@ async function syncOverlayA11y(visible: boolean) {
       panel,
       idSeed: a11yClassName,
       titleSelectors: [
+        '.glass-overlay-header__title',
         '.glass-dialog__title',
         '.t-dialog__header-content h5',
         '.t-dialog__header h5',
         '.t-dialog__header-content',
       ],
-      descriptionSelectors: ['.glass-dialog__subtitle'],
+      descriptionSelectors: ['.glass-overlay-header__subtitle', '.glass-dialog__subtitle'],
       initialFocusSelectors: [
         '[data-glass-overlay-autofocus]',
         '.t-dialog__body input:not([disabled]):not([type="hidden"]), .t-dialog__body textarea:not([disabled]), .t-dialog__body select:not([disabled]), .t-dialog__body [contenteditable="true"]',
@@ -242,8 +315,7 @@ function onGlassCancel(e: MouseEvent) {
 <template>
   <t-dialog
     :visible="visible"
-    :header="header"
-    :body="body"
+    :header="hasHeader"
     :theme="theme"
     :placement="placement"
     :width="width"
@@ -265,9 +337,8 @@ function onGlassCancel(e: MouseEvent) {
     @opened="onDialogOpened"
   >
     <template v-if="$slots.header" #header><slot name="header" /></template>
-    <template v-else-if="hasSubtitleHeader" #header><SubtitleHeader /></template>
-    <template v-if="$slots.default" #default><slot /></template>
-    <template v-if="$slots.body" #body><slot name="body" /></template>
+    <template v-else-if="hasDefaultHeader" #header><OverlayHeader /></template>
+    <template #default><OverlayBody /></template>
     <!-- 默认脚钮：真 GlassButton（quiet 取消 + primary/danger 确认） -->
     <template v-if="useGlassFooter" #footer>
       <div class="glass-overlay-footer glass-dialog__footer-actions">
@@ -309,7 +380,12 @@ function onGlassCancel(e: MouseEvent) {
   border-radius: var(--glass-wb-dialog-radius);
   box-shadow: var(--glass-wb-dialog-shadow);
   border: none;
-  width: var(--glass-wb-dialog-width);
+  /* 宽 token + 视口自适应（TDesign Grid 断点改 token；永不撑破屏） */
+  width: min(
+    var(--glass-wb-dialog-width),
+    calc(100vw - var(--glass-wb-dialog-viewport-gutter))
+  );
+  max-width: calc(100vw - var(--glass-wb-dialog-viewport-gutter));
 }
 
 /* Modal Scrim：低对比，不抢 Confirm Sheet 材质
@@ -318,11 +394,15 @@ function onGlassCancel(e: MouseEvent) {
   background: var(--glass-wb-dialog-scrim);
 }
 
-/* 内 padding 交给 TD：壳层 .t-dialog--default 32px + body/footer 垂直节奏，禁止分区水平 padding 叠算 */
+/* 壳层 pad / header·body·footer 节奏见 theme.css（对齐 HTML：14 + gap 12） */
 .glass-dialog .t-dialog__header {
   font-weight: 600;
   color: var(--glass-text-primary);
-  padding-bottom: 12px;
+}
+
+/* TD theme icon 与 Glass header 圆标二选一，避免 danger 双标。 */
+.glass-dialog .t-dialog__header .t-dialog__header-content > .t-icon {
+  display: none;
 }
 
 /* 可选 subtitle：弱于 title，走 muted；header 槽自定义时不参与 */
@@ -350,10 +430,6 @@ function onGlassCancel(e: MouseEvent) {
   color: var(--glass-text-secondary);
   font-size: 14px;
   line-height: 1.6;
-}
-
-.glass-dialog .t-dialog__footer {
-  padding-top: var(--glass-wb-dialog-footer-padding-top);
 }
 
 /* Quiet Chrome：关闭钮克制 */

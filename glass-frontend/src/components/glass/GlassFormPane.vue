@@ -16,7 +16,8 @@
  *   confirmOnEnter 保持不暴露（表单 Enter 归 Form 自身）。
  *
  * - Header-Footer Rhythm：header 底 / footer 顶仅纯间距（padding 12），
- *   无 hairline box-shadow——表单会话窗不抬分割线。
+ *   无 hairline box-shadow；body 的 L3 inset tray hairline 只界定内容面。
+ * - Header / Body：圆形 #icon 徽标 + 文字列；default 默认进入 L3 inset tray。
  * - 禁 Nested Chrome：禁止搬 .air / .bph / 气泡 / Composer / PosterWash 进本窗；
  *   内部分段用 GlassDialogSection（纯布局，禁双托盘）。
  *
@@ -24,7 +25,7 @@
  * 面板 / 遮罩由 t-dialog teleport 至 body，故材质写在非 scoped 样式，
  * 以 .glass-form-pane 为锚，避免污染全局。
  */
-import { computed, nextTick, onBeforeUnmount, useId, useSlots, watch } from 'vue'
+import { computed, h, nextTick, onBeforeUnmount, useId, useSlots, watch } from 'vue'
 
 import type { TdDialogProps } from 'tdesign-vue-next'
 
@@ -44,6 +45,8 @@ const props = withDefaults(
     title?: string
     /** header 槽未自定义时，在 title 下方渲染的小字副标 */
     subtitle?: string
+    /** default 使用 L3 inset tray；false 时直接渲染正文 */
+    bodyTray?: boolean
     /** 默认走 --glass-wb-form-pane-width（480px） */
     width?: DialogWidth
     showOverlay?: boolean
@@ -55,6 +58,7 @@ const props = withDefaults(
     visible: false,
     title: undefined,
     subtitle: undefined,
+    bodyTray: true,
     width: undefined,
     showOverlay: true,
     destroyOnClose: false,
@@ -73,8 +77,35 @@ const slots = useSlots()
 const overlayId = useId().replace(/[^a-zA-Z0-9_-]/g, '')
 const a11yClassName = `glass-overlay-${overlayId}`
 
-/** 有无 header：slot 优先，其次 title/subtitle */
-const hasHeader = computed(() => Boolean(slots.header || props.title || props.subtitle))
+/** 默认 header：徽标可选；无 #icon 时只渲染文字列。 */
+const OverlayHeader = () =>
+  h('div', { class: 'glass-overlay-header' }, [
+    slots.icon
+      ? h(
+          'span',
+          {
+            class: 'glass-overlay-header__icon',
+            'aria-hidden': 'true',
+          },
+          slots.icon(),
+        )
+      : null,
+    props.title || props.subtitle
+      ? h('div', { class: 'glass-overlay-header__text' }, [
+          props.title
+            ? h('span', { class: 'glass-overlay-header__title' }, props.title)
+            : null,
+          props.subtitle
+            ? h('p', { class: 'glass-overlay-header__subtitle' }, props.subtitle)
+            : null,
+        ])
+      : null,
+  ])
+
+/** 有无 header：自定义 slot 优先，其次 title/subtitle/#icon */
+const hasHeader = computed(() =>
+  Boolean(slots.header || slots.icon || props.title || props.subtitle),
+)
 
 /** 脚钮只用 #footer slot；无 slot 则 footer=false（不渲染任何默认 confirm/cancel） */
 const hasFooterSlot = computed(() => Boolean(slots.footer))
@@ -103,12 +134,13 @@ async function syncOverlayA11y(visible: boolean) {
       panel,
       idSeed: a11yClassName,
       titleSelectors: [
+        '.glass-overlay-header__title',
         '.glass-form-pane__title',
         '.t-dialog__header-content h5',
         '.t-dialog__header h5',
         '.t-dialog__header-content',
       ],
-      descriptionSelectors: ['.glass-form-pane__subtitle'],
+      descriptionSelectors: ['.glass-overlay-header__subtitle', '.glass-form-pane__subtitle'],
       initialFocusSelectors: [
         '[data-glass-overlay-autofocus]',
         '.t-dialog__body input:not([disabled]):not([type="hidden"]), .t-dialog__body textarea:not([disabled]), .t-dialog__body select:not([disabled]), .t-dialog__body [contenteditable="true"]',
@@ -178,13 +210,13 @@ function onUpdateVisible(visible: boolean) {
     @opened="onDialogOpened"
   >
     <template v-if="$slots.header" #header><slot name="header" /></template>
-    <template v-else-if="title || subtitle" #header>
-      <div class="glass-form-pane__header">
-        <span v-if="title" class="glass-form-pane__title">{{ title }}</span>
-        <p v-if="subtitle" class="glass-form-pane__subtitle">{{ subtitle }}</p>
+    <template v-else-if="hasHeader" #header><OverlayHeader /></template>
+    <template #default>
+      <div v-if="bodyTray !== false" class="glass-overlay-body-tray">
+        <slot />
       </div>
+      <slot v-else />
     </template>
-    <slot />
     <template v-if="$slots.footer" #footer>
       <div class="glass-overlay-footer glass-form-pane__footer-actions">
         <slot name="footer" />
@@ -205,7 +237,11 @@ function onUpdateVisible(visible: boolean) {
   border-radius: var(--glass-wb-form-pane-radius);
   box-shadow: var(--glass-wb-form-pane-shadow);
   border: none;
-  width: var(--glass-wb-form-pane-width);
+  width: min(
+    var(--glass-wb-form-pane-width),
+    calc(100vw - var(--glass-wb-dialog-viewport-gutter))
+  );
+  max-width: calc(100vw - var(--glass-wb-dialog-viewport-gutter));
 }
 
 /* Modal Scrim：降浅共用 Dialog scrim token（DOM：.t-dialog__ctx > .t-dialog__mask） */
@@ -213,15 +249,10 @@ function onUpdateVisible(visible: boolean) {
   background: var(--glass-wb-form-pane-scrim);
 }
 
-/* header / footer 纯间距：无 hairline box-shadow */
+/* 壳层 pad / header·body·footer 节奏见 theme.css（对齐 HTML：14 + gap 12） */
 .glass-form-pane .t-dialog__header {
   font-weight: 600;
   color: var(--glass-text-primary);
-  padding-bottom: 12px;
-}
-
-.glass-form-pane .t-dialog__footer {
-  padding-top: var(--glass-wb-dialog-footer-padding-top);
 }
 
 .glass-form-pane .t-dialog__close[data-glass-overlay-close] {

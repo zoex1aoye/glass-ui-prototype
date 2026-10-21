@@ -204,13 +204,32 @@ html.dark {
   --glass-wb-bubble-ai-shadow: var(--td-shadow-1);
   --glass-wb-card-shadow: var(--td-shadow-2);
 
-  /* Overlay / masks ← WinUI ContentDialog · Floating Solid
-     Smoke scrim + 中性炭黑实板，blur none；阴影只保留单层 Whisper Lift。 */
-  --glass-wb-dialog-scrim: rgba(0, 0, 0, 0.5);
-  --glass-wb-dialog-fill: var(--glass-layer-l3-standalone-fill);
-  --glass-wb-dialog-blur: none;
-  --glass-wb-dialog-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+  /* Overlay / masks · Dark：面板试装 Surface 同款（mica #202020 · blur none）；
+     Body Tray 试装 Stage 同款；FormPane 跟随 Dialog。禁把 Surface/Stage seam 当分区线。 */
+  --glass-wb-dialog-scrim: rgba(0, 0, 0, 0.55);
+  --glass-wb-dialog-fill: var(--glass-wb-surface-fill);
+  --glass-wb-dialog-blur: var(--glass-wb-surface-blur);
+  --glass-wb-dialog-shadow: var(--glass-wb-surface-shadow);
+  --glass-wb-dialog-pad: 14px;
+  --glass-wb-dialog-stack-gap: 12px;
+  --glass-wb-dialog-viewport-gutter: 32px;
   --glass-wb-dialog-divider-color: var(--td-component-stroke);
+  --glass-wb-overlay-header-icon-bg: var(--glass-wb-btn-blue);
+  --glass-wb-overlay-header-icon-color: var(--glass-wb-white);
+  --glass-wb-overlay-header-icon-shadow:
+    0 4px 12px color-mix(in srgb, var(--td-brand-color) 40%, transparent);
+  --glass-wb-overlay-header-icon-bg-danger: var(--glass-wb-btn-danger);
+  --glass-wb-overlay-header-icon-shadow-danger:
+    0 4px 12px color-mix(in srgb, var(--glass-wb-btn-danger) 45%, transparent);
+  /* Body Tray · Stage 同款 fill（非 Rail seam） */
+  --glass-wb-overlay-body-tray-fill: var(--glass-wb-stage-fill);
+  --glass-wb-overlay-body-tray-hairline: none;
+  --glass-wb-overlay-body-tray-radius: 10px;
+  --glass-wb-overlay-body-tray-pad: 16px;
+  --glass-wb-form-pane-fill: var(--glass-wb-dialog-fill);
+  --glass-wb-form-pane-blur: var(--glass-wb-dialog-blur);
+  --glass-wb-form-pane-shadow: var(--glass-wb-dialog-shadow);
+  --glass-wb-form-pane-scrim: var(--glass-wb-dialog-scrim);
   --glass-wb-popconfirm-fill: #2c2c2c;
   --glass-wb-popconfirm-blur: none;
   --glass-wb-popconfirm-shadow: var(--td-shadow-2);
@@ -487,10 +506,44 @@ body .t-notification {
   --glass-content-pad: 22px;
 
   /* 字号 */
-  --glass-font-brand: 16px;
-  --glass-font-nav: 14px;
-  --glass-font-sub: 13px;
-  --glass-font-topbar: 14px;
+  --glass-font-sans: 'Noto Sans', 'Noto Sans SC', system-ui, -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  /* Type Scale · Web 默认；权威：.agents/tmp-typography-scale-spec.md。
+     color 只引用语义字色轨，dark 选择器覆写字色后由 var() 自动镜像。 */
+  --glass-type-display-size: 20px;
+  --glass-type-display-weight: 600;
+  --glass-type-display-line: 1.3;
+  --glass-type-display-color: var(--glass-text-primary);
+  --glass-type-title-size: 16px;
+  --glass-type-title-weight: 600;
+  --glass-type-title-line: 1.35;
+  --glass-type-title-color: var(--glass-text-primary);
+  --glass-type-body-size: 14px;
+  --glass-type-body-weight: 400;
+  --glass-type-body-line: 1.5;
+  --glass-type-body-color: var(--glass-text-primary);
+  --glass-type-body-field-size: 13px;
+  --glass-type-body-field-weight: 400;
+  --glass-type-body-field-line: 1.4;
+  --glass-type-body-field-color: var(--glass-text-primary);
+  --glass-type-label-size: 13px;
+  --glass-type-label-weight: 400;
+  --glass-type-label-line: 1.4;
+  --glass-type-label-color: var(--glass-text-secondary);
+  --glass-type-caption-size: 12px;
+  --glass-type-caption-weight: 400;
+  --glass-type-caption-line: 1.4;
+  --glass-type-caption-color: var(--glass-text-muted);
+  --glass-type-placeholder-color: var(--glass-text-muted);
+  --glass-type-disabled-color: var(--glass-text-disabled);
+  --glass-type-mono-size: 13px;
+  --glass-type-mono-weight: 400;
+  --glass-type-mono-line: 1.4;
+  --glass-type-mono-color: var(--glass-text-primary);
+  --glass-font-brand: var(--glass-type-title-size);
+  --glass-font-nav: var(--glass-type-body-size);
+  --glass-font-sub: var(--glass-type-label-size);
+  --glass-font-topbar: var(--glass-type-body-size);
 
   /* AI 工作台 —— z2 Behind Surface（整块浮层）+ z3 Rail|Stage 内部贴缝 */
   --glass-rail-width: 260px;
@@ -618,7 +671,7 @@ body .t-notification {
   --glass-wb-pill-height: 38px;
   --glass-wb-pill-radius: 999px;
   --glass-wb-pill-pad-x: 16px;
-  --glass-wb-pill-font-size: 13px;
+  --glass-wb-pill-font-size: var(--glass-type-body-field-size);
   --glass-wb-pill-font-weight: 600;
   /* Quiet CTA：暖纸微透玻璃 + 知乎深蓝字（token 承载色值，组件禁止硬编码） */
   --glass-wb-pill-quiet-bg: rgba(244, 247, 250, 0.7);
@@ -780,7 +833,7 @@ body .t-notification {
   --glass-wb-text-cta-height: 28px;
   --glass-wb-text-cta-pad-x: 8px;
   --glass-wb-text-cta-radius: 8px;
-  --glass-wb-text-cta-font-size: 13px;
+  --glass-wb-text-cta-font-size: var(--glass-type-body-field-size);
   --glass-wb-white: #ffffff;
   /* Field 底板：light = 白；dark 由 html[theme-mode=dark] 映射 TD component（禁粉笔白） */
   --glass-wb-field-bg: var(--glass-wb-white);
@@ -794,7 +847,7 @@ body .t-notification {
      （仅 radius 换 pill，track 999px / item = soft-item-height / 2），其余材质与状态同 soft。 */
   /* Action Blue 70% + Quiet Active 30%：13px 文字在 Soft Wash 上达到 4.5:1 */
   --glass-wb-tabs-accent-color: #2160e2;
-  --glass-wb-tabs-font-size: 13px;
+  --glass-wb-tabs-font-size: var(--glass-type-label-size);
   --glass-wb-tabs-font-weight: 400;
   --glass-wb-tabs-font-weight-active: 600;
   --glass-wb-tabs-color: var(--glass-text-secondary);
@@ -849,7 +902,7 @@ body .t-notification {
      视觉数值全部在本文件收口。
      形状区分：rounded = 圆角矩形分段（track 12px / item 8px）；capsule = 真胶囊（pill，
      track 999px / item = height/2，两端半圆）。逻辑样式（材质/高度/颜色/wash）二者共享。 */
-  --glass-wb-radio-font-size: 13px;
+  --glass-wb-radio-font-size: var(--glass-type-label-size);
   --glass-wb-radio-color: var(--glass-text-secondary);
   --glass-wb-radio-label-gap: 8px;
   --glass-wb-radio-gap: 20px;
@@ -896,14 +949,14 @@ body .t-notification {
      强调色对齐「按钮与行动」--glass-wb-btn-blue；finish 仍走 Soft Active Wash，
      流程指示只做小物件强调，禁止紫蓝渐变轨与白核；
      process / finish / default / error 四态分明。 */
-  --glass-wb-steps-title-size: 13px;
+  --glass-wb-steps-title-size: var(--glass-type-label-size);
   --glass-wb-steps-title-weight: 400;
   --glass-wb-steps-title-weight-process: 600;
   --glass-wb-steps-title-color: var(--glass-text-secondary);
   --glass-wb-steps-title-color-process: var(--glass-wb-btn-blue);
   --glass-wb-steps-title-color-finish: var(--glass-text-primary);
   --glass-wb-steps-title-color-error: var(--glass-wb-form-error);
-  --glass-wb-steps-desc-size: 12px;
+  --glass-wb-steps-desc-size: var(--glass-type-caption-size);
   --glass-wb-steps-desc-color: var(--glass-text-muted);
   --glass-wb-steps-icon-size: 26px;
   --glass-wb-steps-icon-font: 12px;
@@ -947,7 +1000,7 @@ body .t-notification {
   --glass-wb-collapse-header-fill: rgba(252, 254, 255, 0.46);
   --glass-wb-collapse-header-blur: blur(8px);
   --glass-wb-collapse-header-color: var(--glass-text-primary);
-  --glass-wb-collapse-header-font-size: 13px;
+  --glass-wb-collapse-header-font-size: var(--glass-type-label-size);
   --glass-wb-collapse-header-font-weight: 600;
   --glass-wb-collapse-header-hover-fill: var(--glass-wb-text-cta-hover-bg);
   --glass-wb-collapse-header-active-fill: var(--glass-wb-soft-active-bg);
@@ -985,10 +1038,10 @@ body .t-notification {
   --glass-wb-picker-panel-shadow: var(--glass-wb-dropdown-shadow);
   --glass-wb-picker-panel-pad: 12px;
   --glass-wb-picker-panel-gap: 10px;
-  --glass-wb-picker-header-size: 13px;
+  --glass-wb-picker-header-size: var(--glass-type-body-field-size);
   --glass-wb-picker-header-weight: 600;
   --glass-wb-picker-header-color: var(--glass-text-primary);
-  --glass-wb-picker-weekday-size: 12px;
+  --glass-wb-picker-weekday-size: var(--glass-type-caption-size);
   --glass-wb-picker-weekday-color: var(--glass-text-muted);
   --glass-wb-picker-cell-size: 30px;
   --glass-wb-picker-cell-margin-y: 4px;
@@ -1019,7 +1072,7 @@ body .t-notification {
   --glass-wb-picker-panel-divider: var(--glass-wb-dialog-divider-color);
   --glass-wb-picker-button-height: 28px;
   --glass-wb-picker-button-radius: 8px;
-  --glass-wb-picker-button-font-size: 13px;
+  --glass-wb-picker-button-font-size: var(--glass-type-body-field-size);
   --glass-wb-picker-button-pad-x: 10px;
   --glass-wb-picker-button-hover-bg: var(--glass-wb-text-cta-hover-bg);
   --glass-wb-picker-button-active-bg: var(--glass-wb-soft-active-bg);
@@ -1029,7 +1082,7 @@ body .t-notification {
      full = 整幅日历：透明外壳（宿主 Surface/Stage 承载材质），Quiet 分割线；
      card = 独立玻璃卡片：Floating Plate 近白微透 + soft shadow + hairline（禁 Host Tray / 双托盘）。
      日格密度与选中/悬停/今天态复用 picker 日格 token，DatePicker ↔ Calendar 同套 Glass 日历语言。 */
-  --glass-wb-calendar-font-size: 13px;
+  --glass-wb-calendar-font-size: var(--glass-type-body-field-size);
   --glass-wb-calendar-color: var(--glass-text-primary);
   --glass-wb-calendar-divider: rgba(120, 160, 210, 0.16); /* 静默 hairline 分割，去 TD 2px 灰硬线 */
   --glass-wb-calendar-hairline: inset 0 0 0 1px rgba(120, 160, 210, 0.14);
@@ -1049,7 +1102,7 @@ body .t-notification {
   --glass-wb-calendar-full-pad: 20px 24px;
 
   /* 控制器 Quiet：标题 + Select / Radio / CheckTag / Button 对齐 Action Blue / Quiet Field */
-  --glass-wb-calendar-title-size: 15px;
+  --glass-wb-calendar-title-size: var(--glass-type-title-size);
   --glass-wb-calendar-title-weight: 600;
   --glass-wb-calendar-title-color: var(--glass-text-primary);
   --glass-wb-calendar-control-gap: 8px;
@@ -1092,8 +1145,8 @@ body .t-notification {
   --glass-wb-descriptions-content-color: var(--glass-text-primary);
   --glass-wb-descriptions-content-secondary: var(--glass-text-muted);
   --glass-wb-descriptions-header-color: var(--glass-text-primary);
-  --glass-wb-descriptions-label-font-size: 13px;
-  --glass-wb-descriptions-content-font-size: 13px;
+  --glass-wb-descriptions-label-font-size: var(--glass-type-label-size);
+  --glass-wb-descriptions-content-font-size: var(--glass-type-body-field-size);
   --glass-wb-descriptions-hairline: var(--td-component-stroke); /* Neutral Contour；只用于 bordered 组件网格 */
   --glass-wb-descriptions-bordered-fill: var(--glass-wb-soft-bg); /* Neutral Grid 底；复用 Soft 中性体系 */
   --glass-wb-descriptions-row-stripe: var(--glass-wb-soft-hover-bg); /* 偶数行 content 的中性一档差 */
@@ -1111,10 +1164,10 @@ body .t-notification {
      Neutral illustration 走 TDesign 默认态（不给默认插图加品牌滤镜）；
      action 间距收紧（勿沿用 --td-comp-margin-xxl 大空隙）。 */
   --glass-wb-empty-title-color: var(--glass-text-primary);
-  --glass-wb-empty-title-font-size: 14px;
+  --glass-wb-empty-title-font-size: var(--glass-type-title-size);
   --glass-wb-empty-title-font-weight: 600;
   --glass-wb-empty-description-color: var(--glass-text-muted);
-  --glass-wb-empty-description-font-size: 12px;
+  --glass-wb-empty-description-font-size: var(--glass-type-caption-size);
   --glass-wb-empty-action-margin-top: 16px;
   --glass-wb-empty-action-gap: 10px;
 
@@ -1207,19 +1260,47 @@ body .t-notification {
 
   /* Modal Scrim / Confirm Sheet / Inline Confirm */
   --glass-wb-dialog-scrim: rgba(15, 40, 80, 0.14); /* 降浅换微透（用户裁决）；FormPane overlay 共用 */
-  /* Floating Solid · WinUI ContentDialog：
-     高遮罩近实 fill + blur none + 单层 Whisper Lift；
-     fill 复用既有 L3 standalone 近白容器，不新增色板，不靠 backdrop-filter 透背后。
-     历史曾对齐 t1 .bchat；当前材质权威改为 ContentDialog，仍禁用整装 bloom / 花瓣 / Surface。
-     库消费口径：`--glass-wb-dialog-*` 是 Confirm Sheet / FormPane 的 Floating Solid 材质。 */
-  /* radius / padding 保持自觉例外：radius 走 --glass-wb-card-radius（18），
-     padding 交 TD t-dialog shell 32 节奏；不随历史 bchat 12 / 10×12 回退。 */
-  --glass-wb-dialog-fill: var(--glass-layer-l3-standalone-fill);
-  --glass-wb-dialog-blur: none;
+  /* Floating Acrylic · WinUI ContentDialog × Kit，借鉴 ice Rail（不照抄）：
+     - 色相：chroma-ice 冷晶透感（非 rail-wash 28% 透底、非中性灰 B、非 alipay 冷染）
+     - 明度：高遮罩可读（≈88%），浮层体量仍高于 Stage / Rail
+     - blur：轻亚克力；影略收，贴近 rail 的静抬升量级，仍强于轨内
+     与 L3 standalone 纯白解耦，仅 Overlay。禁 bloom / 花瓣 / Surface。
+     库消费口径：`--glass-wb-dialog-*` = Confirm Sheet / FormPane 面板材质。 */
+  /* radius / pad：radius 走 --glass-wb-card-radius（18）；
+     壳层 pad / stack gap 对齐 HTML 假页（14 / 12），不再跟 TD default 32。 */
+  --glass-wb-dialog-fill: color-mix(
+    in srgb,
+    color-mix(in srgb, var(--glass-chroma-ice) 46%, var(--glass-wb-white)) 88%,
+    transparent
+  );
+  --glass-wb-dialog-blur: blur(20px) saturate(1.2);
   --glass-wb-dialog-radius: var(--glass-wb-card-radius);
-  /* Floating Shadow (Dialog)：单层 Whisper Lift；浮层体量由 Modal Scrim 承载，不加 Ambient。 */
-  --glass-wb-dialog-shadow: 0 12px 30px rgba(15, 60, 140, 0.07);
+  /* Floating Shadow：单层静抬升（量级参考 rail-shadow，略强以托浮层）。 */
+  --glass-wb-dialog-shadow: 0 10px 26px rgba(15, 40, 80, 0.07);
+  /* 默认宽（md）；响应式见下方 media，断点对齐 TDesign Grid。 */
   --glass-wb-dialog-width: 420px;
+  --glass-wb-dialog-pad: 14px;
+  --glass-wb-dialog-stack-gap: 12px;
+  /* 边距：窄屏两侧留白，与 Grid 内容呼吸一致 */
+  --glass-wb-dialog-viewport-gutter: 32px;
+  /* Overlay Header Icon + Body Tray · Dialog / FormPane 同一套；
+     Header = 无容器底板的裸行；Icon = 实色圆标 + 悬浮影（对齐 HTML header-mark，保持圆形）；
+     Body Tray = 试装 Stage fill。 */
+  --glass-wb-overlay-header-gap: 12px;
+  --glass-wb-overlay-header-icon-size: 32px;
+  --glass-wb-overlay-header-icon-radius: 999px;
+  --glass-wb-overlay-header-icon-bg: var(--glass-wb-btn-blue);
+  --glass-wb-overlay-header-icon-color: var(--glass-wb-white);
+  --glass-wb-overlay-header-icon-shadow: 0 4px 10px rgba(47, 107, 246, 0.28);
+  --glass-wb-overlay-header-icon-bg-danger: var(--glass-wb-btn-danger);
+  --glass-wb-overlay-header-icon-shadow-danger:
+    0 4px 12px color-mix(in srgb, var(--glass-wb-btn-danger) 45%, transparent);
+  --glass-wb-overlay-header-icon-glyph: 16px;
+  /* 试装 Stage fill；非 Rail seam。 */
+  --glass-wb-overlay-body-tray-fill: var(--glass-wb-stage-fill);
+  --glass-wb-overlay-body-tray-hairline: none;
+  --glass-wb-overlay-body-tray-radius: 10px;
+  --glass-wb-overlay-body-tray-pad: 16px;
   /* DEPRECATED：Dialog Air Bloom 已下线，仅作旧主题兼容；
      禁止用于 Dialog / FormPane 面板，下轮删。 */
   --glass-wb-dialog-air:
@@ -1243,7 +1324,8 @@ body .t-notification {
   --glass-wb-form-pane-blur: var(--glass-wb-dialog-blur);
   --glass-wb-form-pane-radius: var(--glass-wb-dialog-radius);
   --glass-wb-form-pane-shadow: var(--glass-wb-dialog-shadow);
-  --glass-wb-form-pane-width: 480px;
+  /* 默认宽（md）；响应式见 Overlay 宽度 media */
+  --glass-wb-form-pane-width: 640px;
   --glass-wb-form-pane-scrim: var(--glass-wb-dialog-scrim);
   --glass-wb-popconfirm-fill: rgba(255, 255, 255, 0.94);
   --glass-wb-popconfirm-blur: blur(14px) saturate(1.1);
@@ -1290,11 +1372,11 @@ body .t-notification {
   );
   --glass-wb-table-header-blur: none;
   /* Quiet Grid 字阶：对齐 Poster → large-container conversion table
-     （Header 700 / First-col 600 / pad-x 14）。 */
-  --glass-wb-table-header-font-size: 12px;
+     （Header / Cell 同 13 / Header 700 / First-col 600 / pad-x 14）。 */
+  --glass-wb-table-header-font-size: var(--glass-wb-table-cell-font-size);
   --glass-wb-table-header-font-weight: 700;
   --glass-wb-table-header-color: var(--glass-text-primary);
-  --glass-wb-table-cell-font-size: 13px;
+  --glass-wb-table-cell-font-size: var(--glass-type-body-field-size);
   --glass-wb-table-first-col-font-weight: 600;
   --glass-wb-table-first-col-color: var(--glass-text-primary);
   --glass-wb-table-cell-pad-x: 14px;
@@ -1372,12 +1454,12 @@ body .t-notification {
   --glass-wb-list-item-pad-l: 14px 16px;
   --glass-wb-list-item-radius: 12px;
   /* 字号是 GlassList 全局契约；size 只切 padding，不再联动字号。 */
-  --glass-wb-list-title-size: 13px;
+  --glass-wb-list-title-size: var(--glass-type-body-field-size);
   --glass-wb-list-title-line-height: 20px;
   --glass-wb-list-title-weight: 600;
-  --glass-wb-list-description-size: 12px;
+  --glass-wb-list-description-size: var(--glass-type-caption-size);
   --glass-wb-list-description-line-height: 18px;
-  --glass-wb-list-item-font-size: 14px;
+  --glass-wb-list-item-font-size: var(--glass-type-body-size);
   --glass-wb-list-item-line-height: 22px;
   /* Hover Whisper：Light 提亮 Soft 洗（禁回退 text-cta 半透雾；禁压成偏暗灰板）。
      相对 soft-hover 掺白提亮，近白 Panel 上仍可辨且不发闷。 */
@@ -1404,32 +1486,30 @@ body .t-notification {
   --glass-wb-list-meta-avatar-radius: var(--glass-wb-comment-avatar-radius); /* circle 50% 对齐 Comment */
   --glass-wb-list-meta-gap: 12px;
 
-  /* Sound Wave Loading · GlassLoading（盖 t-loading）
-     默认指示器是三条竖向音浪条：冷蓝胶囊竖条水平居中、错峰 height 起伏
+  /* Sound Wave Loading · WinUI accent · Kit Action Blue · Sound Wave
+     默认指示器是三条竖向音浪条：Action Blue 单 accent 胶囊竖条水平居中、错峰 height 起伏
      （禁 scaleY，避免圆角被非等比拉伸成矩形）；全程 border-radius: 999px 胶囊态。
-     三档包围盒沿用原圆盘 16 / 24 / 32，条宽与间隙按容器比例缩放。
-     禁 TD 硬圆环、整组旋转、纯色实心核、1px 描边与锐白高光点。
+     三档包围盒矮胖：宽 20 / 28 / 36 · 高 12 / 16 / 20；条宽与间隙按容器比例缩放。
+     禁 TD 硬圆环、整组旋转、对比色实心核、1px 描边与锐白高光点。
      包裹态与 fullscreen 遮罩对齐 table loading mask（近白微透），禁实白盖板；
      文本走 secondary（Quiet），不抢指示。 */
   --glass-wb-loading-color: var(--glass-wb-message-loading-icon); /* 自定义 indicator / fallback */
   --glass-wb-loading-text-color: var(--glass-text-secondary); /* 文本 Quiet secondary */
   --glass-wb-loading-overlay: var(--glass-wb-table-loading-mask); /* 轻 mask，勿实白盖板 */
-  --glass-wb-loading-wave-size-small: 16px;
-  --glass-wb-loading-wave-size-medium: 24px;
-  --glass-wb-loading-wave-size-large: 32px;
-  --glass-wb-loading-wave-bar-width: 16%;
-  --glass-wb-loading-wave-bar-gap: 14%;
+  /* 包围盒略扁：宽 > 高；条更宽、间隙更紧 → 矮胖音浪 */
+  --glass-wb-loading-wave-size-small: 20px;
+  --glass-wb-loading-wave-size-medium: 28px;
+  --glass-wb-loading-wave-size-large: 36px;
+  --glass-wb-loading-wave-height-small: 12px;
+  --glass-wb-loading-wave-height-medium: 16px;
+  --glass-wb-loading-wave-height-large: 20px;
+  --glass-wb-loading-wave-bar-width: 22%;
+  --glass-wb-loading-wave-bar-gap: 10%;
   --glass-wb-loading-wave-bar-radius: 999px;
-  --glass-wb-loading-wave-fill: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--glass-chroma-cyan) 86%, var(--glass-chroma-ice)) 0%,
-    var(--glass-chroma-cyan) 28%,
-    var(--glass-chroma-alipay) 68%,
-    var(--glass-chroma-zhihu) 100%
-  ); /* 冷蓝音浪：冰青 → 支付宝蓝 → 知乎蓝；无锐白高光核 */
-  --glass-wb-loading-wave-duration: 1.05s;
-  --glass-wb-loading-wave-ease: cubic-bezier(0.45, 0, 0.55, 1);
-  --glass-wb-loading-wave-min-height: 38%;
+  --glass-wb-loading-wave-fill: var(--glass-wb-btn-blue); /* WinUI accent · Kit Action Blue · Sound Wave */
+  --glass-wb-loading-wave-duration: 1.28s;
+  --glass-wb-loading-wave-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --glass-wb-loading-wave-min-height: 42%;
   --glass-wb-loading-wave-peak-height: 100%;
   --glass-wb-loading-wave-rest-height: 68%; /* reduced-motion 三根等高中等高度 */
   --glass-wb-loading-wave-delay-1: -0.28s;
@@ -1476,10 +1556,10 @@ body .t-notification {
   --glass-wb-statistic-danger: var(--glass-wb-alert-error-icon); /* JD Red 品牌锚，与 alert/btn-danger 同源 */
   --glass-wb-statistic-increase: var(--glass-wb-online-text); /* trend=increase */
   --glass-wb-statistic-decrease: var(--glass-wb-alert-error-icon); /* trend=decrease */
-  --glass-wb-statistic-title-font-size: 13px;
+  --glass-wb-statistic-title-font-size: var(--glass-type-label-size);
   --glass-wb-statistic-title-font-weight: 500;
-  --glass-wb-statistic-unit-font-size: 13px;
-  --glass-wb-statistic-extra-font-size: 12px;
+  --glass-wb-statistic-unit-font-size: var(--glass-type-body-field-size);
+  --glass-wb-statistic-extra-font-size: var(--glass-type-caption-size);
   --glass-wb-statistic-value-font-weight: 600;
 
   /* Inline Banner / WinUI InfoBar · Semantic Solid
@@ -1808,7 +1888,7 @@ body .t-notification {
 
   /* L3 Panel / Card —— Card / LayerFill 分区面。
      inset = 高遮罩近白单色面，靠明度差与 Stage 分区：禁多停渐变光、blur、lift、悬浮影；
-     standalone = 比 inset 更实的 LayerFill，可叠 6–10% alipay，contour + 单档静影；
+     standalone = 比 inset 更实的纯白 LayerFill，不叠 alipay 冷染，contour + 单档静影；
      禁止双托盘、双层光柱或将 Panel 做成第三块 Frost 玻璃。 */
   --glass-layer-l3-fill: rgba(252, 254, 255, 0.56);
   --glass-layer-l3-blur: blur(18px);
@@ -1822,11 +1902,7 @@ body .t-notification {
     0 4px 12px rgba(15, 40, 80, 0.04);
   --glass-layer-l3-inset-lift: 0px;
   --glass-layer-l3-inset-hairline: var(--glass-wb-contour);
-  --glass-layer-l3-standalone-fill: color-mix(
-    in srgb,
-    var(--glass-chroma-alipay) 8%,
-    color-mix(in srgb, #ffffff 96%, transparent)
-  );
+  --glass-layer-l3-standalone-fill: var(--glass-wb-white);
   --glass-layer-l3-standalone-blur: none;
   --glass-layer-l3-standalone-shadow: 0 8px 24px rgba(15, 40, 80, 0.06);
   --glass-layer-l3-hairline: inset 0 0 0 1px rgba(120, 160, 210, 0.12);
@@ -1852,6 +1928,166 @@ body .t-notification {
   --glass-wb-breadcrumb-separator-color: var(--glass-text-muted);
 }
 
+/* Type Scale · Pad 密度（各角色 -1px，Caption 下限 11px）。
+   权威：.agents/tmp-typography-scale-spec.md；仅覆盖 size，weight / line / color 继承 Web。 */
+html[data-glass-density='pad'] {
+  --glass-type-display-size: 19px;
+  --glass-type-title-size: 15px;
+  --glass-type-body-size: 13px;
+  --glass-type-body-field-size: 12px;
+  --glass-type-label-size: 12px;
+  --glass-type-caption-size: 11px;
+  --glass-type-mono-size: 12px;
+}
+
+/* Overlay 壳层节奏 · 对齐 HTML 假页：pad 14 + 纵向 gap 12；
+   取消 TD default 32，避免内容区被挤窄、body 两侧露壳。 */
+.glass-dialog.t-dialog,
+.glass-form-pane.t-dialog {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--glass-wb-dialog-stack-gap);
+  padding: var(--glass-wb-dialog-pad);
+}
+
+.glass-dialog .t-dialog__header,
+.glass-form-pane .t-dialog__header {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  /* close 绝对定位，不占 flex，保证裸 header 行铺满内容宽 */
+  position: relative;
+}
+
+.glass-dialog .t-dialog__header-content,
+.glass-form-pane .t-dialog__header-content {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+  max-width: none;
+}
+
+.glass-dialog .t-dialog__close,
+.glass-form-pane .t-dialog__close {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  z-index: 2;
+  margin: 0;
+  transform: translateY(-50%);
+}
+
+.glass-dialog .t-dialog__body,
+.glass-form-pane .t-dialog__body {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.glass-dialog .t-dialog__footer,
+.glass-form-pane .t-dialog__footer {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Overlay Header + Body Tray · Dialog / FormPane 共用 teleport 样式
+   Header 为无容器底板的裸行，仅承载 icon + 文案；icon 默认正圆；
+   必须 width:100%，否则 flex 子项按内容收缩（曾测到 ~半宽）。 */
+.glass-dialog .glass-overlay-header,
+.glass-form-pane .glass-overlay-header {
+  display: flex;
+  align-items: center;
+  gap: var(--glass-wb-overlay-header-gap);
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  /* 壳层已负责四周呼吸；右侧保留关闭钮避让 */
+  padding: 0 40px 0 0;
+}
+
+.glass-dialog .glass-overlay-header__icon,
+.glass-form-pane .glass-overlay-header__icon {
+  display: inline-flex;
+  flex: 0 0 var(--glass-wb-overlay-header-icon-size);
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--glass-wb-overlay-header-icon-size);
+  block-size: var(--glass-wb-overlay-header-icon-size);
+  /* 默认圆形实色标 + 悬浮影（HTML header-mark 语气，圆角保持正圆） */
+  border-radius: var(--glass-wb-overlay-header-icon-radius);
+  overflow: hidden;
+  background: var(--glass-wb-overlay-header-icon-bg);
+  color: var(--glass-wb-overlay-header-icon-color);
+  line-height: 0;
+  box-shadow: var(--glass-wb-overlay-header-icon-shadow);
+  filter: none;
+}
+
+.glass-dialog .glass-overlay-header__icon--danger {
+  background: var(--glass-wb-overlay-header-icon-bg-danger);
+  box-shadow: var(--glass-wb-overlay-header-icon-shadow-danger);
+}
+
+.glass-dialog .glass-overlay-header__icon > svg,
+.glass-dialog .glass-overlay-header__icon > .t-icon,
+.glass-form-pane .glass-overlay-header__icon > svg,
+.glass-form-pane .glass-overlay-header__icon > .t-icon {
+  display: block;
+  flex: none;
+  inline-size: var(--glass-wb-overlay-header-icon-glyph);
+  block-size: var(--glass-wb-overlay-header-icon-glyph);
+  margin: 0;
+  color: currentColor;
+}
+
+.glass-dialog .glass-overlay-header__text,
+.glass-form-pane .glass-overlay-header__text {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.glass-dialog .glass-overlay-header__title,
+.glass-form-pane .glass-overlay-header__title {
+  display: block;
+  min-width: 0;
+  font-size: var(--glass-type-title-size);
+  font-weight: var(--glass-type-title-weight);
+  line-height: var(--glass-type-title-line);
+  color: var(--glass-type-title-color);
+  overflow-wrap: anywhere;
+}
+
+.glass-dialog .glass-overlay-header__subtitle,
+.glass-form-pane .glass-overlay-header__subtitle {
+  margin: 0;
+  font-size: var(--glass-type-caption-size);
+  font-weight: var(--glass-type-caption-weight);
+  line-height: var(--glass-type-caption-line);
+  color: var(--glass-type-caption-color);
+  overflow-wrap: anywhere;
+}
+
+.glass-dialog .glass-overlay-body-tray,
+.glass-form-pane .glass-overlay-body-tray {
+  /* 试看：Body Tray 使用 Stage fill；不接 Stage seam / shadow。 */
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: var(--glass-wb-overlay-body-tray-pad);
+  border-radius: var(--glass-wb-overlay-body-tray-radius);
+  background: var(--glass-wb-overlay-body-tray-fill);
+  box-shadow: var(--glass-wb-overlay-body-tray-hairline);
+}
+
 /* Overlay footer · 共享动作行（GlassDialog 默认 / GlassFormPane #footer / Lab 自定义 #footer）
    统一右对齐、居中、gap 与换行；不覆盖按钮 variant / shape。
    脚钮密度契约：取消 quiet（默认 Pill 38）；确认 primary/danger 必须 shape="round" 同入 Pill 38。 */
@@ -1870,6 +2106,44 @@ body .t-notification {
   max-width: 100%;
 }
 
+/* Overlay 默认宽 · 对齐 TDesign Grid 断点（语义映射，非嵌 Col）
+   xs <768 手机近满宽 | sm≥768 Pad | md≥992 | lg≥1200 Web | xl≥1400
+   Confirm 短确认；FormPane 表单整装（更宽一档）。 */
+@media (max-width: 767.98px) {
+  :root {
+    --glass-wb-dialog-width: calc(100vw - var(--glass-wb-dialog-viewport-gutter, 32px));
+    --glass-wb-form-pane-width: calc(100vw - var(--glass-wb-dialog-viewport-gutter, 32px));
+  }
+}
+
+@media (min-width: 768px) {
+  :root {
+    --glass-wb-dialog-width: 420px;
+    --glass-wb-form-pane-width: 560px;
+  }
+}
+
+@media (min-width: 992px) {
+  :root {
+    --glass-wb-dialog-width: 420px;
+    --glass-wb-form-pane-width: 640px;
+  }
+}
+
+@media (min-width: 1200px) {
+  :root {
+    --glass-wb-dialog-width: 480px;
+    --glass-wb-form-pane-width: 720px;
+  }
+}
+
+@media (min-width: 1400px) {
+  :root {
+    --glass-wb-dialog-width: 480px;
+    --glass-wb-form-pane-width: 720px;
+  }
+}
+
 *,
 *::before,
 *::after {
@@ -1885,16 +2159,10 @@ body,
 }
 
 body {
-  font-family:
-    'Noto Sans SC',
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    'PingFang SC',
-    'Hiragino Sans GB',
-    'Microsoft YaHei',
-    sans-serif;
-  color: var(--glass-text-primary);
+  font-family: var(--glass-font-sans);
+  font-size: var(--glass-type-body-size);
+  line-height: var(--glass-type-body-line);
+  color: var(--glass-type-body-color);
   background: var(--glass-page-bg);
   -webkit-font-smoothing: antialiased;
 }
@@ -4982,9 +5250,9 @@ body {
   line-height: var(--glass-wb-list-description-line-height);
 }
 
-/* ── Sound Wave Loading · GlassLoading（全局主题层）────────────────────
+/* ── Sound Wave Loading · WinUI accent · Kit Action Blue（全局主题层）───
    Compound Wrapper 盖 t-loading；组件只挂 .glass-loading + .glass-loading__wave，
-   本段是唯一视觉出处。默认指示器为三条竖向音浪条：冷蓝胶囊、横向居中、
+   本段是唯一视觉出处。默认指示器为三条竖向音浪条：Action Blue 单 accent、横向居中、
    错峰 height 起伏（保持 999px 胶囊，禁 scaleY 压扁圆角），无整组旋转 / 描边 /
    实心核；reduced-motion 时三根等高静止。
    文本走 secondary（Quiet）；包裹态 / fullscreen 遮罩用轻 mask，禁实白盖板。 */
@@ -5010,7 +5278,7 @@ body {
   flex: 0 0 auto;
   gap: var(--glass-wb-loading-wave-bar-gap);
   width: var(--glass-wb-loading-wave-size-medium);
-  height: var(--glass-wb-loading-wave-size-medium);
+  height: var(--glass-wb-loading-wave-height-medium);
   line-height: 0;
 }
 
@@ -5043,13 +5311,13 @@ body {
 .glass-loading.t-size-s .glass-loading__wave,
 .glass-loading .t-size-s .glass-loading__wave {
   width: var(--glass-wb-loading-wave-size-small);
-  height: var(--glass-wb-loading-wave-size-small);
+  height: var(--glass-wb-loading-wave-height-small);
 }
 
 .glass-loading.t-size-l .glass-loading__wave,
 .glass-loading .t-size-l .glass-loading__wave {
   width: var(--glass-wb-loading-wave-size-large);
-  height: var(--glass-wb-loading-wave-size-large);
+  height: var(--glass-wb-loading-wave-height-large);
 }
 
 @keyframes glass-loading--wave {

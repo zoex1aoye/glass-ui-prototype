@@ -6,6 +6,7 @@
  */
 import { nextTick, ref } from 'vue'
 
+import { AddIcon, InfoCircleIcon } from 'tdesign-icons-vue-next'
 import type { FormRules, SubmitContext } from 'tdesign-vue-next'
 
 import {
@@ -447,6 +448,7 @@ function onResetClose({ trigger }: DialogCloseContext) {
         @confirm="onDialogConfirm"
         @cancel="onDialogCancel"
       >
+        <template #icon><InfoCircleIcon /></template>
         将按当前筛选条件导出示范数据结果，是否继续？
       </GlassDialog>
       <GlassDialog
@@ -545,6 +547,7 @@ function onResetClose({ trigger }: DialogCloseContext) {
         subtitle="填写后创建一条演示条目"
         @close="onCreateClose"
       >
+        <template #icon><AddIcon /></template>
         <GlassForm
           ref="createFormRef"
           :data="createForm"
