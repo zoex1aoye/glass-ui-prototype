@@ -1,12 +1,13 @@
 <script setup lang="ts">
 /**
  * 组件实验室总览 · Lab Hub
- * 宪章 + 七色 / 深度 + 海报主技法（过渡 / 微透 / 悬浮）+ Living Demo hub。
+ * 宪章 + 文字角色 + 七色 / 深度 + 海报主技法（过渡 / 微透 / 悬浮）+ Living Demo hub。
  * 可见文案走 scheme messages（overview.*）；中文槽位与迁移前一致。
  */
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
-import { GlassPanel } from '@/components/glass'
+import { GlassButton, GlassPanel } from '@/components/glass'
 import { useGlassScheme } from '@/scheme/useGlassScheme'
 
 import LabPageShell from './LabPageShell.vue'
@@ -14,6 +15,22 @@ import './lab-shared.css'
 
 const router = useRouter()
 const { tt } = useGlassScheme()
+
+const typeRoles = [
+  'display',
+  'title',
+  'body',
+  'bodyField',
+  'label',
+  'caption',
+  'placeholder',
+  'disabled',
+  'mono',
+] as const
+
+const densityMode = ref<'web' | 'pad'>(
+  document.documentElement.dataset.glassDensity === 'pad' ? 'pad' : 'web',
+)
 
 const paletteSwatchKeys = [
   'alipay',
@@ -89,6 +106,12 @@ const hubCards = [
 function go(path: string) {
   void router.push(path)
 }
+
+function toggleDensity() {
+  densityMode.value = densityMode.value === 'web' ? 'pad' : 'web'
+  document.documentElement.dataset.glassDensity =
+    densityMode.value === 'pad' ? 'pad' : ''
+}
 </script>
 
 <template>
@@ -113,6 +136,39 @@ function go(path: string) {
           <span>{{ tt('overview.charter.tone') }}</span>
         </div>
       </div>
+    </section>
+
+    <!-- Type Specimen · T4：宪章之后、七色之前；仅消费已定 --glass-type-* token -->
+    <section class="lab-section">
+      <div class="lab-type-head">
+        <div class="lab-section-label">
+          <span class="lab-section-name">{{ tt('overview.type.name') }}</span>
+          <span class="lab-section-meta">{{ tt('overview.type.meta') }}</span>
+        </div>
+        <GlassButton
+          variant="soft"
+          class="lab-type-density"
+          :aria-label="tt('overview.type.density.aria')"
+          :aria-pressed="densityMode === 'pad'"
+          @click="toggleDensity"
+        >
+          {{
+            tt(
+              densityMode === 'pad'
+                ? 'overview.type.density.pad'
+                : 'overview.type.density.web',
+            )
+          }}
+        </GlassButton>
+      </div>
+      <ul class="lab-type-list" :aria-label="tt('overview.type.aria')">
+        <li v-for="role in typeRoles" :key="role" class="lab-type-row">
+          <span class="lab-type-role">{{ tt(`overview.type.role.${role}`) }}</span>
+          <span class="lab-type-sample" :class="`lab-type-sample--${role}`">
+            {{ tt(`overview.type.sample.${role}`) }}
+          </span>
+        </li>
+      </ul>
     </section>
 
     <!-- 七色分工 · 深度五档（自 Poster §2 迁入） -->

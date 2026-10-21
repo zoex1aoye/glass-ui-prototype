@@ -632,66 +632,6 @@ function togglePillLoading() {
       </div>
     </section>
 
-    <!-- TDesign State Matrix（裸 t-button 对照） -->
-    <section class="lab-section">
-      <div class="lab-section-label">
-        <span class="lab-section-name">{{ tt('actions.section.tdMatrix') }}</span>
-        <span class="lab-section-meta">
-          theme / variant / shape / size / ghost / loading / disabled · 仅 Lab 对照，不进入 Glass 导出面
-        </span>
-      </div>
-      <div class="lab-controls">
-        <div class="lab-control-row">
-          <span class="lab-control-label">theme × variant</span>
-          <div class="lab-control-row-items">
-            <t-button theme="default" variant="base">default base</t-button>
-            <t-button theme="primary" variant="base">primary base</t-button>
-            <t-button theme="danger" variant="base">danger base</t-button>
-            <t-button theme="warning" variant="base">warning base</t-button>
-            <t-button theme="success" variant="base">success base</t-button>
-          </div>
-          <div class="lab-control-row-items">
-            <t-button theme="default" variant="outline">outline</t-button>
-            <t-button theme="primary" variant="outline">primary outline</t-button>
-            <t-button theme="primary" variant="dashed">dashed</t-button>
-            <t-button theme="primary" variant="text">text</t-button>
-            <t-button theme="danger" variant="text">danger text</t-button>
-          </div>
-        </div>
-        <div class="lab-control-row">
-          <span class="lab-control-label">shape · size</span>
-          <div class="lab-control-row-items">
-            <t-button theme="primary" shape="square">square</t-button>
-            <t-button theme="primary" shape="round">round</t-button>
-            <t-button theme="primary" shape="circle">circle</t-button>
-          </div>
-          <div class="lab-control-row-items">
-            <t-button theme="primary" size="extra-small">extra-small</t-button>
-            <t-button theme="primary" size="small">small</t-button>
-            <t-button theme="primary" size="medium">medium</t-button>
-            <t-button theme="primary" size="large">large</t-button>
-          </div>
-        </div>
-        <div class="lab-control-row">
-          <span class="lab-control-label">ghost · loading · disabled</span>
-          <div class="lab-control-row-items">
-            <t-button theme="primary" ghost>ghost</t-button>
-            <t-button theme="danger" ghost variant="outline">danger ghost outline</t-button>
-            <t-button theme="primary" loading>loading</t-button>
-            <t-button theme="primary" loading variant="outline">loading outline</t-button>
-            <t-button theme="primary" disabled>disabled</t-button>
-            <t-button theme="primary" disabled variant="outline">disabled outline</t-button>
-            <t-button theme="primary" disabled ghost>disabled ghost</t-button>
-          </div>
-        </div>
-        <div class="lab-control-row">
-          <span class="lab-control-label">block</span>
-          <div class="lab-control-row-items" style="width: 100%">
-            <t-button theme="primary" block>block primary</t-button>
-          </div>
-        </div>
-      </div>
-    </section>
   </LabPageShell>
 </template>
 

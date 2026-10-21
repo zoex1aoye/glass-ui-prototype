@@ -46,12 +46,12 @@ alpha 叙事：default **0.22** → hover **0.10**（Fade）→ active **0.14**�
 | 态 | 位移 | 填充 / 字色 | 轮廓 |
 |---|---|---|---|
 | rest | 0 | `--glass-wb-pill-bg` / `--glass-wb-pill-text` | `border: none` + `--glass-wb-tonal-hairline`（无外影） |
-| hover | `translateY(var(--glass-wb-control-lift-quiet))` | `--glass-wb-pill-hover-bg`；无 brightness | hairline Fade → `--glass-wb-tonal-hairline-hover` |
+| hover | `translateY(var(--glass-wb-control-lift-quiet))` | 保持 rest `--glass-wb-pill-bg`；无 Color Shift / brightness（WinUI Subtle） | hairline Fade → `--glass-wb-tonal-hairline-hover` |
 | active | `translateY(--glass-wb-control-press-y)` + scale 0.98 | **Quiet Active Wash**：`--glass-wb-pill-quiet-active-bg` / `-color`（深字，不反转） | `--glass-wb-tonal-hairline-active` |
 | focus-visible | 无位移 | 不变 | rest hairline + `--glass-wb-control-focus-ring` |
 
 **Icon Leading**：`#icon` slot（左侧 14–16px，gap 6–8px）；`text` / default 文案 slot 保留。  
-**禁止**：`--glass-wb-pill-hover-border` / 实线描边加深；Primary 幅度；Press Invert。reduced-motion：无 transform。
+**禁止**：hover Color Shift（`--glass-wb-pill-hover-bg`）；`--glass-wb-pill-hover-border` / 实线描边加深；soft 外影 bloom；Primary 幅度；Press Invert。reduced-motion：无 transform。
 
 ## Input Quiet Chrome（裁定 C · Field / Capsule）
 
@@ -113,7 +113,7 @@ Don't：`GlassStage`（会话画布）· `GlassCard`（Cite）· Host Tray / 二
 
 Lab `/data` 橱窗宿主（Descriptions / Empty / List / Loading / Skeleton / Statistic 同路径）：`GlassSurface → GlassPanel variant="standalone" → GlassXxx`。组件本体仍透明底 host-first；禁再用 Soft Surface + `border-soft` 小卡冒充容器。历史密信息详情板（DetailPlate / `.bub-a`）已并入 L3 standalone。
 
-**Loading 动效**：默认三条竖向音浪（`.glass-loading__wave` / `__wave-bar`：三根冷蓝胶囊、条宽 16% / 间隙 14%、`border-radius: 999px`；1.05s 错峰 `height 38%→100%`，禁 `scaleY` 以免圆角压扁成矩形；整组不旋转）。禁 TD 硬圆环 / 锐白核；`prefers-reduced-motion` 下三根等高中等高度静止。
+**Loading 动效**：默认三条竖向音浪（`.glass-loading__wave` / `__wave-bar`：三根胶囊、**矮胖**包围盒宽>高、条宽 22% / 间隙 10%、`border-radius: 999px`；填充 **Kit Action Blue** 单 accent `var(--glass-wb-btn-blue)`，禁 chroma 多色相；`1.28s` / `cubic-bezier(0.4, 0, 0.2, 1)` 错峰 `height 42%→100%`，禁 `scaleY` 以免圆角压扁成矩形；整组不旋转）。对齐 WinUI 不确定进度语气；禁 TD 硬圆环 / 锐白核；`prefers-reduced-motion` 下三根等高中等高度静止。
 
 **Skeleton 动效**：微透 · 叠压染色（`.cell-see` / `.lay`：冷蓝半透底 + cyan/zhihu 双层软染强呼吸叠压；**禁**近白高光 / chalk 扫光）。gradient 染层 opacity 约 `0.1→0.95`（2.2s）；flashed 对呼吸约 `0.06↔0.98`（1.2s）。`prefers-reduced-motion` 下静止。
 

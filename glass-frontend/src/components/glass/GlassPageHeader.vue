@@ -6,6 +6,7 @@
  * 单档 Region Layer：唯一 fill 含轻 alipay whisper；四周 1px contour + 极轻 rest，无 blur / lift。
  * 材质只吃 `--glass-layer-l2-*`；薄原生壳，禁止包 t-card、禁止白核实色核、禁止第二 Host Tray。
  * slots: leading / default（标题区补充）/ actions
+ * leading 图标徽标默认圆形：消费方加 class="glass-page-header__mark"
  */
 defineProps<{
   title?: string
@@ -64,6 +65,19 @@ defineProps<{
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+/* Leading icon mark · 默认圆形（消费方：class="glass-page-header__mark"；:slotted 才能吃到 slot） */
+:slotted(.glass-page-header__mark) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  color: var(--glass-wb-white);
+  background: var(--glass-wb-btn-blue);
+  box-shadow: var(--glass-wb-tag-shadow);
 }
 
 .glass-page-header__text {

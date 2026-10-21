@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { SearchIcon } from 'tdesign-icons-vue-next'
 import type { BreadcrumbItemProps, RadioValue } from 'tdesign-vue-next'
 
 import {
@@ -10,6 +9,7 @@ import {
   GlassMenuGroup,
   GlassMenuItem,
   GlassRadioGroup,
+  GlassSearchCapsule,
 } from '@/components/glass'
 import { messageTextMatches } from '@/scheme/messages'
 import { provideGlassScheme } from '@/scheme/useGlassScheme'
@@ -106,11 +106,8 @@ function onColorScheme(next: RadioValue): void {
       </div>
 
       <div class="docs-search">
-        <SearchIcon class="docs-search-icon" size="16" />
-        <input
+        <GlassSearchCapsule
           v-model="query"
-          class="docs-search-input"
-          type="search"
           :placeholder="tt('shell.filter.placeholder')"
           :aria-label="tt('shell.filter.aria')"
         />
@@ -237,44 +234,20 @@ function onColorScheme(next: RadioValue): void {
 }
 
 .docs-brand-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--glass-text-primary);
+  font-size: var(--glass-type-title-size);
+  font-weight: var(--glass-type-title-weight);
+  color: var(--glass-type-title-color);
   letter-spacing: 0.1px;
   white-space: nowrap;
 }
 
 .docs-search {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  height: 34px;
-  padding: 0 10px;
+  width: 100%;
   margin-bottom: 10px;
-  border-radius: 10px;
-  background: var(--glass-wb-search-bg);
-  -webkit-backdrop-filter: var(--glass-wb-search-blur);
-  backdrop-filter: var(--glass-wb-search-blur);
-  box-shadow: var(--glass-wb-field-hairline);
 }
 
-.docs-search-icon {
-  color: var(--glass-text-muted);
-  flex-shrink: 0;
-}
-
-.docs-search-input {
-  flex: 1;
-  min-width: 0;
-  border: none;
-  outline: none;
-  background: transparent;
-  font-size: 13px;
-  color: var(--glass-text-primary);
-}
-
-.docs-search-input::placeholder {
-  color: var(--glass-text-muted);
+.docs-search :deep(.glass-search-capsule) {
+  width: 100%;
 }
 
 .docs-nav {
@@ -298,10 +271,10 @@ function onColorScheme(next: RadioValue): void {
 
 .docs-nav-menu :deep(.t-menu-group__title) {
   padding: 8px 10px 6px;
-  color: var(--glass-text-muted);
-  font-size: 11px;
-  font-weight: 600;
-  line-height: 1.4;
+  color: var(--glass-type-label-color);
+  font-size: var(--glass-type-label-size);
+  font-weight: var(--glass-type-label-weight);
+  line-height: var(--glass-type-label-line);
   letter-spacing: 0.4px;
   text-transform: uppercase;
 }
@@ -342,14 +315,16 @@ function onColorScheme(next: RadioValue): void {
 
 .docs-nav-item-label {
   white-space: nowrap;
-  font-size: 13px;
+  font-size: var(--glass-type-label-size);
+  font-weight: var(--glass-type-label-weight);
+  color: var(--glass-type-label-color);
 }
 
 .docs-nav-item-desc {
-  font-size: 11px;
-  font-weight: 400;
-  line-height: 1.3;
-  color: var(--glass-text-muted);
+  font-size: var(--glass-type-caption-size);
+  font-weight: var(--glass-type-caption-weight);
+  line-height: var(--glass-type-caption-line);
+  color: var(--glass-type-caption-color);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -366,8 +341,10 @@ function onColorScheme(next: RadioValue): void {
 }
 
 .docs-sidebar-foot-text {
-  font-size: 11px;
-  color: var(--glass-text-muted);
+  font-size: var(--glass-type-caption-size);
+  font-weight: var(--glass-type-caption-weight);
+  line-height: var(--glass-type-caption-line);
+  color: var(--glass-type-caption-color);
 }
 
 /* ========== 右侧主区 ========== */

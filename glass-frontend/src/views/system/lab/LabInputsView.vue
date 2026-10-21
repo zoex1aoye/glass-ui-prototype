@@ -45,7 +45,6 @@ const iconSuggestions = [
 
 const searchKeyword = ref('')
 const fieldText = ref('')
-const bareText = ref('')
 const formName = ref('')
 const composerText = ref('')
 const roleName = ref('角色 A')
@@ -422,41 +421,6 @@ function onCalendarMonthChange(
       </div>
     </section>
 
-    <!-- 裸 t-input 对照 -->
-    <section class="lab-section">
-      <div class="lab-section-label">
-        <span class="lab-section-name">{{ tt('inputs.section.bareInput') }}</span>
-        <span class="lab-section-meta">
-          保留 TDesign 默认矩形 focus（.t-input--focused 的 border + box-shadow 贴 --td-radius-default）·
-          用来显 Kill Inner Rect 差异
-        </span>
-      </div>
-      <div class="lab-controls">
-        <div class="lab-control-row">
-          <span class="lab-control-label">裸 t-input vs GlassInput（同 placeholder 看 focus）</span>
-          <div class="lab-control-row-items">
-            <t-input v-model="bareText" placeholder="裸 t-input（矩形 focus）" class="lab-input" />
-            <GlassInput
-              v-model="bareText"
-              placeholder="Glass（柔环 + 无内芯框）"
-              aria-label="Glass 输入对照"
-              class="lab-input"
-            />
-            <t-input
-              v-model="bareText"
-              placeholder="裸 t-input borderless"
-              borderless
-              class="lab-input"
-            />
-          </div>
-          <span class="lab-control-note">
-            对照结论：Glass 外层 focus-within 画柔环（Follows Radius）；裸 t-input 在内芯画矩形 ring——差异即 Kill
-            Inner Rect 目标。
-          </span>
-        </div>
-      </div>
-    </section>
-
     <!-- Form 内嵌 -->
     <section class="lab-section">
       <div class="lab-section-label">
@@ -513,7 +477,7 @@ function onCalendarMonthChange(
           <span class="lab-control-note">
             前 3 枚挂 Icon Leading（#icon slot，左侧 15px）；后 3 枚纯文案对照（WelcomePanel
             可保持纯文案对齐 jpg）。rest = inset hairline（tonal-hairline）· hover = Suggest Chip Lift
-            (-1px) + Color Shift（pill-hover-bg）+ hairline Fade · active = Quiet Active Wash
+            (-1px) + hairline Fade（WinUI Subtle，保持 pill-bg，无 Color Shift）· active = Quiet Active Wash
             （pill-quiet-active-bg / color，深字不反转）+ scale 0.98 · focus-visible = control-focus-ring。
             禁止 pill-hover-border 实线加深 / Primary 幅度 / Press Invert。
           </span>
@@ -835,22 +799,6 @@ function onCalendarMonthChange(
       </div>
     </section>
 
-    <!-- Raw contrast -->
-    <section class="lab-section">
-      <div class="lab-section-label">
-        <span class="lab-section-name">{{ tt('inputs.section.bareDate') }}</span>
-        <span class="lab-section-meta">仅用于对照，不进入 components/glass 导出；演示 v-model 透传一致</span>
-      </div>
-      <div class="lab-controls">
-        <div class="lab-control-row">
-          <span class="lab-control-label">t-date-picker / t-time-picker 默认外观</span>
-          <div class="lab-control-row-items">
-            <t-date-picker v-model="dateValue" class="lab-input" />
-            <t-time-picker v-model="timeValue" class="lab-input" />
-          </div>
-        </div>
-      </div>
-    </section>
   </LabPageShell>
 </template>
 

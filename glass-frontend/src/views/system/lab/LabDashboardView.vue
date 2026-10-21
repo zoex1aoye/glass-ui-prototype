@@ -337,7 +337,7 @@ onBeforeUnmount(() => {
             class="dashboard-page-header"
           >
             <template #leading>
-              <span class="dashboard-header-mark" aria-hidden="true">
+              <span class="glass-page-header__mark" aria-hidden="true">
                 <RefreshIcon size="16" />
               </span>
             </template>
@@ -745,18 +745,6 @@ onBeforeUnmount(() => {
 #dashboard-quality-section,
 #dashboard-delivery-section {
   scroll-margin-top: 8px;
-}
-
-.dashboard-header-mark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 10px;
-  color: var(--glass-wb-white);
-  background: var(--glass-wb-btn-blue);
-  box-shadow: var(--glass-wb-tag-shadow);
 }
 
 .dashboard-section {

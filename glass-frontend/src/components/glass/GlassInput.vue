@@ -173,6 +173,8 @@ const inputOptionalBind = computed(() => {
 .glass-input__control :deep(.t-input--borderless:not(.t-input--focused).t-is-disabled),
 .glass-input__control :deep(.t-input.t-is-disabled),
 .glass-input__control :deep(.t-input.t-is-disabled:hover),
+.glass-input__control :deep(.t-input.t-is-readonly),
+.glass-input__control :deep(.t-input.t-is-readonly:hover),
 .glass-input__control :deep(.t-input.t-is-focused) {
   border: none;
   border-color: transparent;
@@ -187,12 +189,12 @@ const inputOptionalBind = computed(() => {
 }
 
 .glass-input__control :deep(.t-input__inner) {
-  font-size: 13px;
-  color: var(--glass-text-primary);
+  font-size: var(--glass-type-body-field-size);
+  color: var(--glass-type-body-field-color);
 }
 
 .glass-input__control :deep(.t-input__inner::placeholder) {
-  color: var(--glass-text-muted);
+  color: var(--glass-type-placeholder-color);
 }
 
 .glass-input__control :deep(.t-input__prefix-icon) {

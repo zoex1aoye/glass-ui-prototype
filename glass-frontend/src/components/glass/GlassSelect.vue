@@ -259,12 +259,12 @@ const mergedPopupProps = computed<TdPopupProps>(() => {
 
 .glass-select__control :deep(.t-input__inner),
 .glass-select__control :deep(.t-select__input) {
-  font-size: 13px;
-  color: var(--glass-text-primary);
+  font-size: var(--glass-type-body-field-size);
+  color: var(--glass-type-body-field-color);
 }
 
 .glass-select__control :deep(.t-input__inner::placeholder) {
-  color: var(--glass-text-muted);
+  color: var(--glass-type-placeholder-color);
 }
 
 .glass-select__control :deep(.t-select__right-icon),

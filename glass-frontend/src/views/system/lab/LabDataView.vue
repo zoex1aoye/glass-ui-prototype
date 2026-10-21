@@ -1563,11 +1563,6 @@ function replayStatisticAnimation() {
                   </GlassAvatarGroup>
                 </div>
               </div>
-              <div class="lab-avatar-raw-row">
-                <span class="lab-avatar-group-caption">裸 t-avatar 对照（不进导出面）</span>
-                <t-avatar size="medium">王</t-avatar>
-                <GlassAvatar size="medium">王</GlassAvatar>
-              </div>
             </div>
           </GlassPanel>
         </div>
@@ -2426,19 +2421,6 @@ function replayStatisticAnimation() {
 .lab-avatar-group-caption {
   font-size: 11px;
   color: var(--glass-text-muted);
-}
-
-.lab-avatar-raw-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px;
-  padding-top: 12px;
-  border-top: 1px solid var(--glass-border-soft);
-}
-
-.lab-avatar-raw-row .lab-avatar-group-caption {
-  margin-right: 4px;
 }
 
 .lab-bubble-host {

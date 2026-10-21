@@ -618,10 +618,10 @@ const widthSyncOptions = [
           <p class="lab-control-note">readonly</p>
           <GlassForm :data="lockedData" label-align="top" :colon="false" :status-icon="false" readonly>
             <t-form-item label="条目名称" name="name">
-              <t-input v-model="lockedData.name" />
+              <GlassInput v-model="lockedData.name" />
             </t-form-item>
             <t-form-item label="负责人" name="owner">
-              <t-select
+              <GlassSelect
                 v-model="lockedData.owner"
                 :options="[
                   { label: '王倩', value: '王倩' },

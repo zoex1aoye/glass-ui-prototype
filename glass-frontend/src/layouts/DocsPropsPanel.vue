@@ -6,11 +6,15 @@
  * 样式只走 --glass-* / --glass-wb-* token，禁止魔法 hex/rgba。
  */
 import { computed } from 'vue'
+import type { TdSelectProps } from 'tdesign-vue-next'
 
+import { GlassButton, GlassInput, GlassSelect } from '@/components/glass'
 import { useGlassScheme } from '@/scheme/useGlassScheme'
 
 import { useDocsProps } from './useDocsProps'
 import type { DocsPropControl, DocsPropValue } from './useDocsProps'
+
+type GlassSelectValue = TdSelectProps['modelValue']
 
 const store = useDocsProps()
 const { tt } = useGlassScheme()
@@ -39,16 +43,24 @@ function setControl(control: DocsPropControl, value: DocsPropValue): void {
   if (block) store.setValue(block.id, control.key, value)
 }
 
-function onSelectChange(control: DocsPropControl, event: Event): void {
-  setControl(control, (event.target as HTMLSelectElement).value)
+function selectOptions(control: DocsPropControl): Array<{ label: string; value: string }> {
+  return (control.options ?? []).map((option) => ({
+    label: option.label,
+    value: String(option.value),
+  }))
+}
+
+function onSelectUpdate(control: DocsPropControl, value: GlassSelectValue): void {
+  const next = Array.isArray(value) ? value[0] : value
+  setControl(control, next == null ? '' : String(next))
 }
 
 function onToggleBoolean(control: DocsPropControl): void {
   setControl(control, !Boolean(controlValue(control)))
 }
 
-function onTextInput(control: DocsPropControl, event: Event): void {
-  setControl(control, (event.target as HTMLInputElement).value)
+function onTextUpdate(control: DocsPropControl, value: string): void {
+  setControl(control, value)
 }
 </script>
 
@@ -56,9 +68,9 @@ function onTextInput(control: DocsPropControl, event: Event): void {
   <div class="docs-props-panel">
     <div class="docs-props-head">
       <span class="docs-props-title">{{ tt('shell.props.title') }}</span>
-      <button v-if="activeDemo" type="button" class="docs-props-clear" @click="selectDemo(null)">
+      <GlassButton v-if="activeDemo" variant="text" @click="selectDemo(null)">
         {{ tt('shell.props.back') }}
-      </button>
+      </GlassButton>
     </div>
 
     <p v-if="blocks.length === 0" class="docs-props-empty">
@@ -80,21 +92,15 @@ function onTextInput(control: DocsPropControl, event: Event): void {
             <span class="docs-prop-value">{{ controlDisplay(control) }}</span>
           </label>
 
-          <select
+          <GlassSelect
             v-if="control.type === 'select'"
             :id="`docs-prop-${control.key}`"
-            class="docs-prop-select"
-            :value="String(controlValue(control))"
-            @change="onSelectChange(control, $event)"
-          >
-            <option
-              v-for="option in control.options"
-              :key="String(option.value)"
-              :value="String(option.value)"
-            >
-              {{ option.label }}
-            </option>
-          </select>
+            class="docs-prop-field"
+            :model-value="String(controlValue(control))"
+            :options="selectOptions(control)"
+            :aria-label="control.label"
+            @update:model-value="onSelectUpdate(control, $event)"
+          />
 
           <button
             v-else-if="control.type === 'boolean'"
@@ -110,14 +116,13 @@ function onTextInput(control: DocsPropControl, event: Event): void {
             <span class="docs-prop-switch-thumb"></span>
           </button>
 
-          <input
+          <GlassInput
             v-else
             :id="`docs-prop-${control.key}`"
-            class="docs-prop-text"
-            type="text"
-            :value="String(controlValue(control))"
+            class="docs-prop-field"
+            :model-value="String(controlValue(control))"
             :aria-label="control.label"
-            @input="onTextInput(control, $event)"
+            @update:model-value="onTextUpdate(control, $event)"
           />
         </div>
       </div>
@@ -157,27 +162,6 @@ function onTextInput(control: DocsPropControl, event: Event): void {
   font-size: 13px;
   font-weight: 600;
   color: var(--glass-text-primary);
-}
-
-.docs-props-clear {
-  height: 24px;
-  padding: 0 8px;
-  border: none;
-  border-radius: 7px;
-  background: transparent;
-  color: var(--glass-wb-text-cta-color);
-  font-size: 12px;
-  cursor: pointer;
-  transition: background-color 0.15s ease;
-}
-
-.docs-props-clear:hover {
-  background: var(--glass-wb-text-cta-hover-bg);
-}
-
-.docs-props-clear:focus-visible {
-  outline: none;
-  box-shadow: var(--glass-wb-control-focus-ring);
 }
 
 .docs-props-empty {
@@ -238,38 +222,8 @@ function onTextInput(control: DocsPropControl, event: Event): void {
   white-space: nowrap;
 }
 
-.docs-prop-select,
-.docs-prop-text {
+.docs-prop-field {
   width: 100%;
-  height: 30px;
-  padding: 0 8px;
-  border: none;
-  border-radius: 8px;
-  background: var(--glass-wb-search-bg);
-  box-shadow: var(--glass-wb-field-hairline);
-  color: var(--glass-text-primary);
-  font-size: 12px;
-  outline: none;
-}
-
-.docs-prop-select {
-  appearance: none;
-  -webkit-appearance: none;
-  padding-right: 26px;
-  background-image:
-    linear-gradient(45deg, transparent 50%, var(--glass-text-muted) 50%),
-    linear-gradient(135deg, var(--glass-text-muted) 50%, transparent 50%);
-  background-position:
-    calc(100% - 14px) 50%,
-    calc(100% - 9px) 50%;
-  background-size: 5px 5px;
-  background-repeat: no-repeat;
-  cursor: pointer;
-}
-
-.docs-prop-select:focus-visible,
-.docs-prop-text:focus-visible {
-  box-shadow: var(--glass-wb-control-focus-ring);
 }
 
 .docs-prop-switch {

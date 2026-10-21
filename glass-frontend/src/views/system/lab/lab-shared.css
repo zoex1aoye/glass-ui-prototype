@@ -19,9 +19,10 @@
 
 .lab-title {
   margin: 0;
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--glass-text-primary);
+  font-size: var(--glass-type-display-size);
+  font-weight: var(--glass-type-display-weight);
+  line-height: var(--glass-type-display-line);
+  color: var(--glass-type-display-color);
 }
 
 .lab-desc {
@@ -589,6 +590,121 @@
   min-width: 72px;
 }
 
+/* Overview · Type Specimen：纵向字阶清单，仅消费已定 --glass-type-* token。 */
+.lab-type-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.lab-type-head .lab-section-label {
+  min-width: 0;
+}
+
+.lab-type-density {
+  flex-shrink: 0;
+}
+
+.lab-type-list {
+  margin: 0;
+  padding: 4px 18px;
+  border: 1px solid var(--glass-border-soft);
+  border-radius: var(--glass-wb-card-radius);
+  background: var(--glass-panel-bg);
+  list-style: none;
+}
+
+.lab-type-row {
+  display: grid;
+  grid-template-columns: minmax(88px, 116px) minmax(0, 1fr);
+  gap: 20px;
+  align-items: baseline;
+  padding: 13px 0;
+  border-top: 1px solid var(--glass-border-soft);
+}
+
+.lab-type-row:first-child {
+  border-top: 0;
+}
+
+.lab-type-role {
+  font-size: var(--glass-type-label-size);
+  font-weight: var(--glass-type-label-weight);
+  line-height: var(--glass-type-label-line);
+  color: var(--glass-type-label-color);
+}
+
+.lab-type-sample {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-family: var(--glass-font-sans);
+}
+
+.lab-type-sample--display {
+  font-size: var(--glass-type-display-size);
+  font-weight: var(--glass-type-display-weight);
+  line-height: var(--glass-type-display-line);
+  color: var(--glass-type-display-color);
+}
+
+.lab-type-sample--title {
+  font-size: var(--glass-type-title-size);
+  font-weight: var(--glass-type-title-weight);
+  line-height: var(--glass-type-title-line);
+  color: var(--glass-type-title-color);
+}
+
+.lab-type-sample--body {
+  font-size: var(--glass-type-body-size);
+  font-weight: var(--glass-type-body-weight);
+  line-height: var(--glass-type-body-line);
+  color: var(--glass-type-body-color);
+}
+
+.lab-type-sample--bodyField {
+  font-size: var(--glass-type-body-field-size);
+  font-weight: var(--glass-type-body-field-weight);
+  line-height: var(--glass-type-body-field-line);
+  color: var(--glass-type-body-field-color);
+}
+
+.lab-type-sample--label {
+  font-size: var(--glass-type-label-size);
+  font-weight: var(--glass-type-label-weight);
+  line-height: var(--glass-type-label-line);
+  color: var(--glass-type-label-color);
+}
+
+.lab-type-sample--caption {
+  font-size: var(--glass-type-caption-size);
+  font-weight: var(--glass-type-caption-weight);
+  line-height: var(--glass-type-caption-line);
+  color: var(--glass-type-caption-color);
+}
+
+.lab-type-sample--placeholder {
+  font-size: var(--glass-type-body-field-size);
+  font-weight: var(--glass-type-body-field-weight);
+  line-height: var(--glass-type-body-field-line);
+  color: var(--glass-type-placeholder-color);
+}
+
+.lab-type-sample--disabled {
+  font-size: var(--glass-type-body-size);
+  font-weight: var(--glass-type-body-weight);
+  line-height: var(--glass-type-body-line);
+  color: var(--glass-type-disabled-color);
+}
+
+.lab-type-sample--mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: var(--glass-type-mono-size);
+  font-weight: var(--glass-type-mono-weight);
+  line-height: var(--glass-type-mono-line);
+  color: var(--glass-type-mono-color);
+}
+
 .lab-todo-list {
   margin: 0;
   padding-left: 18px;
@@ -961,6 +1077,24 @@
 @media (max-width: 640px) {
   .lab-depth-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .lab-type-head {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .lab-type-density {
+    align-self: flex-start;
+  }
+
+  .lab-type-list {
+    padding-inline: 14px;
+  }
+
+  .lab-type-row {
+    grid-template-columns: 1fr;
+    gap: 5px;
   }
 }
 

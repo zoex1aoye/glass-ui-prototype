@@ -5,11 +5,11 @@
  *
  * 本质 Quiet/soft pill（Tonal 轨 + Quiet 幅度），非 Primary。
  * Interaction：
- * - Suggest Chip Lift：hover translateY(lift-quiet)；禁 Primary 幅度
+ * - Suggest Chip Lift：hover translateY(lift-quiet) + hairline Fade；保持 rest 底，无 Color Shift（对齐 WinUI Subtle）
  * - Quiet Active Wash：active 略深同色 + 深字，禁止 Press Invert
  * - Icon Leading：可选 #icon 左侧 14–16px；text / default 文案 slot 保留
  * - 轮廓 inset hairline（tonal-hairline*）；禁实线 pill-border / pill-hover-border
- * reduced-motion：取消位移与 scale，保留 wash / hairline / ring。
+ * reduced-motion：取消位移与 scale，保留 Quiet Active Wash / hairline / ring。
  * 色值一律走 --glass-wb-*，禁止魔法色。
  */
 withDefaults(
@@ -78,10 +78,10 @@ const emit = defineEmits<{
   color: currentColor;
 }
 
-/* Suggest Chip Lift + Color Shift：抬 1px + wash；hairline Fade，禁 pill-hover-border */
+/* Suggest Chip Lift（WinUI Subtle）：抬 1px + hairline Fade；保持 rest 底，无 Color Shift */
 .glass-suggest-chip:not(:disabled):hover {
   border: none;
-  background: var(--glass-wb-pill-hover-bg);
+  background: var(--glass-wb-pill-bg);
   color: var(--glass-wb-pill-text);
   filter: none;
   box-shadow: var(--glass-wb-tonal-hairline-hover);

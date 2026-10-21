@@ -189,12 +189,12 @@ defineExpose({
   margin-bottom: 0;
 }
 
-/* Label Rhythm — 公共：13px 次级色 */
+/* Label Rhythm — 公共角色走 Type Scale */
 .glass-form__form :deep(.t-form__label) {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--glass-text-secondary);
-  line-height: 1.4;
+  font-size: var(--glass-type-label-size);
+  font-weight: var(--glass-type-label-weight);
+  color: var(--glass-type-label-color);
+  line-height: var(--glass-type-label-line);
 }
 
 /* Required Mark — 柔化：收敛 TDesign 默认粉红至 Validation Whisper error 同族 token */
@@ -275,8 +275,8 @@ defineExpose({
 
 .glass-form__form :deep(.t-input__inner),
 .glass-form__form :deep(.t-select__input) {
-  font-size: 13px;
-  color: var(--glass-text-primary);
+  font-size: var(--glass-type-body-field-size);
+  color: var(--glass-type-body-field-color);
 }
 
 /* Textarea：Quiet chrome 挂在 __inner（TDesign 真实芯），外层 t-textarea 只做布局 */
@@ -289,8 +289,8 @@ defineExpose({
 }
 
 .glass-form__form :deep(.t-textarea__inner) {
-  font-size: 13px;
-  color: var(--glass-text-primary);
+  font-size: var(--glass-type-body-field-size);
+  color: var(--glass-type-body-field-color);
   min-height: 80px;
   padding: 10px 12px;
   line-height: 1.5;
@@ -475,11 +475,19 @@ defineExpose({
 .glass-form__form :deep(.t-input__help),
 .glass-form__form :deep(.t-tips),
 .glass-form__form :deep(.t-form__status) {
-  font-size: 12px;
-  line-height: 1.35;
+  font-size: var(--glass-type-caption-size);
+  font-weight: var(--glass-type-caption-weight);
+  line-height: var(--glass-type-caption-line);
   margin-top: 4px;
-  color: var(--glass-wb-form-error);
+  color: var(--glass-type-caption-color);
   text-align: left;
+}
+
+.glass-form__form :deep(.t-form__status.t-is-error),
+.glass-form__form :deep(.t-tips.t-is-error),
+.glass-form__form :deep(.t-is-error .t-input__extra),
+.glass-form__form :deep(.t-is-error .t-input__help) {
+  color: var(--glass-wb-form-error);
 }
 
 .glass-form__form :deep(.t-form__status.t-is-success),
@@ -606,14 +614,15 @@ defineExpose({
 /* Choice Quiet — Checkbox / Radio：字色 secondary、勾选统一 Action Blue、禁用降透、无脏方框 */
 .glass-form__form :deep(.t-checkbox),
 .glass-form__form :deep(.t-radio) {
-  color: var(--glass-text-secondary);
-  font-size: 13px;
+  color: var(--glass-type-label-color);
+  font-size: var(--glass-type-label-size);
 }
 
 .glass-form__form :deep(.t-checkbox__label),
 .glass-form__form :deep(.t-radio__label) {
-  color: var(--glass-text-secondary);
-  font-size: 13px;
+  color: var(--glass-type-label-color);
+  font-size: var(--glass-type-label-size);
+  font-weight: var(--glass-type-label-weight);
 }
 
 .glass-form__form :deep(.t-checkbox__input),
@@ -664,10 +673,10 @@ defineExpose({
 }
 
 /* 只读 Quiet 边界：只挂最外 chrome
-   - 裸 Input（非 Select 内芯）readonly 保留 hairline
-   - Select 内芯 .t-input.t-is-readonly 一律不画（下方扩面 Kill 收口，含 hover）
+   - 裸 Input（非 GlassInput / Select 内芯）readonly 保留 hairline
+   - GlassInput / Select 内芯 .t-input.t-is-readonly 一律不画（下方扩面 Kill 收口，含 hover）
    - 裸 Select 外壳 .t-select.t-is-readonly 保留 hairline（Single Chrome Layer） */
-.glass-form__form :deep(.t-input.t-is-readonly),
+.glass-form__form :deep(.t-input.t-is-readonly:not(.glass-input *)),
 .glass-form__form :deep(.t-select.t-is-readonly),
 .glass-form__form :deep(.input-readonly.t-is-readonly) {
   box-shadow: var(--glass-wb-field-hairline);
@@ -676,6 +685,7 @@ defineExpose({
 /* P2：非 filterable Select 内芯 .t-is-readonly 会被上行回写 inset hairline → rest 双环。
    扩面 Kill：凡 .t-select / .t-select-input 内的 .t-input（含 readonly / hover）一律无边无影，
    即使用户未包 GlassSelect。只读 hairline 只允许挂在最外 chrome（.t-select / .glass-select）。
+   GlassInput 同病：Form readonly 回写内环；与 Select P2 一同收口，外壳 hairline 保持。
    特异性须盖过上行 .t-input.t-is-readonly（0,3,0）与 .t-input:hover:not(...)(...) 链。 */
 .glass-form__form :deep(.t-select .t-input.t-is-readonly),
 .glass-form__form :deep(.t-select .t-input.t-is-readonly:hover),
@@ -688,7 +698,9 @@ defineExpose({
 .glass-form__form :deep(.t-select .t-input__wrap),
 .glass-form__form :deep(.t-select-input .t-input__wrap),
 .glass-form__form :deep(.glass-select .t-input.t-is-readonly),
-.glass-form__form :deep(.glass-select .t-input.t-is-readonly:hover) {
+.glass-form__form :deep(.glass-select .t-input.t-is-readonly:hover),
+.glass-form__form :deep(.glass-input .t-input.t-is-readonly),
+.glass-form__form :deep(.glass-input .t-input.t-is-readonly:hover) {
   border: none;
   border-color: transparent;
   background: transparent;

@@ -4,7 +4,7 @@
  *
  * 透传：loading / size / text / fullscreen / showOverlay / delay / indicator /
  * preventScrollThrough / attach / zIndex / inheritColor + 默认槽（content）。
- * 默认指示器为三条竖向音浪条（Sound Wave / Equalizer）：冷蓝胶囊竖条错峰
+ * 默认指示器为三条竖向音浪条（Sound Wave / Equalizer）：Kit Action Blue 单 accent 胶囊竖条错峰
  * height 起伏（保持 999px 胶囊，禁 scaleY）；禁 TD 硬圆环、整组旋转、实心核与硬描边。
  * 自定义 #indicator、indicator=false 或函数型 indicator 原样透传，不覆盖。
  * 包裹态遮罩轻 mask（--glass-wb-table-loading-mask 近义，勿实白盖板）；

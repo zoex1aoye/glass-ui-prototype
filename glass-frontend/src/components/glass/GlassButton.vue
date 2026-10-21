@@ -541,7 +541,7 @@ function onClick(e: MouseEvent) {
   border: none;
   background: var(--glass-wb-soft-bg);
   color: var(--glass-wb-soft-color);
-  font-size: 12px;
+  font-size: var(--glass-type-body-field-size);
   box-shadow: var(--glass-wb-tonal-hairline);
 }
 

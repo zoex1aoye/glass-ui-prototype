@@ -946,7 +946,7 @@ function onTableChange(data: TableChangeData, context: TableChangeContext<GlassT
 .glass-table__core :deep(.t-table__expanded-row-inner) {
   padding: 9px 16px;
   color: var(--glass-text-secondary);
-  font-size: 12px;
+  font-size: var(--glass-type-caption-size);
   line-height: 1.6;
 }
 
@@ -1198,7 +1198,7 @@ function onTableChange(data: TableChangeData, context: TableChangeContext<GlassT
 .glass-table__core :deep(.t-table__empty) {
   background: transparent;
   color: var(--glass-text-muted);
-  font-size: 13px;
+  font-size: var(--glass-type-body-field-size);
   padding: 24px 16px;
 }
 
@@ -1283,7 +1283,7 @@ function onTableChange(data: TableChangeData, context: TableChangeContext<GlassT
 .glass-table-column-controller .t-table__column-controller-desc {
   margin-bottom: 14px;
   color: var(--glass-text-muted);
-  font-size: 12px;
+  font-size: var(--glass-type-caption-size);
 }
 
 .glass-table-column-controller .t-table__column-controller-block,
@@ -1305,7 +1305,8 @@ function onTableChange(data: TableChangeData, context: TableChangeContext<GlassT
 
 .glass-table-column-controller .t-checkbox__label {
   color: inherit;
-  font-size: 13px;
+  font-size: var(--glass-type-label-size);
+  font-weight: var(--glass-type-label-weight);
 }
 
 /* 列配置 footer = Overlay footer 同套：

@@ -192,7 +192,6 @@ const capsuleValue = ref('overview')
 const cardValue = ref('overview')
 const disabledValue = ref('overview')
 const leftValue = ref('overview')
-const rawValue = ref('overview')
 
 function onChange(variant: string, value: string | number) {
   lastAction.value = `tabs change → ${variant} · ${String(value)}`
@@ -532,24 +531,6 @@ function onMenuChange(source: string, value: MenuValue) {
             <GlassTabPanel value="detail" label="明细">明细面板内容</GlassTabPanel>
             <GlassTabPanel value="settings" label="设置">设置面板内容</GlassTabPanel>
           </GlassTabs>
-        </div>
-      </div>
-    </section>
-
-    <!-- 4. Raw contrast -->
-    <section class="lab-section">
-      <div class="lab-section-label">
-        <span class="lab-section-name">{{ tt('navigation.section.bareTabs') }}</span>
-        <span class="lab-section-meta">仅用于对照，不进入 components/glass 导出；演示 v-model 透传一致</span>
-      </div>
-      <div class="lab-controls">
-        <div class="lab-control-row">
-          <span class="lab-control-label">t-tabs 默认主题</span>
-          <t-tabs v-model="rawValue" @change="onChange('raw', $event)">
-            <t-tab-panel value="overview" label="概览">概览面板内容</t-tab-panel>
-            <t-tab-panel value="detail" label="明细">明细面板内容</t-tab-panel>
-            <t-tab-panel value="settings" label="设置">设置面板内容</t-tab-panel>
-          </t-tabs>
         </div>
       </div>
     </section>

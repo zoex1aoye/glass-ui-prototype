@@ -2,13 +2,15 @@
 /**
  * 实验室·海报技法 — Living Demo / 小物件↔大容器 / 换算表。
  * 七色·深度、过渡、微透·悬浮摘录见 Overview。
- * 保留 PosterWash 整装舞台（html「整装工作台 · 真实组件」全局底）。只消费 glass/* 已导出。
+ * 保留 PosterWash 整装舞台（html「整装工作台 · 真实组件」全局底）。只消费 glass/* 已导出；
+ * §3 换算表已走 GlassTable。
  * 禁双托盘；禁 t-card 冒充 Tray；不改 AppShell 全站背景（Track I）。
  * 页面内 min-height 舞台，避免实白 content-panel 盖死 PosterWash。
  * Track J：fit 固定 cover（含安全过冲），无三档切换。
  */
 import { computed, onBeforeUnmount, onMounted } from 'vue'
 import { ArrowUpIcon } from 'tdesign-icons-vue-next'
+import type { PrimaryTableCol, TableRowData } from 'tdesign-vue-next'
 
 import {
   GlassBadge,
@@ -21,6 +23,7 @@ import {
   GlassStage,
   GlassStickyTool,
   GlassSurface,
+  GlassTable,
 } from '@/components/glass'
 
 import { useDocsProps } from '@/layouts/useDocsProps'
@@ -85,6 +88,35 @@ const panelDemo = computed(() => {
     title: String(v.title ?? '焦点面 · 叠 wash'),
   }
 })
+
+const posterConversionColumns: PrimaryTableCol[] = [
+  { colKey: 'technique', title: '海报技法', width: 92 },
+  { colKey: 'small', title: '小物件（可满浓）' },
+  { colKey: 'large', title: '大容器（必须改写）' },
+]
+
+const posterConversionData: TableRowData[] = [
+  {
+    technique: '过渡',
+    small: '芯部饱和、边缘近透；短程高对比可，长程无白色高光核。',
+    large: '同色相拉长、降对比；页头从冰白到冰蓝再到极淡蓝。',
+  },
+  {
+    technique: '微透',
+    small: '半透叠层看得见背后形，交叠处自然加深。',
+    large: '近白微透 + backdrop blur；颜色放在背后虚化场，不涂面板。',
+  },
+  {
+    technique: '悬浮',
+    small: '柔影 + 虚化陪衬盘，让行动点从底上浮起。',
+    large: '极柔大范围投影；顶栏、Surface、Rail、Stage 分层漂浮。',
+  },
+  {
+    technique: '色深',
+    small: '支付宝蓝 / 知乎蓝满饱和，只服务气泡、发送、FAB、徽章、进度与新会话。',
+    large: '大面蓝染约 5–15% 视觉权重；满饱和只留给小物件。',
+  },
+]
 
 </script>
 
@@ -298,42 +330,16 @@ const panelDemo = computed(() => {
       <div class="lab-section-label">
         <span class="lab-section-name">{{ tt('poster.section.table') }}</span>
         <span class="lab-section-meta">
-          同一技法在小物件与大容器上的不同落法；色深行是优先裁决。
+          同一技法在小物件与大容器上的不同落法；GlassTable · Quiet Grid；色深行是优先裁决。
         </span>
       </div>
-      <div class="poster-table-wrap">
-        <table class="poster-table">
-          <thead>
-            <tr>
-              <th scope="col">海报技法</th>
-              <th scope="col">小物件（可满浓）</th>
-              <th scope="col">大容器（必须改写）</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">过渡</th>
-              <td>芯部饱和、边缘近透；短程高对比可，长程无白色高光核。</td>
-              <td>同色相拉长、降对比；页头从冰白到冰蓝再到极淡蓝。</td>
-            </tr>
-            <tr>
-              <th scope="row">微透</th>
-              <td>半透叠层看得见背后形，交叠处自然加深。</td>
-              <td>近白微透 + backdrop blur；颜色放在背后虚化场，不涂面板。</td>
-            </tr>
-            <tr>
-              <th scope="row">悬浮</th>
-              <td>柔影 + 虚化陪衬盘，让行动点从底上浮起。</td>
-              <td>极柔大范围投影；顶栏、Surface、Rail、Stage 分层漂浮。</td>
-            </tr>
-            <tr>
-              <th scope="row">色深</th>
-              <td>支付宝蓝 / 知乎蓝满饱和，只服务气泡、发送、FAB、徽章、进度与新会话。</td>
-              <td>大面蓝染约 5–15% 视觉权重；满饱和只留给小物件。</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <GlassTable
+        variant="tray"
+        stripe
+        :columns="posterConversionColumns"
+        :data="posterConversionData"
+        row-key="technique"
+      />
     </section>
   </LabPageShell>
 </template>
@@ -619,51 +625,6 @@ const panelDemo = computed(() => {
   font-weight: 700;
   line-height: 1;
   color: var(--glass-wb-pill-quiet-color);
-}
-
-/* ── 3. 换算表 ─────────────────────────────────────────────────────── */
-.poster-table-wrap {
-  overflow-x: auto;
-  border-radius: 14px;
-  background: var(--glass-wb-pill-quiet-bg);
-  box-shadow: var(--glass-wb-pill-quiet-shadow);
-}
-
-.poster-table {
-  width: 100%;
-  min-width: 720px;
-  border-collapse: collapse;
-  font-size: 12px;
-  line-height: 1.55;
-  color: var(--glass-text-secondary);
-}
-
-.poster-table th,
-.poster-table td {
-  padding: 12px 14px;
-  text-align: left;
-  vertical-align: top;
-}
-
-.poster-table thead th {
-  background: var(--glass-chroma-frost);
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--glass-text-primary);
-}
-
-.poster-table thead th:first-child,
-.poster-table tbody th {
-  width: 92px;
-}
-
-.poster-table tbody th {
-  font-weight: 600;
-  color: var(--glass-text-primary);
-}
-
-.poster-table tbody tr:nth-child(even) {
-  background: var(--glass-wb-soft-bg);
 }
 
 @media (max-width: 980px) {
