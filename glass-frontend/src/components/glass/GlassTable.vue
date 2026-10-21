@@ -13,6 +13,7 @@
  * - t4 Near-White：行体近白透明吃外壳；空态 muted（html .bchat）
  * - Row Density：行高对齐 Capsule / Form 垂直节奏（偏紧凑；t-table size="small"）
  * - Hover Whisper / Selected Whisper：alipay 10% / 12% / 15% 整行 Wash，对齐轨内 List（无左 Pill）
+ * - Quiet Grid 字阶：Header 700 primary · First-col 600 · pad-x 14（Poster conversion table）
  * - Compound Wrapper：外壳材质由本 wrapper 承担，t-table 仅作内芯
  *
  * variant（外壳语义，Lab / 业务页按宿主选择）：
@@ -745,13 +746,15 @@ function onTableChange(data: TableChangeData, context: TableChangeContext<GlassT
 /* th 字色/字重/底边 soft Quiet Ribbon；无列间竖线 */
 .glass-table__core :deep(.t-table__header th),
 .glass-table__core :deep(.t-table__header thead th) {
-  color: var(--glass-text-secondary);
-  font-weight: 600;
-  font-size: 12px;
+  color: var(--glass-wb-table-header-color);
+  font-weight: var(--glass-wb-table-header-font-weight);
+  font-size: var(--glass-wb-table-header-font-size);
   /* t3 Quiet Ribbon：水平细分割（带与行体的台阶线） */
   border-bottom: 1px solid var(--glass-border-soft);
   border-right: none;
   border-left: none;
+  padding-left: var(--glass-wb-table-cell-pad-x);
+  padding-right: var(--glass-wb-table-cell-pad-x);
   padding-top: 8px;
   padding-bottom: 8px;
 }
@@ -842,9 +845,57 @@ function onTableChange(data: TableChangeData, context: TableChangeContext<GlassT
   border-bottom: 1px solid var(--glass-border-soft);
   border-right: none;
   color: var(--glass-text-primary);
-  font-size: 13px;
+  font-size: var(--glass-wb-table-cell-font-size);
+  padding-left: var(--glass-wb-table-cell-pad-x);
+  padding-right: var(--glass-wb-table-cell-pad-x);
   padding-top: 9px;
   padding-bottom: 9px;
+}
+
+/* First-col / 主标识：对齐 Poster conversion table 的首列强调。
+   勾选、展开、行移动是 prefix 操作列：保留普通 pad-x，但不继承 600 字重。
+   树形触发目前内嵌在内容首列（TD 无独立树操作列），因此内容首列仍按主标识处理。 */
+.glass-table__core
+  :deep(
+    thead
+      th:first-child:not(.t-table__cell-check):not(.t-table__selection-cell):not(
+        .t-table__expandable-icon-cell
+      ):not(.glass-table__row-move-cell)
+  ),
+.glass-table__core
+  :deep(
+    tbody
+      td:first-child:not(.t-table__cell-check):not(.t-table__selection-cell):not(
+        .t-table__expandable-icon-cell
+      ):not(.glass-table__row-move-cell)
+  ),
+.glass-table__core
+  :deep(
+    tbody
+      th:first-child:not(.t-table__cell-check):not(.t-table__selection-cell):not(
+        .t-table__expandable-icon-cell
+      ):not(.glass-table__row-move-cell)
+  ) {
+  color: var(--glass-wb-table-first-col-color);
+  padding-left: var(--glass-wb-table-first-col-pad-x);
+  padding-right: var(--glass-wb-table-first-col-pad-x);
+}
+
+.glass-table__core
+  :deep(
+    tbody
+      td:first-child:not(.t-table__cell-check):not(.t-table__selection-cell):not(
+        .t-table__expandable-icon-cell
+      ):not(.glass-table__row-move-cell)
+  ),
+.glass-table__core
+  :deep(
+    tbody
+      th:first-child:not(.t-table__cell-check):not(.t-table__selection-cell):not(
+        .t-table__expandable-icon-cell
+      ):not(.glass-table__row-move-cell)
+  ) {
+  font-weight: var(--glass-wb-table-first-col-font-weight);
 }
 
 /* Row Density：行高贴近 Capsule 33 / Field 38 */
@@ -904,7 +955,7 @@ function onTableChange(data: TableChangeData, context: TableChangeContext<GlassT
 .glass-table__core :deep(td.t-table__expandable-icon-cell) {
   height: auto;
   /* 7 + 24 + 7 = 38，与 Quiet Grid 行高（9 + 20 + 9）对齐 */
-  padding: 7px 4px;
+  padding: 7px var(--glass-wb-table-cell-pad-x);
   vertical-align: middle;
 }
 
@@ -951,7 +1002,7 @@ function onTableChange(data: TableChangeData, context: TableChangeContext<GlassT
 /* 行移动替代路径：24px Quiet 热区，两枚按钮并排；行高与展开 / 树形触发区一致。
    拖拽仍由 TD Sortable / dragSort 承担，这里只补键盘与单指针路径。 */
 .glass-table__core :deep(td.glass-table__row-move-cell) {
-  padding: 7px 8px;
+  padding: 7px var(--glass-wb-table-cell-pad-x);
 }
 
 .glass-table__row-move {

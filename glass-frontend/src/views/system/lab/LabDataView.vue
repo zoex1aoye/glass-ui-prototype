@@ -1035,7 +1035,8 @@ function replayStatisticAnimation() {
         <span class="lab-section-name">{{ tt('data.section.s1') }}</span>
         <span class="lab-section-meta">
           TDesign：基础表格 / columns · 玻璃：Quiet Grid 可读 + t4 行体 + Header Band / Workbench Left Nav（`.hero-ico`）·
-          Row Density ≈36–40px · 禁止重阴影实白 Excel 卡
+          Row Density ≈36–40px · Header 700 · First-col 600 · pad-x 14（对齐 Poster conversion table）·
+          禁止重阴影实白 Excel 卡
         </span>
       </div>
       <div class="lab-table-panel">

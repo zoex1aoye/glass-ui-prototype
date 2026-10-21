@@ -1271,7 +1271,7 @@ body .t-notification {
 
   /* Data Grid / Glass Table · Quiet Grid（t1–t4 大容器映射 · 单一语言）
      t1 Host Tray   → shell fill + blur + soft shadow（禁实白 Excel 卡 + 重阴影）
-     Header Band    → Content Layer：近白层 + 轻 alipay 染；标题行一体带；字 secondary
+     Header Band    → Content Layer：近白层 + 轻 alipay 染；标题行一体带；primary 700
      t3 Quiet Ribbon → 水平细分割 + pagination Quiet Chrome
      t4 Near-White  → 行体透明吃外壳；空态 muted
      Hover Whisper / Selected Whisper → alipay 10% / 12% / 15%；整行 wash，无左 pill
@@ -1288,6 +1288,16 @@ body .t-notification {
     rgba(252, 254, 255, 0.85)
   );
   --glass-wb-table-header-blur: none;
+  /* Quiet Grid 字阶：对齐 Poster → large-container conversion table
+     （Header 700 / First-col 600 / pad-x 14）。 */
+  --glass-wb-table-header-font-size: 12px;
+  --glass-wb-table-header-font-weight: 700;
+  --glass-wb-table-header-color: var(--glass-text-primary);
+  --glass-wb-table-cell-font-size: 13px;
+  --glass-wb-table-first-col-font-weight: 600;
+  --glass-wb-table-first-col-color: var(--glass-text-primary);
+  --glass-wb-table-cell-pad-x: 14px;
+  --glass-wb-table-first-col-pad-x: 14px;
   /* Hover / Selected Whisper：alipay 10 / 12 / 15 阶梯；AI 紫只做点缀，禁满行脏紫 */
   --glass-wb-table-row-hover: color-mix(in srgb, var(--glass-chroma-alipay) 10%, transparent);
   --glass-wb-table-row-selected: color-mix(in srgb, var(--glass-chroma-alipay) 12%, transparent);
