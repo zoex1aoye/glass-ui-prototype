@@ -16,15 +16,16 @@
 
 拼写：**FormPane**（Form），禁止 `FromPane`。
 
-## 2. 材质（t1 `.bchat` Floating Plate）
+## 2. 材质（WinUI ContentDialog · Floating Solid）
 
-Dialog 与 FormPane **面板**材质对齐 t1 Bchat 语义合成：
+Dialog 与 FormPane **面板**材质对齐 WinUI ContentDialog：高遮罩近实、不靠 frost 透背后。  
+（历史曾对齐 t1 `.bchat` 半透板；当前权威改为 ContentDialog / Floating Solid。）
 
 | Token 族 | 口径 |
 |---|---|
-| fill | flat `rgba(252,254,255,.6)`（非 gradient） |
-| blur | `blur(16px) saturate(1.15)` |
-| shadow | 单层 `0 12px 30px rgba(15,60,140,.07)` |
+| fill | `var(--glass-layer-l3-standalone-fill)`（Light 近白冷底 / Dark 深冷实板；非 gradient、非 `.6` 半透） |
+| blur | `none` |
+| shadow | 单层 Whisper Lift（Light `0 12px 30px rgba(15,60,140,.07)`；Dark 同量级深影） |
 | radius | `--glass-wb-card-radius`（**18**；历史 bchat 12 为自觉例外） |
 | padding | TD `t-dialog` shell **32**（历史 10×12 为自觉例外；Form 呼吸优先） |
 
@@ -37,10 +38,9 @@ FormPane 宽默认 **480**；Dialog Confirm 宽 **420**。FormPane token 以 `va
 --glass-wb-form-pane-scrim: var(--glass-wb-dialog-scrim)
 ```
 
-- 同色相降 alpha，让背后色相透进微透板（对照 t1「背后花瓣影」**观感**，不是把 `.air` 画进面板）。  
+- 同色相降 alpha；背后色相靠 **Scrim** 透出，不靠面板 frost / backdrop-filter。  
 - **禁止**用抬 fill / 白渐变 / 面板内花瓣径向「补白」。  
 - 再调 scrim 须用户裁决（全库 Modal 对比度）。
-
 ## 4. 分区节奏：纯间距（非 hairline）
 
 Overlay 壳（Dialog / FormPane）的 header↔body↔footer，以及 `GlassDialogSection` 的 `divider`：
@@ -52,7 +52,7 @@ Overlay 壳（Dialog / FormPane）的 header↔body↔footer，以及 `GlassDial
 
 ## 5. Nested Chrome 禁令
 
-仅搬 `.bchat` 面板材质进 Overlay。**禁止**搬进 Dialog / FormPane 面板：
+仅搬 ContentDialog Floating Solid 面板材质进 Overlay。**禁止**搬进 Dialog / FormPane 面板：
 
 - `.t1 .air` / 花瓣径向 / PosterWash / hero-air  
 - `.t1 .bph` 扇形头  

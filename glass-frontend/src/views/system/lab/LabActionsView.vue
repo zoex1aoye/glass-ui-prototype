@@ -587,7 +587,7 @@ function togglePillLoading() {
         <span class="lab-section-name">{{ tt('actions.section.status') }}</span>
         <span class="lab-section-meta">
           danger=京东红同源分档（品牌锚 #E1251B / btn·confirm #D91F18，冻结勿改）·
-          warning=中石油宝石花辅色（CNPC / Pantone 137C）锚 #FFA300 / btn #9E6400 ·
+          warning=中石油宝石花辅色（CNPC / Pantone 137C）锚 #FFA300 / btn #A15C07 ·
           success=酷安绿（favicon 采样）锚 #18B458 / btn #117E3E ·
           白字 + 满浓底 · Tone Ladder（锚亮识别／钮深保对比）·
           交互与 Primary 同族（Hover Lift -2px / Filled Press）· 几何同 primary（42/12）·
@@ -617,7 +617,7 @@ function togglePillLoading() {
             <GlassButton variant="danger" shape="round">删除</GlassButton>
             <GlassButton variant="warning" shape="round">谨慎</GlassButton>
             <GlassButton variant="success" shape="round">通过</GlassButton>
-            <span class="lab-control-note">danger=京东红同源分档（冻结） · warning=中石油宝石花辅色（CNPC / Pantone 137C）锚 #FFA300 / btn #9E6400 · success=酷安绿（favicon）锚 #18B458 / btn #117E3E · 交互挂 Primary 轨</span>
+            <span class="lab-control-note">danger=京东红同源分档（冻结） · warning=中石油宝石花辅色（CNPC / Pantone 137C）锚 #FFA300 / btn #A15C07 · success=酷安绿（favicon）锚 #18B458 / btn #117E3E · 交互挂 Primary 轨</span>
           </div>
         </div>
         <div class="lab-control-row">
@@ -625,7 +625,7 @@ function togglePillLoading() {
           <div class="lab-control-row-items">
             <span class="lab-tone-swatch lab-tone-swatch--warning-anchor" title="品牌锚 #FFA300"></span>
             <span class="lab-control-note">品牌锚 #FFA300（Pantone 137C）· 识别用 · 禁 Filled 白字</span>
-            <GlassButton variant="warning">Contrast 钮 #9E6400</GlassButton>
+            <GlassButton variant="warning">Contrast 钮 #A15C07</GlassButton>
             <span class="lab-control-note">Filled 白字轨 · rest 4.91 / hover 4.61 · 同相贴锚、更亮更艳（v2）</span>
           </div>
         </div>

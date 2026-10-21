@@ -5,8 +5,8 @@
  * 术语：
  * - Form Session Pane：表单整装会话窗（开一窗填表的 Modal 浮层），
  *   与 GlassDialog（Confirm Sheet 短确认托盘）职责分离。
- * - Floating Plate：独立 teleport 的面板材质，圆角对齐 Surface radius 体系；
- *   材质起步对齐 Dialog/.bchat（fill/blur/radius/shadow 复用 dialog token），
+ * - Floating Solid：独立 teleport 的 ContentDialog 面板材质，圆角对齐 Surface radius 体系；
+ *   高遮罩近实 fill + blur none，fill/blur/radius/shadow 复用 Dialog token，
  *   仅 width 更宽（480 表单呼吸 > 420 确认）。
  * - 与 Confirm Sheet（Dialog）边界：FormPane 不提供默认 confirm/cancel 脚钮，
  *   脚钮一律由使用方通过 #footer slot 放 GlassButton；组件只包共享动作行

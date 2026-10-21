@@ -4,17 +4,14 @@
  *
  * 术语：
  * - Modal Scrim：遮罩降对比，不抢托盘材质
- * - Floating Plate：独立 teleport 的对话框面板，圆角对齐 Surface radius 体系
- * - T1 Bchat Material：对齐 html t1 .bchat（z4 近白高亮）档；
- *   flat rgba(252,254,255,.6) fill + blur 16/1.15
- * - T1 Bchat Port：fill rgba(252,254,255,.6) / blur 16/1.15 / shadow 0 12/30/.07
- *   数值与 html t1 .bchat 合成（基座 L458–460 + t1 覆盖 L478）逐字对齐；
- *   仅搬 .bchat，禁搬 .t1 .air / .bsurf / .bph / 花瓣径向进 Dialog（Nested Chrome 禁令）；
- * - Floating Shadow (Dialog)：单层影逐字对齐 html t1 .bchat 基座
- *   （0 12px 30px rgba(15,60,140,.07)）；浮层体量由 Modal Scrim 承载，不加 Ambient；
+ * - Floating Solid：独立 teleport 的对话框面板，圆角对齐 Surface radius 体系
+ * - WinUI ContentDialog Material：高遮罩近实 fill + blur none；
+ *   Light 复用 L3 standalone 近白容器，Dark 用同源深冷实板，均不靠 backdrop-filter 透背后；
+ *   历史曾对齐 t1 .bchat，当前材质权威改为 ContentDialog；
+ * - Floating Shadow (Dialog)：单层 Whisper Lift；浮层体量由 Modal Scrim 承载，不加 Ambient；
  * - 禁区：禁用整装背景技法（PosterWash / hero-air / petals / 多重 radial bloom）
  * - 消费边界（兄弟项目）：Dialog = Confirm Sheet（短确认 / 危险确认），
- *   对齐对象是 html/t1 `.bchat` Floating Plate 材质，不是 t1 整装会话窗；
+ *   对齐对象是 ContentDialog Floating Solid 材质，不是 t1 整装会话窗；
  *   禁止期望 Dialog 提供扇形头（.bph）/ 花瓣 air / 聊天气泡 / Composer 输入；
  *   整装会话窗（头 + 气泡 + 输入）见 Composer / Workbench 原语，不在 Dialog；
  *   映射与红线见方案 §1（.agents/tmp-glass-dialog-t1-session-align-plan.md）。
@@ -41,7 +38,7 @@
  *   Form 内 Input 原生 Enter 触发 submit 产生双触发（先 Form submit 后 Dialog confirm，
  *   或反之，视 DOM 冒泡），本组件默认收口为安全值，使用方按需显式开启需自行处理冲突。
  *
- * - 例外项（不随 t1 .bchat 走）：radius 走 --glass-wb-card-radius 库契约（18 vs bchat 12）；
+ * - 例外项（不随历史 t1 .bchat 走）：radius 走 --glass-wb-card-radius 库契约（18）；
  *   padding 交 TD t-dialog shell 32 节奏（vs bchat 10×12）；均为自觉选择，不是遗漏。
  * 色值一律走 --glass-wb-*，禁止魔法色。面板 / 遮罩由 t-dialog teleport 至 body，
  * 故材质写在非 scoped 样式并以 .glass-dialog 为锚，避免污染全局。
