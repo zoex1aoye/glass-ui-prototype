@@ -11,8 +11,9 @@ alwaysApply: true
   1. 用户明确点名「Cursor 自己做 / 你直接改 / 别派 Codex」
   2. **规范轨**：改 `AGENTS.md` / `.agents/rules` / `.agents/skills`（含 Codex 拒写 `.agents/**` 时的落盘与挪入）
   3. **编排本身**：UX/契约 brief、Track 拆分、`.agents/tmp-codex-*-prompt.txt`、拉起 `codex exec`（Shell `all`）、读 run.log **摘要**、返工指令、合流 QA 结论
-  4. **极小阻塞热修**：同一缺陷 Codex 已失败 ≥2 轮，且改动约 ≤20 行 / 单文件时可直改，回复须注明「例外自做」
+  4. **极小阻塞热修**：同一缺陷 Codex 已失败 ≥2 轮，且改动约 ≤20 行 / 单文件时可直改，回复须注明「例外自做」。**Auto-review 拦一次 ≠ Codex 失败一轮**——须先走审批重派（见 `codex-dispatch`）
   5. 用户点名的 `git commit` / PR / 分支操作
+- **派发被 Auto-review 拦**：同命令 + `request_smart_mode_approval` / `smart_mode_block_reason`，请用户 Approve；**禁止**因此改自做 `glass-frontend/**`（细则 `codex-dispatch`）
 - **噪音控制（硬）**：
   - 禁止为「顺手实现」整文件 Read `glass-frontend/**`；规划优先 Grep / 路径清单 / 既有 tmp brief
   - 业务 SOP（`glass-* / docs-shell` / `prototype-qa`）写进 Codex prompt「请 Read …」，Cursor **不默认全文载入**

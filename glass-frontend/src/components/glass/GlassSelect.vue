@@ -7,6 +7,8 @@
  * Focus Ring Follows Radius：外壳 :focus-within 或 popup 打开时挂 --glass-wb-field-focus-ring
  * Popup Width Sync：默认注入 popupProps.overlayInnerStyle，面板宽 = 触发器 offsetWidth；
  *   用户已传 overlayInnerStyle.width 或函数则尊重覆盖，不二次锁宽。
+ * 下拉弹层：overlayClassName 必含 glass-select-dropdown；材质对齐 GlassDropdown
+ *  （`--glass-wb-dropdown-*`），teleport 非 scoped。
  *
  * 色值走 --glass-wb-*。外壳材质由本 wrapper 承担，t-select 仅作内芯。
  */
@@ -95,20 +97,49 @@ function userOwnsOverlayInnerStyle(user: OverlayInnerStyle | undefined): boolean
   return typeof user === 'object' && user !== null && user.width !== undefined
 }
 
+/** overlayClassName 必含 glass-select-dropdown；用户 class 只追加不覆盖。 */
+function mergeOverlayClassName(
+  userClass: TdPopupProps['overlayClassName'],
+): TdPopupProps['overlayClassName'] {
+  const append = (list: string[]) => [...list, 'glass-select-dropdown']
+  if (typeof userClass === 'function') {
+    const fn = userClass
+    return ((...args: unknown[]) => {
+      const resolved = (fn as (...a: unknown[]) => unknown)(...args)
+      const list = Array.isArray(resolved)
+        ? resolved.map(String)
+        : String(resolved ?? '')
+            .split(/\s+/)
+            .filter(Boolean)
+      return append(list).join(' ')
+    }) as TdPopupProps['overlayClassName']
+  }
+  if (Array.isArray(userClass)) {
+    return append(userClass.map(String)).join(' ')
+  }
+  return append(
+    String(userClass ?? '')
+      .split(/\s+/)
+      .filter(Boolean),
+  ).join(' ')
+}
+
 /**
- * Popup Width Sync（文档推荐 popupProps.overlayInnerStyle）：
+ * Popup Width Sync（文档推荐 popupProps.overlayInnerStyle）+ Dropdown 对齐锚类。
  * 默认函数返回 width = trigger.offsetWidth；可与用户传入的非 width style 合并。
  */
 const mergedPopupProps = computed<TdPopupProps>(() => {
-  const user = props.popupProps
-  const userInner = user?.overlayInnerStyle
+  const user = props.popupProps ?? {}
+  const userInner = user.overlayInnerStyle
+  const overlayClassName = mergeOverlayClassName(user.overlayClassName)
 
   if (userOwnsOverlayInnerStyle(userInner)) {
-    return { ...user }
+    return { ...user, overlayClassName }
   }
 
   return {
     ...user,
+    overlayClassName,
     /**
      * 以外壳 `.glass-select` 为准测宽（非 TDesign trigger 内芯）。
      * Form :deep 曾给 .t-select 再垫 12px padding，trigger.offsetWidth 会偏窄，
@@ -280,5 +311,74 @@ const mergedPopupProps = computed<TdPopupProps>(() => {
   background: transparent;
   box-shadow: none;
   outline: none;
+}
+</style>
+
+<style>
+/* teleport 到 body：非 scoped。
+   DOM：.t-popup.glass-select-dropdown.t-select__dropdown > .t-popup__content
+        > .t-select__dropdown-inner > .t-select__list > .t-select-option
+   材质对齐 GlassDropdown（--glass-wb-dropdown-*）。 */
+
+.glass-select-dropdown .t-popup__content {
+  padding: 0;
+  border: none;
+  border-radius: var(--glass-wb-dropdown-radius);
+  background: var(--glass-wb-dropdown-fill);
+  -webkit-backdrop-filter: var(--glass-wb-dropdown-blur);
+  backdrop-filter: var(--glass-wb-dropdown-blur);
+  box-shadow: var(--glass-wb-dropdown-shadow);
+  overflow: hidden;
+}
+
+.glass-select-dropdown .t-select__dropdown-inner {
+  background: transparent;
+}
+
+.glass-select-dropdown .t-select-option {
+  border-radius: var(--glass-wb-dropdown-item-radius);
+  color: var(--glass-wb-dropdown-item-color);
+  --ripple-color: var(--glass-wb-dropdown-ripple);
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+/* TDesign Select 用 JS 类 --hover / __hover（不只 :hover）。
+   TD hover 复合选择器特异约 (0,6,0) 且样式表更靠后；须 ≥(0,7,0) 才能盖过
+   `--td-bg-color-container-hover`（见 .t-select-option--hover 链式 :not）。 */
+.glass-select-dropdown.t-select__dropdown .t-select__list .t-select-option:hover:not(.t-is-disabled):not(.t-is-selected),
+.glass-select-dropdown.t-select__dropdown .t-select__list .t-select-option.t-select-option--hover:not(.t-is-disabled):not(.t-is-selected),
+.glass-select-dropdown.t-select__dropdown .t-select__list .t-select-option.t-select-option__hover:not(.t-is-disabled):not(.t-is-selected) {
+  background-color: var(--glass-wb-dropdown-item-hover-bg);
+  color: var(--glass-wb-dropdown-item-hover-color);
+}
+
+.glass-select-dropdown.t-select__dropdown .t-select__list .t-select-option:active:not(.t-is-disabled) {
+  background-color: var(--glass-wb-dropdown-item-active-bg);
+  color: var(--glass-wb-dropdown-item-active-color);
+}
+
+.glass-select-dropdown.t-select__dropdown .t-select__list .t-select-option.t-is-selected:not(.t-is-disabled),
+.glass-select-dropdown.t-select__dropdown .t-select__list .t-select-option.t-is-selected:not(.t-is-disabled):hover,
+.glass-select-dropdown.t-select__dropdown .t-select__list .t-select-option.t-is-selected.t-select-option--hover:not(.t-is-disabled),
+.glass-select-dropdown.t-select__dropdown .t-select__list .t-select-option.t-is-selected.t-select-option__hover:not(.t-is-disabled),
+.glass-select-dropdown.t-select__dropdown .t-select__list .t-is-selected.t-select-option__hover:not(.t-is-disabled) {
+  background-color: var(--glass-wb-dropdown-item-active-bg);
+  color: var(--glass-wb-dropdown-item-active-color);
+}
+
+.glass-select-dropdown.t-select__dropdown .t-select__list .t-select-option.t-is-disabled,
+.glass-select-dropdown.t-select__dropdown .t-select__list .t-select-option.t-is-disabled:hover,
+.glass-select-dropdown.t-select__dropdown .t-select__list .t-select-option.t-is-disabled.t-select-option--hover,
+.glass-select-dropdown.t-select__dropdown .t-select__list .t-select-option.t-is-disabled.t-select-option__hover {
+  background-color: transparent;
+  color: var(--glass-wb-dropdown-item-disabled-color);
+  cursor: not-allowed;
+}
+
+.glass-select-dropdown .t-select-option:focus-visible {
+  outline: none;
+  box-shadow: var(--glass-wb-control-focus-ring);
 }
 </style>

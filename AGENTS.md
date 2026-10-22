@@ -75,7 +75,9 @@ npm --prefix glass-frontend run build
 # 默认 -m deepseek-flash（唯一 Vision + 常规实现）；deepseek-v4-pro 仅例外（无 Vision、贵约 3–7×）
 # 视觉目标：V=flash 看图 → I=默认 flash 按偏差改码；禁止指望 pro 看图（见 codex-dispatch）
 # Cursor Shell 派发须 required_permissions: ["all"]（与 Codex 自身 -s 是两件事；尤其 -i Vision）
-# 假成功：run.log 仅有 Operation not permitted / app-server 初始化失败 → FAIL 重派，勿凭 exit 0 勾完成# 规范轨 / .agents 落盘：优先 Cursor（见 cursor-planner）；Codex 若拒写 .agents/ 则 Cursor 挪入
+# 假成功：run.log 仅有 Operation not permitted / app-server 初始化失败 → FAIL 重派，勿凭 exit 0 勾完成
+# Auto-review 拦 codex exec：同命令 + request_smart_mode_approval + smart_mode_block_reason，等用户 Approve；禁默默自做产品代码；禁 grep ~/.zshrc 抠 key
+# 规范轨 / .agents 落盘：优先 Cursor（见 cursor-planner）；Codex 若拒写 .agents/ 则 Cursor 挪入
 # codex --version
 # codex exec -m deepseek-flash -s workspace-write --skip-git-repo-check "$(cat .agents/tmp-codex-<task>-prompt.txt)"
 # 仅当用户点名 mimo：见 .agents/skills/mimo-dispatch/（DEPRECATED；须 --yolo，禁 run --trust）

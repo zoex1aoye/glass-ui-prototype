@@ -89,6 +89,7 @@ import type {
   TableTreeExpandChangeContext,
   TableTreeNodeExpandOptions,
   TdEnhancedTableProps,
+  TdPopupProps,
   TdPrimaryTableProps,
 } from 'tdesign-vue-next'
 
@@ -251,18 +252,78 @@ const slots = useSlots()
 const hasTree = computed(() => Boolean(props.tree && Object.keys(props.tree).length))
 const tableComponent = computed(() => (hasTree.value ? EnhancedTable : PrimaryTable))
 const showRowMove = computed(() => props.rowMove && !hasTree.value)
-const tableColumns = computed<PrimaryTableCol<GlassTableRow>[]>(() => {
-  if (!showRowMove.value) return props.columns
 
-  const moveColumn: PrimaryTableCol<GlassTableRow> = {
-    colKey: '__glass_row_move__',
-    title: props.moveColumnTitle,
-    width: props.moveColumnWidth,
-    align: 'center',
-    className: 'glass-table__row-move-cell',
-    cell: 'glassRowMove',
+const filterPopupClasses = ['t-table__filter-pop', 'glass-table-filter-pop']
+
+/** 保留 TD 默认锚与用户 class，再追加 Glass 筛选弹层锚。 */
+function mergeFilterOverlayClassName(
+  userClass: TdPopupProps['overlayClassName'],
+): TdPopupProps['overlayClassName'] {
+  const append = (list: string[]) =>
+    Array.from(new Set([...list.filter(Boolean), ...filterPopupClasses])).join(' ')
+
+  if (typeof userClass === 'function') {
+    const fn = userClass
+    return ((...args: unknown[]) => {
+      const resolved = (fn as (...a: unknown[]) => unknown)(...args)
+      const list = Array.isArray(resolved)
+        ? resolved.map(String)
+        : String(resolved ?? '')
+            .split(/\s+/)
+            .filter(Boolean)
+      return append(list)
+    }) as TdPopupProps['overlayClassName']
   }
-  return [moveColumn, ...props.columns]
+  if (Array.isArray(userClass)) return append(userClass.map(String))
+  return append(
+    String(userClass ?? '')
+      .split(/\s+/)
+      .filter(Boolean),
+  )
+}
+
+/**
+ * TDesign 列筛选会以 col.filter.popupProps 覆盖默认 overlayClassName。
+ * 这里只克隆含 filter 的列，并递归保留分组表头与调用方自定义 class。
+ */
+function withGlassFilterPopup(
+  column: PrimaryTableCol<GlassTableRow>,
+): PrimaryTableCol<GlassTableRow> {
+  const children = column.children?.map(withGlassFilterPopup)
+  if (!column.filter) {
+    return children ? { ...column, children } : column
+  }
+
+  const popupProps = column.filter.popupProps ?? {}
+  return {
+    ...column,
+    ...(children ? { children } : {}),
+    filter: {
+      ...column.filter,
+      popupProps: {
+        ...popupProps,
+        overlayClassName: mergeFilterOverlayClassName(popupProps.overlayClassName),
+      },
+    },
+  }
+}
+
+const tableColumns = computed<PrimaryTableCol<GlassTableRow>[]>(() => {
+  const columns = showRowMove.value
+    ? [
+        {
+          colKey: '__glass_row_move__',
+          title: props.moveColumnTitle,
+          width: props.moveColumnWidth,
+          align: 'center' as const,
+          className: 'glass-table__row-move-cell',
+          cell: 'glassRowMove',
+        } satisfies PrimaryTableCol<GlassTableRow>,
+        ...props.columns,
+      ]
+    : props.columns
+
+  return columns.map(withGlassFilterPopup)
 })
 
 const moveAnnouncement = ref('')
@@ -1194,12 +1255,19 @@ function onTableChange(data: TableChangeData, context: TableChangeContext<GlassT
   background: var(--glass-wb-table-fixed-cell-selected-hover-fill);
 }
 
-/* t4 Near-White 空态：muted 字色，保持玻璃透明底 */
+/* t4 Near-White 空态：muted 字色，保持玻璃透明底。
+   Empty 不是可选行：禁吃 `--glass-wb-table-row-hover`（alipay 10% 在空态上抢色）；
+   对照 List Soft 中性 hover / GlassEmpty 无行 wash。 */
 .glass-table__core :deep(.t-table__empty) {
   background: transparent;
   color: var(--glass-text-muted);
   font-size: var(--glass-type-body-field-size);
   padding: 24px 16px;
+}
+
+.glass-table__core :deep(.t-table__empty-row:hover > td),
+.glass-table__core :deep(tr:has(.t-table__empty):hover > td) {
+  background: transparent;
 }
 
 /* t4 轻 loading mask，不盖死玻璃 */
@@ -1247,6 +1315,11 @@ function onTableChange(data: TableChangeData, context: TableChangeContext<GlassT
 /* 列配置面板由 TD DialogPlugin teleport 到 body，故材质锚在
    .glass-table-column-controller，不污染全局；色值全部走 token。 */
 .glass-table-column-controller.t-dialog {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--glass-wb-dialog-stack-gap);
+  padding: var(--glass-wb-dialog-pad);
   background: var(--glass-wb-dialog-fill);
   -webkit-backdrop-filter: var(--glass-wb-dialog-blur);
   backdrop-filter: var(--glass-wb-dialog-blur);
@@ -1260,28 +1333,78 @@ function onTableChange(data: TableChangeData, context: TableChangeContext<GlassT
 }
 
 .glass-table-column-controller .t-dialog__header {
-  padding-bottom: 12px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  padding: 0 40px 0 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
   color: var(--glass-text-primary);
+  font-size: var(--glass-type-title-size);
   font-weight: 600;
+  line-height: var(--glass-type-title-line);
+  box-shadow: none;
+}
+
+.glass-table-column-controller .t-dialog__header-content {
+  flex: 1 1 auto;
+  align-items: center;
+  min-width: 0;
+  width: 100%;
+  max-width: none;
 }
 
 .glass-table-column-controller .t-dialog__body {
+  box-sizing: border-box;
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+  margin: 0;
+  padding: var(--glass-wb-overlay-body-tray-pad);
+  border-radius: var(--glass-wb-overlay-body-tray-radius);
+  background: var(--glass-wb-overlay-body-tray-fill);
   color: var(--glass-text-secondary);
+  box-shadow: var(--glass-wb-overlay-body-tray-hairline);
 }
 
 .glass-table-column-controller .t-dialog__close {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  z-index: 2;
+  margin: 0;
   border-radius: var(--glass-wb-text-cta-radius);
+  background: transparent;
   color: var(--glass-text-muted);
+  box-shadow: none;
+  transform: translateY(-50%);
+  transition: var(--glass-wb-control-transition);
 }
 
 .glass-table-column-controller .t-dialog__close:hover {
   background: var(--glass-wb-icon-hover-bg);
   color: var(--glass-text-secondary);
+  box-shadow: none;
 }
 
-/* 面板内分区：用 hairline + 纯间距，不叠 TD 实线方框 */
+.glass-table-column-controller .t-dialog__close:active {
+  background: var(--glass-wb-icon-active-bg);
+  color: var(--glass-wb-icon-active-color);
+  box-shadow: none;
+}
+
+.glass-table-column-controller .t-dialog__close:focus-visible {
+  outline: none;
+  box-shadow: var(--glass-wb-control-focus-ring);
+}
+
+/* 面板内分区：tray 内只用 hairline whisper + 纯间距，不叠 TD 实线方框。 */
 .glass-table-column-controller .t-table__column-controller-desc {
-  margin-bottom: 14px;
+  margin-bottom: var(--glass-wb-dialog-stack-gap);
   color: var(--glass-text-muted);
   font-size: var(--glass-type-caption-size);
 }
@@ -1296,7 +1419,7 @@ function onTableChange(data: TableChangeData, context: TableChangeContext<GlassT
 }
 
 .glass-table-column-controller .t-table__column-controller-block + .t-table__column-controller-block {
-  margin-top: 8px;
+  margin-top: var(--td-comp-margin-xs);
 }
 
 .glass-table-column-controller .t-checkbox {
@@ -1309,11 +1432,14 @@ function onTableChange(data: TableChangeData, context: TableChangeContext<GlassT
   font-weight: var(--glass-type-label-weight);
 }
 
-/* 列配置 footer = Overlay footer 同套：
-   行几何复用共享 footer token；TDesign 原生 cancel / confirm 映射到
-   GlassButton quiet / primary 的 Pill 38 + 同源影子 / 按压 / 焦点态。 */
+/* 列配置 footer：对齐 filter Text CTA。
+   壳层 gap 负责 Overlay 分区，动作行只负责右对齐 / 换行；
+   TDesign 原生 cancel / confirm 统一映射到 --glass-wb-text-cta-*。 */
 .glass-table-column-controller .t-dialog__footer {
-  padding-top: var(--glass-wb-dialog-footer-padding-top);
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: right;
 }
 
 .glass-table-column-controller .t-dialog__footer > div:first-child {
@@ -1322,6 +1448,7 @@ function onTableChange(data: TableChangeData, context: TableChangeContext<GlassT
   align-items: center;
   flex-wrap: wrap;
   gap: var(--glass-wb-dialog-footer-gap);
+  min-width: 0;
 }
 
 .glass-table-column-controller .t-dialog__footer .t-button + .t-button {
@@ -1332,87 +1459,402 @@ function onTableChange(data: TableChangeData, context: TableChangeContext<GlassT
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: var(--glass-wb-pill-height);
-  padding: 0 var(--glass-wb-pill-pad-x);
+  height: var(--glass-wb-text-cta-height);
+  padding: 0 var(--glass-wb-text-cta-pad-x);
   border: none;
-  border-radius: var(--glass-wb-pill-radius);
-  font-size: var(--glass-wb-pill-font-size);
+  border-color: transparent;
+  border-radius: var(--glass-wb-text-cta-radius);
+  background: transparent;
+  background-color: transparent;
+  color: var(--glass-wb-text-cta-color);
+  font-size: var(--glass-wb-text-cta-font-size);
   font-weight: var(--glass-wb-pill-font-weight);
+  box-shadow: none;
+  filter: none;
+  cursor: pointer;
+  --ripple-color: var(--glass-wb-text-cta-ripple);
   transition: var(--glass-wb-control-transition);
 }
 
-/* Cancel = Quiet CTA：Shadow-only Chrome，无 inset hairline */
-.glass-table-column-controller .t-dialog__footer .t-dialog__cancel {
-  background: var(--glass-wb-pill-quiet-bg);
-  color: var(--glass-wb-pill-quiet-color);
-  -webkit-backdrop-filter: var(--glass-wb-pill-quiet-blur);
-  backdrop-filter: var(--glass-wb-pill-quiet-blur);
-  box-shadow: var(--glass-wb-pill-quiet-shadow);
+.glass-table-column-controller .t-dialog__footer .t-button:hover {
+  border: none;
+  background: var(--glass-wb-text-cta-hover-bg);
+  color: var(--glass-wb-text-cta-hover-color);
+  box-shadow: none;
+  filter: none;
+  transform: translateY(var(--glass-wb-control-lift-quiet));
 }
 
-.glass-table-column-controller .t-dialog__footer .t-dialog__cancel:hover {
-  background: var(--glass-wb-pill-quiet-hover-bg);
-  color: var(--glass-wb-pill-quiet-color);
-  box-shadow: var(--glass-wb-pill-quiet-hover-shadow);
-}
-
-.glass-table-column-controller .t-dialog__footer .t-dialog__cancel:active {
-  background: var(--glass-wb-pill-quiet-active-bg);
-  color: var(--glass-wb-pill-quiet-active-color);
-  box-shadow: var(--glass-wb-pill-quiet-active-shadow);
+.glass-table-column-controller .t-dialog__footer .t-button:active {
+  border: none;
+  background-color: var(--glass-wb-text-cta-active-bg);
+  color: var(--glass-wb-text-cta-active-color);
+  box-shadow: none;
   filter: none;
   transform: translateY(var(--glass-wb-control-press-y))
     scale(var(--glass-wb-control-active-scale));
 }
 
-.glass-table-column-controller .t-dialog__footer .t-dialog__cancel:focus-visible {
+.glass-table-column-controller .t-dialog__footer .t-button:focus-visible {
   outline: none;
-  box-shadow:
-    var(--glass-wb-pill-quiet-shadow),
-    var(--glass-wb-control-focus-ring);
-}
-
-/* Confirm = Primary Pill：与 GlassButton shape=round 同高同影 */
-.glass-table-column-controller .t-dialog__footer .t-dialog__confirm {
-  background: var(--glass-wb-btn-blue);
-  color: var(--glass-wb-white);
-  box-shadow: var(--glass-wb-pill-pri-shadow);
-}
-
-.glass-table-column-controller .t-dialog__footer .t-dialog__confirm:hover {
-  background: var(--glass-wb-btn-blue);
-  color: var(--glass-wb-white);
-  filter: var(--glass-wb-control-hover-bright);
-  box-shadow: var(--glass-wb-pill-pri-hover-shadow);
-}
-
-.glass-table-column-controller .t-dialog__footer .t-dialog__confirm:active {
-  background: var(--glass-wb-btn-blue);
-  color: var(--glass-wb-white);
-  box-shadow: var(--glass-wb-control-active-shadow-tight);
-  filter: none;
-  transform: translateY(var(--glass-wb-control-press-y))
-    scale(var(--glass-wb-control-active-scale));
-}
-
-.glass-table-column-controller .t-dialog__footer .t-dialog__confirm:focus-visible {
-  outline: none;
-  box-shadow:
-    var(--glass-wb-pill-pri-shadow),
-    var(--glass-wb-control-focus-ring);
+  border: none;
+  background: transparent;
+  color: var(--glass-wb-text-cta-color);
+  box-shadow: var(--glass-wb-control-focus-ring);
 }
 
 .glass-table-column-controller .t-dialog__footer .t-button.t-is-disabled {
   cursor: not-allowed;
   opacity: var(--glass-wb-control-disabled-opacity);
+  background: transparent;
   box-shadow: none;
   transform: none;
 }
 
 .glass-table-column-controller .t-dialog__footer .t-button.t-is-disabled:hover,
 .glass-table-column-controller .t-dialog__footer .t-button.t-is-disabled:active {
+  background: transparent;
+  color: var(--glass-wb-text-cta-color);
   filter: none;
   transform: none;
+}
+
+/* ==========================================================================
+   列筛选 Popup · 对齐 GlassDropdown
+   TD 默认 overlayClassName 为 t-table__filter-pop；GlassTable 在列级
+   popupProps 中追加 glass-table-filter-pop，确保只命中 Glass 表。
+   DOM：.t-popup.glass-table-filter-pop.t-table__filter-pop
+        > .t-popup__content > .t-table__filter-pop-content
+        > __content-inner + __filter--bottom-buttons
+   ========================================================================== */
+.glass-table-filter-pop.t-table__filter-pop .t-popup__content {
+  padding: 0;
+  border: none;
+  border-radius: var(--glass-wb-dropdown-radius);
+  background: var(--glass-wb-dropdown-fill);
+  -webkit-backdrop-filter: var(--glass-wb-dropdown-blur);
+  backdrop-filter: var(--glass-wb-dropdown-blur);
+  box-shadow: var(--glass-wb-dropdown-shadow);
+  overflow: hidden;
+}
+
+/* Dropdown 面板无箭头；隐藏 TD 箭头及其 inset 脏描边，并收回箭头占位。 */
+.glass-table-filter-pop.t-table__filter-pop .t-popup__arrow {
+  display: none;
+}
+
+.glass-table-filter-pop.t-table__filter-pop[data-popper-placement^='bottom']
+  .t-popup__content--arrow {
+  margin-top: var(--td-comp-margin-s);
+}
+
+.glass-table-filter-pop.t-table__filter-pop[data-popper-placement^='top']
+  .t-popup__content--arrow {
+  margin-bottom: var(--td-comp-margin-s);
+}
+
+.glass-table-filter-pop.t-table__filter-pop[data-popper-placement^='left']
+  .t-popup__content--arrow {
+  margin-right: var(--td-comp-margin-s);
+}
+
+.glass-table-filter-pop.t-table__filter-pop[data-popper-placement^='right']
+  .t-popup__content--arrow {
+  margin-left: var(--td-comp-margin-s);
+}
+
+.glass-table-filter-pop.t-table__filter-pop .t-table__filter-pop-content {
+  background: transparent;
+  color: var(--glass-text-primary);
+}
+
+/* 与 Dropdown menu 同内边距、同 2px 项间距。 */
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter-pop-content-inner {
+  padding: var(--td-pop-padding-m);
+}
+
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter-pop-content-inner
+  .t-radio-group,
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter-pop-content-inner
+  .t-checkbox-group {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 2px;
+  width: 100%;
+  height: auto;
+}
+
+/* TD 列表行默认是裸 radio / checkbox；收成与 Dropdown item 同密度的 Quiet 行。 */
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter-pop-content-inner
+  .t-radio,
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter-pop-content-inner
+  .t-checkbox {
+  display: flex;
+  width: 100%;
+  min-height: 32px;
+  margin: 0;
+  padding: calc(var(--td-comp-paddingTB-xs) - 1px) var(--td-comp-paddingLR-s);
+  border: none;
+  border-radius: var(--glass-wb-dropdown-item-radius);
+  background: transparent;
+  color: var(--glass-wb-dropdown-item-color);
+  box-sizing: border-box;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter-pop-content-inner
+  .t-radio__label,
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter-pop-content-inner
+  .t-checkbox__label {
+  color: inherit;
+}
+
+/* Hover / active / selected 全部吃 Dropdown item whisper；禁用态保持透明。 */
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter-pop-content-inner
+  .t-radio:hover:not(.t-is-disabled):not(.t-is-checked),
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter-pop-content-inner
+  .t-checkbox:hover:not(.t-is-disabled):not(.t-is-checked) {
+  background-color: var(--glass-wb-dropdown-item-hover-bg);
+  color: var(--glass-wb-dropdown-item-hover-color);
+}
+
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter-pop-content-inner
+  .t-radio:active:not(.t-is-disabled),
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter-pop-content-inner
+  .t-checkbox:active:not(.t-is-disabled),
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter-pop-content-inner
+  .t-radio.t-is-checked:not(.t-is-disabled),
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter-pop-content-inner
+  .t-checkbox.t-is-checked:not(.t-is-disabled),
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter-pop-content-inner
+  .t-radio.t-is-checked:not(.t-is-disabled):hover,
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter-pop-content-inner
+  .t-checkbox.t-is-checked:not(.t-is-disabled):hover {
+  background-color: var(--glass-wb-dropdown-item-active-bg);
+  color: var(--glass-wb-dropdown-item-active-color);
+}
+
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter-pop-content-inner
+  .t-radio:has(.t-radio__former:focus-visible),
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter-pop-content-inner
+  .t-checkbox:has(.t-checkbox__former:focus-visible) {
+  outline: none;
+  box-shadow: var(--glass-wb-control-focus-ring);
+}
+
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter-pop-content-inner
+  .t-radio.t-is-disabled,
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter-pop-content-inner
+  .t-radio.t-is-disabled:hover,
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter-pop-content-inner
+  .t-checkbox.t-is-disabled,
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter-pop-content-inner
+  .t-checkbox.t-is-disabled:hover {
+  background: transparent;
+  color: var(--glass-wb-dropdown-item-disabled-color);
+  cursor: not-allowed;
+}
+
+/* 输入型 filter 只接 Quiet Field Chrome，不改 Input 本体的组件行为。 */
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter-pop-content-inner
+  > .t-input__wrap {
+  width: 100%;
+  background: transparent;
+}
+
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter-pop-content-inner
+  .t-input {
+  border-color: transparent;
+  border-radius: var(--glass-wb-field-radius);
+  background: var(--glass-wb-field-bg);
+  box-shadow: var(--glass-wb-field-hairline);
+  transition: box-shadow 0.15s ease;
+}
+
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter-pop-content-inner
+  .t-input:hover {
+  border-color: transparent;
+  box-shadow: var(--glass-wb-field-hairline-hover);
+}
+
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter-pop-content-inner
+  .t-input.t-is-focused,
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter-pop-content-inner
+  .t-input:focus-within {
+  border-color: transparent;
+  box-shadow: var(--glass-wb-field-focus-ring);
+}
+
+/* 输入 sticky 区不恢复 TD 容器灰底。 */
+.glass-table-filter-pop.t-table__filter-pop.t-table__filter-pop
+  .t-table__list-filter-input--sticky
+  .t-table__filter-pop-content
+  .t-table__filter-pop-content-inner
+  .t-input__wrap {
+  background: transparent;
+}
+
+/* Footer：Text CTA only（对齐 GlassButton variant=text；无 Pill / 实心主色）。
+   竖向勿复用 dialog-footer-padding-top 作上下 shorthand（12+28+12≈52，下拉偏厚）；
+   紧凑条：上下 6 + text-cta 28 ≈ 40。 */
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter--bottom-buttons,
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter-pop-content-button {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--glass-wb-dialog-footer-gap);
+  padding: calc(var(--glass-wb-dialog-footer-padding-top) / 2) var(--td-pop-padding-m);
+  border-top: 1px solid var(--glass-border-soft);
+  background: transparent;
+}
+
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter--bottom-buttons
+  .t-button
+  + .t-button,
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter-pop-content-button
+  .t-button
+  + .t-button {
+  margin-left: 0;
+}
+
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter--bottom-buttons
+  .t-button,
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter-pop-content-button
+  .t-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--glass-wb-text-cta-height);
+  padding: 0 var(--glass-wb-text-cta-pad-x);
+  border: none;
+  border-color: transparent;
+  border-radius: var(--glass-wb-text-cta-radius);
+  background: transparent;
+  background-color: transparent;
+  color: var(--glass-wb-text-cta-color);
+  font-size: var(--glass-wb-text-cta-font-size);
+  font-weight: var(--glass-wb-pill-font-weight);
+  box-shadow: none;
+  filter: none;
+  --ripple-color: var(--glass-wb-text-cta-ripple);
+  transition: var(--glass-wb-control-transition);
+}
+
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter--bottom-buttons
+  .t-button:hover,
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter-pop-content-button
+  .t-button:hover {
+  border: none;
+  background: var(--glass-wb-text-cta-hover-bg);
+  color: var(--glass-wb-text-cta-hover-color);
+  box-shadow: none;
+  filter: none;
+  transform: translateY(var(--glass-wb-control-lift-quiet));
+}
+
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter--bottom-buttons
+  .t-button:active,
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter-pop-content-button
+  .t-button:active {
+  border: none;
+  background-color: var(--glass-wb-text-cta-active-bg);
+  color: var(--glass-wb-text-cta-active-color);
+  box-shadow: none;
+  filter: none;
+  transform: translateY(var(--glass-wb-control-press-y))
+    scale(var(--glass-wb-control-active-scale));
+}
+
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter--bottom-buttons
+  .t-button:focus-visible,
+.glass-table-filter-pop.t-table__filter-pop
+  .t-table__filter-pop-content
+  .t-table__filter-pop-content-button
+  .t-button:focus-visible {
+  outline: none;
+  border: none;
+  background: transparent;
+  color: var(--glass-wb-text-cta-color);
+  box-shadow: var(--glass-wb-control-focus-ring);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1452,6 +1894,23 @@ function onTableChange(data: TableChangeData, context: TableChangeContext<GlassT
   .glass-table.glass-table .t-table__column-controller-trigger .t-button:active,
   .glass-table-column-controller.glass-table-column-controller
     .t-dialog__footer
+    .t-button:active {
+    transform: none;
+  }
+
+  .glass-table-filter-pop.glass-table-filter-pop
+    .t-table__filter-pop-content
+    .t-table__filter--bottom-buttons
+    .t-button {
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+
+  .glass-table-filter-pop.glass-table-filter-pop
+    .t-table__filter-pop-content
+    .t-table__filter--bottom-buttons
     .t-button:active {
     transform: none;
   }

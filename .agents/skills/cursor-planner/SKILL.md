@@ -40,6 +40,7 @@ mimo 仅用户点名（DEPRECATED）→ `mimo-dispatch`。
   → 每 Track：写 .agents/tmp-codex-<task>-prompt.txt（边界·红线·验收·必读路径）
   → 按模型矩阵选 -m（默认 flash；视觉目标拆 V/I）；按是否落盘选 -s
   → Shell all 拉起 codex exec（可并行多 Track；缺 all 勿派）
+  → 若 Cursor Auto-review 拦下：同命令 + request_smart_mode_approval / smart_mode_block_reason，请用户 Approve（见 codex-dispatch）；禁止改自做产品代码
   → 先扫 run.log 头/尾：非 EPERM / app-server 失败后，再读 QA 结论段做验收
   → PASS → 向用户给对照结论；FAIL → 写返工 brief 再派（勿 Cursor 大面积接手）
 ```
@@ -51,7 +52,7 @@ mimo 仅用户点名（DEPRECATED）→ `mimo-dispatch`。
 - **I 按偏差改码** → 默认仍 flash；仅超大重构 / 跨模块契约 / 用户点名 → `deepseek-v4-pro`（禁 `-i`）  
 - 视觉目标：V 与 I 可并行写 brief，**验收串行**（V 结论喂 I）；同文件冲突 Track 勿并行  
 
-通道细节强制走 `codex-dispatch`（`-m` 必写、sandbox 跟落盘、`required_permissions: ["all"]`）。
+通道细节强制走 `codex-dispatch`（`-m` 必写、sandbox 跟落盘、`required_permissions: ["all"]`、Auto-review 审批重派）。
 
 ## 4. Brief / Prompt 最小结构
 
@@ -84,16 +85,20 @@ Cursor **不要**把业务 skill 全文粘进 prompt；只写路径让 Codex Rea
 | 开多个 Cursor 子代理改 `glass-frontend` | 不要；改开多条 Codex |
 | 验收时读 QA md 结论 + 抽查 build | 要 |
 | 派 Codex 后先扫 run.log 头/尾，确认非 EPERM / app-server 假成功 | 要（见 `codex-dispatch`） |
+| Auto-review 拦 `codex exec` 后走审批重派，等用户 Approve | 要 |
+| Auto-review 拦一次就改 Cursor 自做 `glass-frontend/**` | 不要（≠ 热修例外） |
+| 派发命令里 grep `~/.zshrc` 抠 `DEEPSEEK_API_KEY` | 不要 |
 | 把 `tee` 的完整 run.log 贴进下一条用户回复上下文 | 不要；摘要 5～15 行关键点 |
 | 规范变更由 Cursor 落盘 | 要（白名单） |
 
 ## 6. 验收收口（Cursor）
 
-1. 先扫 run.log 头/尾：若 `Operation not permitted` / `failed to initialize in-process app-server` → **通道 FAIL**，带 `all` 重派；禁止凭 exit 0 当完成。  
-2. 读 Track 产出路径（优先 QA md / notes；log 只扫失败与文件清单）。  
-3. 对照 brief 的完成标准 → **一致 / 偏差 / 待确认**。  
-4. P0/P1：写返工 prompt 再派；P2：记入待确认问用户。  
-5. 向用户汇报保持短：结论 + 偏差 + 下一步；不复述整份方案。
+1. 若派发被 **Auto-review** 拒（命令未跑）：同命令 + `request_smart_mode_approval` / `smart_mode_block_reason`，请用户 Approve；**不算** Codex 失败轮次，**禁止**因此自做产品代码。  
+2. 先扫 run.log 头/尾：若 `Operation not permitted` / `failed to initialize in-process app-server` → **通道 FAIL**，带 `all` 重派；禁止凭 exit 0 当完成。  
+3. 读 Track 产出路径（优先 QA md / notes；log 只扫失败与文件清单）。  
+4. 对照 brief 的完成标准 → **一致 / 偏差 / 待确认**。  
+5. P0/P1：写返工 prompt 再派；P2：记入待确认问用户。  
+6. 向用户汇报保持短：结论 + 偏差 + 下一步；不复述整份方案。
 
 视觉总验收可派 `prototype-qa` 给 flash（V 轨）；返工实现默认仍 flash（I 轨），pro 仅例外——或 Cursor 只做「合流已有 QA」，避免再跑完整读码。
 
@@ -110,6 +115,8 @@ Cursor **不要**把业务 skill 全文粘进 prompt；只写路径让 Codex Rea
 ## 8. 禁止
 
 - 默认 Cursor 实现 Glass / Lab / 壳层 / 工作台  
-- 用「更快」当借口跳过派发去做中大型改码（非白名单）  
+- 用「更快」或「派发被 Auto-review 拦了」当借口跳过派发去做中大型改码（非白名单）  
+- Auto-review 拦一次就当热修例外自做（须先审批重派；热修仍要 Codex 真失败 ≥2 轮）  
 - 为编排加载与本轮 Track 无关的大文件 / 历史 transcript 全文  
 - 在规范里复制第二份业务 SOP 到 Cursor 专属目录  
+

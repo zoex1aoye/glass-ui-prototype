@@ -13,7 +13,9 @@ alwaysApply: true
 - 环境：npm 版 `@openai/codex`（禁止 ChatGPT.app 捆绑作默认）；非交互须 `export DEEPSEEK_API_KEY`；登录冲突时 `codex logout`。
 - **Cursor Shell 派发必须无沙箱**：一切 `codex exec`（尤其 **`-i` Vision**）须 `required_permissions: ["all"]`。与 Codex 自身 `-s …` 是两件事；关 Cursor 沙箱 ≠ 放宽 Codex sandbox。缺 `all` → `failed to initialize in-process app-server` / PATH aliases `Operation not permitted`；重派一律带 `all`。
 - **假成功门禁**：run.log 仅有上述 EPERM、无 QA md → **FAIL**，禁止凭 Shell/`tee` exit 0 勾完成；细则见 skill。
+- **飞轮（Auto-review）**：Cursor Smart Mode 可能在执行前拦 `codex exec`（credential / external CLI / 宽权限文案）。同命令重派并带 `request_smart_mode_approval: true` + `smart_mode_block_reason: <审查原文>`，等用户 Approve。**禁止**因被拦就默默自做产品代码；**禁止**派发命令里 grep `~/.zshrc` 抠 key（用环境已有 `DEEPSEEK_API_KEY`）。细则见 skill。
 - **飞轮**：部分 Codex session 仍拒写 `.agents/**`（即使 `workspace-write`）。规范轨优先 Cursor 落盘（`cursor-planner` 白名单）；`.agents/tmp-*` 若被拦 → Cursor 写，或先落 `output/qa/` 再挪入。细则见 skill。
-- **飞轮（listen EPERM）**：`-s workspace-write` 不能 bind；Codex 自启 vite 会 `EPERM 127.0.0.1:5173`。默认禁止 Codex 自启服；prompt 写已有 `DEV_URL` 或「浏览器验收由 Cursor」；仅用户知情时才用 `-s danger-full-access`。- 禁止把 API key 写入仓库。禁止自动 `git commit`。
+- **飞轮（listen EPERM）**：`-s workspace-write` 不能 bind；Codex 自启 vite 会 `EPERM 127.0.0.1:5173`。默认禁止 Codex 自启服；prompt 写已有 `DEV_URL` 或「浏览器验收由 Cursor」；仅用户知情时才用 `-s danger-full-access`。
+- 禁止把 API key 写入仓库。禁止自动 `git commit`。
 - mimo 仅当用户点名：见 `.agents/skills/mimo-dispatch/`（DEPRECATED）。
 - 派发模板与 dry-run 见 `.agents/skills/codex-dispatch/SKILL.md`；编排节奏见 `.agents/skills/cursor-planner/`。

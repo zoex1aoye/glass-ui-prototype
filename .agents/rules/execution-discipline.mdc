@@ -44,4 +44,4 @@ npm --prefix glass-frontend run build
 npm --prefix glass-frontend run dev   # Glass/Lab 对照 token + Living Demo
 ```
 
-编排见 `.agents/rules/cursor-planner.mdc`；派发通道见 `.agents/rules/codex-dispatch.mdc`（默认 `codex exec`；Cursor Shell 须 `required_permissions: ["all"]`）。mimo 仅用户点名时见 `.agents/rules/mimo-dispatch.mdc`（DEPRECATED）。
+编排见 `.agents/rules/cursor-planner.mdc`；派发通道见 `.agents/rules/codex-dispatch.mdc`（默认 `codex exec`；Cursor Shell 须 `required_permissions: ["all"]`；Auto-review 拦则审批重派，勿改自做）。mimo 仅用户点名时见 `.agents/rules/mimo-dispatch.mdc`（DEPRECATED）。

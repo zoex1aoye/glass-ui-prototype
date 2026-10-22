@@ -4,10 +4,11 @@ description: >
   当需要用 Codex CLI（npm @openai/codex）派发实现任务时使用。覆盖 interactive /
   headless `codex exec`、必须显式 `-m`（flash=默认+唯一 Vision；pro=例外无 Vision）、
   flash/pro 价格与双轨编排、sandbox、环境（PATH/nvm、DEEPSEEK_API_KEY）、
-  Cursor Shell 无沙箱纪律与 dry-run。
+  Cursor Shell 无沙箱、Auto-review 审批重派与 dry-run。
   典型触发：「派 Codex」「codex exec」「-m deepseek」「headless 派发」
-  「派发实现任务」。编排节奏 / 噪音控制见 cursor-planner；业务实现由 Codex
-  Read 对应 glass-* / docs-shell / prototype-qa；本 skill 只负责派通道。
+  「派发实现任务」「派发被拦」「Auto-review」。编排节奏 / 噪音控制见
+  cursor-planner；业务实现由 Codex Read 对应 glass-* / docs-shell /
+  prototype-qa；本 skill 只负责派通道。
 ---
 
 # codex-dispatch — Codex CLI 派发约定
@@ -152,13 +153,43 @@ required_permissions: ["all"]
 - **`-i` Vision 附图更易踩**（视觉 QA / prototype-qa V 轨）；普通 `codex exec` 无 `-i` 也可能 EPERM——重派一律带 `all`。
 - **假成功门禁**：Shell/`tee` 可能 `exit_code: 0`，但 log 只有上述 Error、**没有** QA 结论 md / 真正 agent 产出 → **禁止**勾「Vision QA / 派发完成」。判定 **FAIL**，立即用 `required_permissions: ["all"]` 重派。
 - 派发后扫 run.log **头/尾**：出现 `Operation not permitted` / `failed to initialize in-process app-server` → 同上 FAIL 重派，勿读半截当验收。
+
+**飞轮（曾错：Cursor Auto-review / Smart Mode 拦 `codex exec` → 误当「Codex 挂了」或默默自做）**：
+
+这是 **Cursor 审批层**在 Shell **真正执行前**拒命令，与 Codex sandbox / API / EPERM **不是同一层**。
+
+| 层 | 信号 | 处理 |
+|---|---|---|
+| Cursor Auto-review | 命令未跑；文案含 credential / external CLI / without authorization / workspace-write without explicit user authorization | 见下「审批重派」 |
+| Cursor 沙箱缺 `all` | run.log 有 app-server / PATH aliases `Operation not permitted` | 带 `all` 重派 |
+| Codex 拒写 `.agents/**` | 改得了 `glass-frontend/`，写 `.agents` 报 outside project / not permitted | Cursor 落盘或先写 `output/qa/` 再挪入 |
+
+**为何易拦**：`codex exec` + `required_permissions: ["all"]` + `-s workspace-write` 本身像「宽权限拉起外部 agent」；若再 `grep ~/.zshrc` / 抠 `DEEPSEEK_API_KEY`，更易被标成 credential 提取。
+
+**派发命令纪律（降拦）**：
+
+1. **禁止**在派发命令里 `grep` / `sed` 读 `~/.zshrc`、`~/.bashrc`、密钥文件抠 key。
+2. 非交互环境优先依赖**已注入**的 `DEEPSEEK_API_KEY`：`export DEEPSEEK_API_KEY="${DEEPSEEK_API_KEY:?missing}"`（或 `test -n` 后失败退出）。缺 key 时向用户说明「请在 Agent/终端环境导出」，**不要**用读家目录配置文件绕过。
+3. 仍须 `required_permissions: ["all"]`——去掉 `all` 只会变成 EPERM 假成功，不能用来躲 Auto-review。
+
+**审批重派（硬）**：
+
+1. Auto-review 拒一次后，**立刻**用**同一条** `codex exec` 再调 Shell，并带：
+   - `required_permissions: ["all"]`
+   - `request_smart_mode_approval: true`
+   - `smart_mode_block_reason: <审查返回的原文，勿改写>`
+2. 向用户一句话说明：点审批卡 **Approve**；通过后命令才会真正跑。
+3. **禁止**因 Auto-review 被拦就默默改走 Cursor 实现 `glass-frontend/**`（不算「热修例外」；热修仍须 Codex 已失败 ≥2 轮且体量够小，见 `cursor-planner`）。
+4. 用户明确说「别派 / 你直接改」→ 才可按白名单自做。
+
 ## 标准命令模板
 
 ### Headless（推荐：Cursor 派发）
 
 ```bash
+# 勿 grep ~/.zshrc 抠 key；依赖环境已有 DEEPSEEK_API_KEY
 export DEEPSEEK_API_KEY="${DEEPSEEK_API_KEY:?missing}"
-# 若非交互 shell 无 nvm：先 source nvm 或把 npm 全局 bin 加入 PATH
+# 若非交互 shell 无 nvm：先 source nvm 或把 npm 全局 bin 加入 PATH（勿 source 整份 zshrc 仅为拿 key）
 
 # <MODEL>：按「模型选择」表填写，例如 deepseek-flash 或 deepseek-v4-pro
 codex exec \
@@ -170,7 +201,8 @@ codex exec \
 ```
 
 仅当完成标准**确实无落盘**时，才把 `-s workspace-write` 换成 `-s read-only`。  
-在 Cursor Agent 里执行上式时：**同步请求 `required_permissions: ["all"]`**（缺则易 EPERM / 假成功，见上节飞轮）。
+在 Cursor Agent 里执行上式时：**同步请求 `required_permissions: ["all"]`**（缺则易 EPERM / 假成功，见上节飞轮）。  
+若 Auto-review 拦下 → 同命令 + `request_smart_mode_approval` / `smart_mode_block_reason`（见上节飞轮），**禁止**改自做产品代码。
 
 ### Headless + Vision 附图（`-i`）
 
@@ -214,21 +246,25 @@ codex exec -m deepseek-flash -s read-only --skip-git-repo-check "Reply PONG and 
 
 1. Cursor：读 `cursor-planner`（编排）+ **本 skill**（通道）。业务 skill / rules **写入 prompt 必读列表**，由 Codex Read——Cursor 不为实现全文预载。
 2. Brief / prompt 落在 `.agents/tmp-codex-*`；实现边界、红线、验收写进 prompt；**在 brief 或派发记录里写明选用的 `-m` 与理由**（Vision / 默认 flash / pro 例外原因），以及 **`-s` 与「是否落盘」一致**。视觉目标写清 V / I 双轨或单轨 flash。
-3. 确认 `export DEEPSEEK_API_KEY`；确认 `which codex` 为 npm 版。
+3. 确认环境已有 `DEEPSEEK_API_KEY`（`export …:?missing`）；**禁止**派发命令里 grep 家目录配置抠 key。确认 `which codex` 为 npm 版。
 4. 确认命令含 **`-m <slug>`**（按上表；默认 flash）。
 5. 若选 `deepseek-v4-pro` → 确认无 `-i`，且 brief 有例外理由。
 6. 若 prompt/计划要求写出 `.agents/tmp-*` 或 refs 截图 → 确认 **`-s workspace-write`**（禁止误用 `read-only`）。
 7. 若带 `-i` → 确认 `-m deepseek-flash` 且 prompt 经 stdin（`- < prompt.txt`），非空 positional。
 8. Cursor Shell：**必须** `required_permissions: ["all"]`（含无 `-i` 的 `codex exec`；`-i` Vision 更易踩）。
 9. 可选 dry-run：上节短 `exec`。
-10. 派发后扫 run.log 头/尾：`Operation not permitted` / `failed to initialize in-process app-server` → **FAIL，立刻带 `all` 重派**；禁止仅凭 exit 0 勾完成。无 EPERM 时再只吸收 log / QA **摘要**，禁止整份 run.log 回灌对话上下文。
+10. 派发后：若 **Auto-review 拒** → 同命令 + `request_smart_mode_approval` / `smart_mode_block_reason`，等用户 Approve；**禁止**默默自做产品代码。
+11. 派发后扫 run.log 头/尾：`Operation not permitted` / `failed to initialize in-process app-server` → **FAIL，立刻带 `all` 重派**；禁止仅凭 exit 0 勾完成。无 EPERM 时再只吸收 log / QA **摘要**，禁止整份 run.log 回灌对话上下文。
 ## 禁止
 
 - 默认再派 `mimo run`（除非用户点名 mimo）
 - 把 ChatGPT.app 捆绑 `codex` 当默认 PATH
 - 把 `DEEPSEEK_API_KEY` 写入仓库任何文件
+- 在派发命令里 `grep` / 读 `~/.zshrc` 等家目录文件抠 API key
 - 在 Cursor sandbox 内派 `codex exec`（缺 `required_permissions: ["all"]`）；含 `-i` Vision
-- 把「tee exit 0 + 仅有 app-server EPERM」当 Vision QA / 派发完成（假成功）- **headless 派发省略 `-m`**（禁止指望 Codex 按任务内容自选模型）
+- 把「tee exit 0 + 仅有 app-server EPERM」当 Vision QA / 派发完成（假成功）
+- Auto-review 拦一次就改 Cursor 自做 `glass-frontend/**`（须审批重派；热修白名单另见 `cursor-planner`）
+- **headless 派发省略 `-m`**（禁止指望 Codex 按任务内容自选模型）
 - **给 `deepseek-v4-pro` 传 `-i` / 附图**（无 Vision）
 - **无例外理由默认派 pro**（贵且多数 agentic 不优于 flash）
 - **有落盘产出却用 `-s read-only`**（含 Vision QA / prototype-qa 写 `.agents/tmp-*`）
