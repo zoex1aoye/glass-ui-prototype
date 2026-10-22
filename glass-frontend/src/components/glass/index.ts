@@ -165,6 +165,8 @@ export { default as GlassFormPane } from './GlassFormPane.vue'
 // Dialog 内分段原语 · 禁双托盘
 export { default as GlassDialogSection } from './GlassDialogSection.vue'
 export { default as GlassPopconfirm } from './GlassPopconfirm.vue'
+export { default as GlassTooltip } from './GlassTooltip.vue'
+export { default as GlassTooltipLite } from './GlassTooltipLite.vue'
 
 // ── Loading · Sound Wave（盖 t-loading；三条竖向音浪 / 错峰伸缩 / 轻 mask） ──
 // 组件透明底、非托盘；Lab 橱窗宿主可 Surface → Panel(standalone) 展示真实消费路径。

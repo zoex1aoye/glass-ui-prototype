@@ -3,7 +3,7 @@
  * 实验室·反馈与加载 — Inline InfoBar / Toast / Soft Notice / Sound Wave Loading。
  * Overlay（Dialog / FormPane / Popconfirm）与 GlassBadge 已按控件职能迁出。
  */
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, h, onBeforeUnmount, onMounted, ref } from 'vue'
 
 import {
   GlassAlert,
@@ -16,6 +16,8 @@ import {
   GlassPanel,
   GlassPosterWash,
   GlassSurface,
+  GlassTooltip,
+  GlassTooltipLite,
 } from '@/components/glass'
 
 import { useDocsProps } from '@/layouts/useDocsProps'
@@ -191,6 +193,16 @@ const collapseMessage: string[] = [
   '若遇延迟或冲突，请至「设置 · 同步任务」查看失败明细。',
 ]
 
+/* ---------- Tooltip · Frosted tip / weak arrow ---------- */
+const liteTrigger = () =>
+  h(
+    GlassButton,
+    {
+      variant: 'soft',
+    },
+    () => tt('feedback.tooltip.lite.trigger'),
+  )
+
 /* ---------- Loading · Sound Wave / Fullscreen ---------- */
 const fullscreenLoading = ref(false)
 let fullscreenLoadingTimer: ReturnType<typeof setTimeout> | undefined
@@ -319,6 +331,88 @@ onBeforeUnmount(() => {
           </div>
         </div>
       </GlassPosterWash>
+    </section>
+
+    <section class="lab-section">
+      <div class="lab-section-label">
+        <span class="lab-section-name">{{ tt('feedback.section.tooltip') }}</span>
+        <span class="lab-section-meta">{{ tt('feedback.tooltip.meta') }}</span>
+      </div>
+
+      <GlassSurface class="lab-surface-host">
+        <div class="lab-plate-grid">
+          <GlassPanel
+            variant="standalone"
+            :title="tt('feedback.tooltip.panel.default')"
+            class="lab-plate"
+          >
+            <div class="lab-plate-stack">
+              <div class="lab-tooltip-row">
+                <GlassTooltip
+                  placement="top"
+                  :content="tt('feedback.tooltip.default.content')"
+                >
+                  <GlassButton variant="soft">
+                    {{ tt('feedback.tooltip.placement.top') }}
+                  </GlassButton>
+                </GlassTooltip>
+                <GlassTooltip
+                  placement="right"
+                  :content="tt('feedback.tooltip.default.content')"
+                >
+                  <GlassButton variant="quiet">
+                    {{ tt('feedback.tooltip.placement.right') }}
+                  </GlassButton>
+                </GlassTooltip>
+                <GlassTooltip
+                  placement="bottom"
+                  :content="tt('feedback.tooltip.default.content')"
+                >
+                  <GlassButton variant="soft">
+                    {{ tt('feedback.tooltip.placement.bottom') }}
+                  </GlassButton>
+                </GlassTooltip>
+                <GlassTooltip
+                  placement="left"
+                  :content="tt('feedback.tooltip.default.content')"
+                >
+                  <GlassButton variant="quiet">
+                    {{ tt('feedback.tooltip.placement.left') }}
+                  </GlassButton>
+                </GlassTooltip>
+              </div>
+              <div class="lab-control-note">{{ tt('feedback.tooltip.note') }}</div>
+            </div>
+          </GlassPanel>
+
+          <GlassPanel
+            variant="standalone"
+            :title="tt('feedback.tooltip.panel.lite')"
+            class="lab-plate"
+          >
+            <div class="lab-plate-stack">
+              <div class="lab-tooltip-row">
+                <GlassTooltipLite
+                  placement="top"
+                  theme="light"
+                  :content="tt('feedback.tooltip.lite.light.content')"
+                >
+                  <GlassButton variant="soft">
+                    {{ tt('feedback.tooltip.lite.light.trigger') }}
+                  </GlassButton>
+                </GlassTooltipLite>
+                <GlassTooltipLite
+                  placement="bottom"
+                  theme="default"
+                  :content="tt('feedback.tooltip.lite.default.content')"
+                  :trigger-element="liteTrigger"
+                />
+              </div>
+              <div class="lab-control-note">{{ tt('feedback.tooltip.note') }}</div>
+            </div>
+          </GlassPanel>
+        </div>
+      </GlassSurface>
     </section>
 
     <section class="lab-section">
@@ -547,6 +641,13 @@ onBeforeUnmount(() => {
   flex-wrap: wrap;
   align-items: center;
   gap: 24px;
+}
+
+.lab-tooltip-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
 }
 
 .lab-loading-block {

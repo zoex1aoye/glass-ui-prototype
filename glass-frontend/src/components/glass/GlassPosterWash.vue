@@ -71,6 +71,7 @@ withDefaults(
   height: 100%;
   object-fit: cover;
   object-position: center;
+  filter: var(--glass-poster-wash-raster-filter);
   pointer-events: none;
   user-select: none;
 }

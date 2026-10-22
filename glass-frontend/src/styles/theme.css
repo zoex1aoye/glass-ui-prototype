@@ -233,6 +233,11 @@ html.dark {
   --glass-wb-popconfirm-fill: #2c2c2c;
   --glass-wb-popconfirm-blur: none;
   --glass-wb-popconfirm-shadow: var(--td-shadow-2);
+  --glass-wb-tooltip-fill: #2c2c2c;
+  --glass-wb-tooltip-blur: none;
+  --glass-wb-tooltip-shadow: var(--td-shadow-2);
+  --glass-wb-tooltip-color: var(--td-text-color-primary);
+  --glass-wb-tooltip-arrow-fill: #2c2c2c;
   --glass-wb-dropdown-fill: #2c2c2c;
   --glass-wb-dropdown-blur: none;
   --glass-wb-dropdown-shadow: var(--td-shadow-2);
@@ -369,7 +374,8 @@ html.dark {
      下方 air / petal 变量为 legacy live stack，默认不再驱动。 */
   --glass-poster-wash: var(--glass-layer-l0-wash);
   --glass-poster-wash-raster: url('../assets/glass/poster-wash-air-petals.webp');
-  --glass-poster-wash-veil: rgba(20, 28, 40, 0.44);
+  --glass-poster-wash-raster-filter: brightness(0.15) saturate(2.8);
+  --glass-poster-wash-veil: rgba(32, 32, 32, 0.55);
   --glass-poster-wash-fallback: #202020;
   --glass-poster-air-radial-a: radial-gradient(
     36% 42% at 78% 18%,
@@ -1343,6 +1349,24 @@ body .t-notification {
   --glass-wb-popconfirm-radius: 14px;
   --glass-wb-popconfirm-shadow: 0 10px 28px rgba(15, 60, 140, 0.12);
 
+  /* Tooltip · WinUI frosted tip
+     default 跟随当前 scheme：浅色近白微透 / 深色炭黑实板；
+     light 为显式浅色分支。箭头只复用 tip fill，禁止硬描边。 */
+  --glass-wb-tooltip-fill: rgba(252, 254, 255, 0.92);
+  --glass-wb-tooltip-blur: blur(16px) saturate(1.1);
+  --glass-wb-tooltip-radius: 12px;
+  --glass-wb-tooltip-shadow: 0 10px 26px rgba(15, 60, 140, 0.12);
+  --glass-wb-tooltip-color: var(--glass-text-primary);
+  --glass-wb-tooltip-arrow-fill: rgba(252, 254, 255, 0.92);
+  --glass-wb-tooltip-light-fill: rgba(252, 254, 255, 0.92);
+  --glass-wb-tooltip-light-blur: blur(16px) saturate(1.1);
+  --glass-wb-tooltip-light-shadow: 0 10px 26px rgba(15, 60, 140, 0.12);
+  --glass-wb-tooltip-light-color: #1a2332;
+  --glass-wb-tooltip-light-arrow-fill: rgba(252, 254, 255, 0.92);
+  --glass-wb-tooltip-pad: 8px 12px;
+  --glass-wb-tooltip-font-size: var(--glass-type-caption-size);
+  --glass-wb-tooltip-line-height: 1.45;
+
   /* Dropdown Menu · Quiet Chrome（GlassDropdown 面板）
      触发钮 = GlassButton 密度（soft/quiet/primary）；本组只管菜单。
      近白微透 fill + 主题蓝 item hover/active whisper；禁 TD 灰脏边。 */
@@ -1722,6 +1746,7 @@ body .t-notification {
   --glass-poster-wash: linear-gradient(180deg, #eff5fb 0%, #e9f0f7 52%, #e4edf6 100%);
   /* 主用光栅；GlassPosterWash 内再以 Vite import 覆盖，保证构建后 URL 可解析 */
   --glass-poster-wash-raster: url('../assets/glass/poster-wash-air-petals.webp');
+  --glass-poster-wash-raster-filter: none;
   --glass-poster-wash-veil: rgba(255, 255, 255, 0.14);
   --glass-poster-wash-fallback: var(--glass-layer-l0-fill);
 
