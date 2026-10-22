@@ -390,8 +390,6 @@ const posterConversionData: TableRowData[] = [
   min-height: 640px;
   gap: var(--lab-poster-gap);
   padding: 20px;
-  border-radius: var(--glass-wb-card-radius);
-  border: 1px solid var(--glass-border-soft);
   box-sizing: border-box;
 }
 
@@ -511,8 +509,6 @@ const posterConversionData: TableRowData[] = [
 .poster-pair-wash {
   min-height: 520px;
   padding: 20px;
-  border-radius: var(--glass-wb-card-radius);
-  border: 1px solid var(--glass-border-soft);
   box-sizing: border-box;
 }
 

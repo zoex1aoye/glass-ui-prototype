@@ -12,7 +12,7 @@
 
 // ── L0 Page / Poster Wash ──────────────────────────────────────────────────
 // 页底海报灰白：简化近似走 --glass-layer-l0-*；整装权威场见 GlassPosterWash + --glass-poster-*
-// fit 仅 cover（含安全过冲）；禁止 contain / safe 选项
+// fit 仅 cover（光栅 center cover）；禁止 contain / safe 选项
 // token: --glass-layer-l0-fill / --glass-layer-l0-wash / --glass-layer-l0-air
 // 壳层接线：background: var(--glass-layer-l0-air), var(--glass-layer-l0-wash)
 export { default as GlassPosterWash } from './GlassPosterWash.vue'

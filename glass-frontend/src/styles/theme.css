@@ -365,65 +365,76 @@ html.dark {
     color-mix(in srgb, #ffffff 7%, transparent) 100%
   );
 
-  /* PosterWash：中性炭黑底 + 极淡白空气感；不复用品牌冷蓝做大面积装饰。 */
+  /* PosterWash：air · petals 光栅 + 均匀压暗 veil。
+     下方 air / petal 变量为 legacy live stack，默认不再驱动。 */
   --glass-poster-wash: var(--glass-layer-l0-wash);
+  --glass-poster-wash-raster: url('../assets/glass/poster-wash-air-petals.webp');
+  --glass-poster-wash-veil: rgba(20, 28, 40, 0.44);
+  --glass-poster-wash-fallback: #202020;
   --glass-poster-air-radial-a: radial-gradient(
     36% 42% at 78% 18%,
-    rgba(255, 255, 255, 0.025),
-    transparent 62%
+    rgba(176, 210, 255, 0.05),
+    transparent 70%
   );
   --glass-poster-air-radial-b: radial-gradient(
     30% 36% at 92% 72%,
-    rgba(255, 255, 255, 0.018),
+    rgba(176, 210, 255, 0.018),
     transparent 60%
   );
   --glass-poster-air-radial-c: radial-gradient(
     40% 48% at 18% 88%,
-    rgba(255, 255, 255, 0.014),
+    rgba(176, 210, 255, 0.014),
     transparent 65%
   );
   --glass-poster-air-radial-d: radial-gradient(
-    28% 30% at 42% 12%,
-    rgba(255, 255, 255, 0.02),
-    transparent 70%
+    34% 34% at 48% 42%,
+    rgba(255, 255, 255, 0.026),
+    transparent 76%
   );
-  --glass-poster-air-linear: linear-gradient(135deg, #202020, #202020 55%, #1e1e1e);
+  --glass-poster-air-radial-e: radial-gradient(
+    40% 38% at 16% 4%,
+    rgba(176, 210, 255, 0.065),
+    rgba(140, 190, 255, 0.02) 48%,
+    transparent 76%
+  );
+  --glass-poster-air-linear: linear-gradient(145deg, #202020, #1f2226 52%, #1d1f22);
   --glass-poster-air-bg:
     var(--glass-poster-air-radial-a),
     var(--glass-poster-air-radial-b),
     var(--glass-poster-air-radial-c),
+    var(--glass-poster-air-radial-e),
     var(--glass-poster-air-radial-d),
     var(--glass-poster-air-linear);
   --glass-poster-air-before-bg: linear-gradient(
     100deg,
-    rgba(255, 255, 255, 0.03),
-    rgba(255, 255, 255, 0.02) 40%,
+    rgba(176, 210, 255, 0.026),
+    rgba(176, 210, 255, 0.014) 46%,
     transparent
   );
   --glass-poster-air-after-bg: linear-gradient(
     150deg,
-    rgba(255, 255, 255, 0.025),
-    rgba(255, 255, 255, 0.014),
+    rgba(176, 210, 255, 0.018),
+    rgba(176, 210, 255, 0.01),
     transparent
   );
   --glass-poster-petal-blend: screen;
   --glass-poster-petal-a-bg: linear-gradient(
     155deg,
-    rgba(255, 255, 255, 0.025),
-    rgba(255, 255, 255, 0.04) 35%,
-    rgba(255, 255, 255, 0.03) 65%,
+    rgba(176, 210, 255, 0.018),
+    rgba(176, 210, 255, 0.028) 35%,
+    rgba(176, 210, 255, 0.02) 65%,
     transparent
   );
   --glass-poster-petal-b-bg: linear-gradient(
     145deg,
-    rgba(255, 255, 255, 0.02),
-    rgba(255, 255, 255, 0.035) 50%,
+    rgba(176, 210, 255, 0.014),
+    rgba(176, 210, 255, 0.024) 50%,
     transparent
   );
   --glass-poster-petal-c-bg: linear-gradient(
     160deg,
-    rgba(255, 255, 255, 0.025),
-    rgba(255, 255, 255, 0.018),
+    rgba(176, 210, 255, 0.018),
+    rgba(176, 210, 255, 0.012),
     transparent
   );
   --glass-poster-page-air-a-bg: radial-gradient(
@@ -1691,7 +1702,7 @@ body .t-notification {
      本组变量是唯一材质入口，禁止在组件内写死色值。 */
   /* L0 Page / Poster Wash —— page-level 近似（html body / .poster-air 的简化四径向）
      fill = 实色回退 / Lab swatch；壳层接线：background: var(--glass-layer-l0-air), var(--glass-layer-l0-wash)
-     ⚠ 非整装权威场：完整 hero-air + hero-petals 走 --glass-poster-* / GlassPosterWash。
+     ⚠ 非整装权威场：已烘焙 air · petals 光栅走 --glass-poster-* / GlassPosterWash。
      本组保留作页级小样对照，禁止冒充「整装工作台」全局底。 */
   --glass-layer-l0-fill: var(--glass-chroma-poster);
   --glass-layer-l0-wash: linear-gradient(180deg, #edf2f8 0%, #e7edf5 50%, #e1e9f2 100%);
@@ -1703,49 +1714,61 @@ body .t-notification {
     radial-gradient(circle 200px at 82% 92%, rgba(79, 195, 255, 0.16), transparent 70%);
 
   /* ── PosterWash 整装权威场（GlassPosterWash）──────────────────────────
-     忠实对应 html「整装工作台 · 真实组件」区：body wash + .hero-air（含 ::before/::after）
-     + .hero-petals i.a–c；可选 pageAir = 页级 .poster-air span.a–d。
+     air · petals 已烘焙为 2560×1440 光栅；组件按 center cover 铺底，再叠均匀微透 veil。
+     live air / petal 几何仅作 legacy 对照，默认不渲染；pageAir 也默认关闭。
      组件只读本组 var，禁止魔法色。与 --glass-layer-l0-* 并存，但整装裁决以本组为准。 */
 
   /* body 长渐变底垫（边界露边时可见） */
-  --glass-poster-wash: linear-gradient(180deg, #edf2f8 0%, #e7edf5 50%, #e1e9f2 100%);
+  --glass-poster-wash: linear-gradient(180deg, #eff5fb 0%, #e9f0f7 52%, #e4edf6 100%);
+  /* 主用光栅；GlassPosterWash 内再以 Vite import 覆盖，保证构建后 URL 可解析 */
+  --glass-poster-wash-raster: url('../assets/glass/poster-wash-air-petals.webp');
+  --glass-poster-wash-veil: rgba(255, 255, 255, 0.14);
+  --glass-poster-wash-fallback: var(--glass-layer-l0-fill);
 
-  /* 设计画布与 cover 安全过冲（cover × boost，防四角裁花瓣芯） */
+  /* legacy live stack：旧 scene 画布与 cover 安全过冲，默认不驱动 */
   --glass-poster-board-w: 1280px;
   --glass-poster-board-h: 720px;
   --glass-poster-board-w-num: 1280;
   --glass-poster-board-h-num: 720;
   --glass-poster-safe-boost: 1.08;
 
-  /* hero-air：四径向 + 一线性；整层 blur + saturate；inset -10% */
+  /* hero-air：TL/TR 冷蓝 bloom + 中心低对比提亮 + 冷蓝线性底；
+     整层柔和 blur，顶带不依赖 petals 也有冷蓝。 */
   --glass-poster-air-inset: -10%;
-  --glass-poster-air-blur: blur(36px) saturate(1.15);
-  --glass-poster-air-radial-a: radial-gradient(36% 42% at 78% 18%, rgba(22, 119, 255, 0.3), transparent 62%);
-  --glass-poster-air-radial-b: radial-gradient(30% 36% at 92% 72%, rgba(79, 195, 255, 0.26), transparent 60%);
-  --glass-poster-air-radial-c: radial-gradient(40% 48% at 18% 88%, rgba(0, 102, 255, 0.2), transparent 65%);
-  --glass-poster-air-radial-d: radial-gradient(28% 30% at 42% 12%, rgba(240, 248, 255, 0.62), transparent 70%);
-  --glass-poster-air-linear: linear-gradient(135deg, #f4f8fc, #eaf2fa 55%, #e2ecf7);
+  --glass-poster-air-blur: blur(42px) saturate(1.04);
+  --glass-poster-air-radial-a: radial-gradient(36% 42% at 78% 18%, rgba(64, 152, 255, 0.2), transparent 70%);
+  --glass-poster-air-radial-b: radial-gradient(30% 36% at 92% 72%, rgba(79, 195, 255, 0.12), transparent 68%);
+  --glass-poster-air-radial-c: radial-gradient(40% 48% at 18% 88%, rgba(22, 119, 255, 0.08), transparent 70%);
+  --glass-poster-air-radial-e: radial-gradient(
+    40% 38% at 16% 4%,
+    rgba(91, 188, 255, 0.27),
+    rgba(22, 119, 255, 0.1) 48%,
+    transparent 76%
+  );
+  --glass-poster-air-radial-d: radial-gradient(34% 34% at 48% 42%, rgba(246, 251, 255, 0.34), transparent 76%);
+  --glass-poster-air-linear: linear-gradient(145deg, #eef7ff, #e8f1fa 52%, #e2ecf6);
   --glass-poster-air-bg:
     var(--glass-poster-air-radial-a),
     var(--glass-poster-air-radial-b),
     var(--glass-poster-air-radial-c),
+    var(--glass-poster-air-radial-e),
     var(--glass-poster-air-radial-d),
     var(--glass-poster-air-linear);
 
   /* hero-air::before —— 横向条带二次 bloom */
-  --glass-poster-air-before-w: 55%;
-  --glass-poster-air-before-h: 32%;
-  --glass-poster-air-before-left: 30%;
+  --glass-poster-air-before-w: 65%;
+  --glass-poster-air-before-h: 36%;
+  --glass-poster-air-before-left: 20%;
   --glass-poster-air-before-top: 12%;
   --glass-poster-air-before-radius: 999px;
   --glass-poster-air-before-bg: linear-gradient(
     100deg,
-    rgba(210, 232, 255, 0.45),
-    rgba(79, 195, 255, 0.3) 40%,
-    rgba(0, 102, 255, 0.14)
+    rgba(206, 233, 255, 0.23),
+    rgba(79, 195, 255, 0.16) 46%,
+    rgba(22, 119, 255, 0.04)
   );
-  --glass-poster-air-before-blur: blur(18px);
-  --glass-poster-air-before-opacity: 0.55;
+  --glass-poster-air-before-blur: blur(24px);
+  --glass-poster-air-before-opacity: 0.32;
   --glass-poster-air-before-rotate: 8deg;
 
   /* hero-air::after —— 左下有机形二次 bloom */
@@ -1756,12 +1779,12 @@ body .t-notification {
   --glass-poster-air-after-radius: 60% 40% 55% 45% / 55% 45% 55% 45%;
   --glass-poster-air-after-bg: linear-gradient(
     150deg,
-    rgba(210, 232, 255, 0.4),
-    rgba(79, 195, 255, 0.24),
-    rgba(22, 119, 255, 0.12)
+    rgba(206, 233, 255, 0.18),
+    rgba(79, 195, 255, 0.1),
+    rgba(22, 119, 255, 0.04)
   );
-  --glass-poster-air-after-blur: blur(22px);
-  --glass-poster-air-after-opacity: 0.5;
+  --glass-poster-air-after-blur: blur(28px);
+  --glass-poster-air-after-opacity: 0.3;
   --glass-poster-air-after-rotate: -16deg;
 
   /* hero-petals 共性（有机圆角 + multiply） */
@@ -1776,13 +1799,13 @@ body .t-notification {
   --glass-poster-petal-a-rotate: -32deg;
   --glass-poster-petal-a-bg: linear-gradient(
     155deg,
-    rgba(200, 230, 255, 0.2),
-    rgba(90, 190, 255, 0.35) 35%,
-    rgba(22, 119, 255, 0.32) 65%,
-    rgba(0, 82, 204, 0.1)
+    rgba(200, 230, 255, 0.12),
+    rgba(90, 190, 255, 0.2) 35%,
+    rgba(22, 119, 255, 0.14) 65%,
+    rgba(0, 82, 204, 0.03)
   );
-  --glass-poster-petal-a-blur: blur(18px);
-  --glass-poster-petal-a-opacity: 0.7;
+  --glass-poster-petal-a-blur: blur(24px);
+  --glass-poster-petal-a-opacity: 0.48;
 
   /* .hero-petals .b —— 右上中瓣 */
   --glass-poster-petal-b-w: 280px;
@@ -1792,12 +1815,12 @@ body .t-notification {
   --glass-poster-petal-b-rotate: 24deg;
   --glass-poster-petal-b-bg: linear-gradient(
     145deg,
-    rgba(180, 220, 255, 0.18),
-    rgba(22, 119, 255, 0.3) 50%,
-    rgba(0, 102, 255, 0.14)
+    rgba(180, 220, 255, 0.1),
+    rgba(22, 119, 255, 0.14) 50%,
+    rgba(0, 102, 255, 0.06)
   );
-  --glass-poster-petal-b-blur: blur(22px);
-  --glass-poster-petal-b-opacity: 0.65;
+  --glass-poster-petal-b-blur: blur(28px);
+  --glass-poster-petal-b-opacity: 0.36;
 
   /* .hero-petals .c —— 底部淡出小瓣 */
   --glass-poster-petal-c-w: 220px;
@@ -1805,9 +1828,9 @@ body .t-notification {
   --glass-poster-petal-c-left: 38%;
   --glass-poster-petal-c-bottom: -20%;
   --glass-poster-petal-c-rotate: -12deg;
-  --glass-poster-petal-c-bg: linear-gradient(160deg, rgba(140, 205, 255, 0.22), rgba(0, 102, 255, 0.2), transparent);
-  --glass-poster-petal-c-blur: blur(26px);
-  --glass-poster-petal-c-opacity: 0.55;
+  --glass-poster-petal-c-bg: linear-gradient(160deg, rgba(140, 205, 255, 0.1), rgba(22, 119, 255, 0.08), transparent);
+  --glass-poster-petal-c-blur: blur(32px);
+  --glass-poster-petal-c-opacity: 0.28;
 
   /* pageAir 可选页级 bokeh（html .poster-air span.a–d；非橱窗主权威） */
   --glass-poster-page-air-radius: 50%;

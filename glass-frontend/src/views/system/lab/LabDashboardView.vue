@@ -625,8 +625,6 @@ onBeforeUnmount(() => {
   gap: var(--dashboard-poster-gap);
   min-height: 730px;
   padding: 20px;
-  border: 1px solid var(--glass-border-soft);
-  border-radius: var(--glass-wb-card-radius);
   box-sizing: border-box;
 }
 
